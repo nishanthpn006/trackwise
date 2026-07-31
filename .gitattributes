@@ -1,0 +1,31 @@
+# ─────────────────────────────────────────────
+# TrackWise — Git line-ending policy
+# ─────────────────────────────────────────────
+
+# Default: normalise to LF in the repo, check out as native on each OS
+* text=auto eol=lf
+
+# Shell scripts must always be LF (even on Windows) so they are executable
+# on Linux/macOS without corruption
+backend/mvnw text eol=lf
+*.sh         text eol=lf
+
+# Windows batch files must always be CRLF
+*.cmd  text eol=crlf
+*.bat  text eol=crlf
+
+# Binary files — never mangle
+*.jar    binary
+*.class  binary
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.ico    binary
+*.svg    binary
+*.webp   binary
+*.woff   binary
+*.woff2  binary
+*.ttf    binary
+*.eot    binary
+*.zip    binary

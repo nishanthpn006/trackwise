@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────
+# TrackWise — Root .gitignore
+# ─────────────────────────────────────────────
+
+# ── Node / Frontend ──────────────────────────
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# ── Java / Maven / Backend ───────────────────
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# ── IDEs ─────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+
+# ── OS ───────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ── Misc ─────────────────────────────────────
+*.tmp
+*.bak
+*.orig
+screenshots/*.png
+screenshots/*.jpg
+!screenshots/.gitkeep
