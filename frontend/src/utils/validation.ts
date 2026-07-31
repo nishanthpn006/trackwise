@@ -35,3 +35,35 @@ export const registerSchema = z
   });
 
 export type RegisterFormData = z.infer<typeof registerSchema>;
+
+export const categorySchema = z.object({
+  name: z
+    .string()
+    .min(2, 'Category name must be at least 2 characters')
+    .max(50, 'Category name cannot exceed 50 characters'),
+  type: z.enum(['INCOME', 'EXPENSE'], {
+    message: 'Transaction type is required',
+  }),
+  icon: z.string().optional(),
+  color: z.string().optional(),
+});
+
+export type CategoryFormData = z.infer<typeof categorySchema>;
+
+export const transactionSchema = z.object({
+  title: z
+    .string()
+    .min(2, 'Title must be at least 2 characters')
+    .max(100, 'Title cannot exceed 100 characters'),
+  amount: z
+    .number({ message: 'Amount must be a number' })
+    .positive('Amount must be greater than 0'),
+  type: z.enum(['INCOME', 'EXPENSE'], {
+    message: 'Type is required',
+  }),
+  categoryId: z.string().optional(),
+  date: z.string().min(1, 'Date is required'),
+  description: z.string().max(500, 'Description cannot exceed 500 characters').optional(),
+});
+
+export type TransactionFormData = z.infer<typeof transactionSchema>;
