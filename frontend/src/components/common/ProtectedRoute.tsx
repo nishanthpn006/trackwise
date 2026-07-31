@@ -1,11 +1,24 @@
-import { Outlet } from 'react-router';
+import { Navigate, Outlet, useLocation } from 'react-router';
+import { useAuth } from '@/hooks/useAuth';
+import GlobalLoadingPage from '@/pages/GlobalLoadingPage';
 
 /**
- * ProtectedRoute — authentication guard placeholder.
- *
- * Currently passes through all requests unconditionally.
- * In Milestone 3, this will redirect to /login when the user is unauthenticated.
+ * ProtectedRoute — Route guard enforcing authentication.
+ * Redirects unauthenticated users to /login and preserves original location.
  */
-const ProtectedRoute = () => <Outlet />;
+const ProtectedRoute = () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
+
+  if (isLoading) {
+    return <GlobalLoadingPage />;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  return <Outlet />;
+};
 
 export default ProtectedRoute;

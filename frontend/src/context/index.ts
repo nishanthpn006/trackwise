@@ -1,3 +1,3 @@
-// React Context providers barrel export.
-// Example: export { AuthProvider, useAuth } from './AuthContext';
-export {};
+export { AuthContext, type AuthContextType } from './AuthContext';
+export { AuthProvider } from './AuthProvider';
+export { useAuth } from '@/hooks/useAuth';

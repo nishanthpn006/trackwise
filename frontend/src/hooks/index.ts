@@ -1,3 +1,1 @@
-// Custom hooks barrel export.
-// Example: export { useLocalStorage } from './useLocalStorage';
-export {};
+export { default as useAuth } from './useAuth';

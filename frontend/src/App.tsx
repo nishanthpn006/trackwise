@@ -1,21 +1,19 @@
 import { BrowserRouter } from 'react-router';
 import AppRoutes from '@/routes';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
+import { AuthProvider } from '@/context';
 
 /**
- * App — application root.
- *
- * Provides:
- *  - ErrorBoundary: catches any uncaught render errors app-wide
- *  - BrowserRouter: enables client-side routing via the History API
- *  - AppRoutes: the full route tree (see src/routes/index.tsx)
+ * App — Root application component wrapping AuthProvider and BrowserRouter.
  */
 function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
