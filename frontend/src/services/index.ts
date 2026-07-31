@@ -1,3 +1,3 @@
-// Services barrel export
-// Re-export all API service modules from this directory as they are created.
-// Example: export { expenseService } from './expenseService';
+// API service modules barrel export.
+// Example: export { transactionService } from './transactionService';
+export {};

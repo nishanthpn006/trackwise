@@ -1,24 +1,22 @@
+import { BrowserRouter } from 'react-router';
+import AppRoutes from '@/routes';
+import ErrorBoundary from '@/components/common/ErrorBoundary';
+
 /**
- * App.tsx — Root application shell.
+ * App — application root.
  *
- * Milestone 1: Renders a minimal, styled placeholder.
- * Routing and layout wrappers will be added in subsequent milestones.
+ * Provides:
+ *  - ErrorBoundary: catches any uncaught render errors app-wide
+ *  - BrowserRouter: enables client-side routing via the History API
+ *  - AppRoutes: the full route tree (see src/routes/index.tsx)
  */
 function App() {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground">
-          TrackWise
-        </h1>
-        <p className="text-muted-foreground text-lg">
-          Personal Expense Tracker — Foundation Ready
-        </p>
-        <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium">
-          Milestone 1 ✓
-        </span>
-      </div>
-    </div>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 

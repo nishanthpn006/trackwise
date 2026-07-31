@@ -1,3 +1,7 @@
-// Components barrel export
-// Re-export all components from this directory as they are created.
-// Example: export { Button } from './Button/Button';
+export { default as ErrorBoundary } from './common/ErrorBoundary';
+export { default as Loading } from './common/Loading';
+export { default as PageContainer } from './common/PageContainer';
+export { default as ProtectedRoute } from './common/ProtectedRoute';
+export { default as Navbar } from './layout/Navbar';
+export { default as Sidebar } from './layout/Sidebar';
+export { default as Footer } from './layout/Footer';

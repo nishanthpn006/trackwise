@@ -1,3 +1,10 @@
-// Pages barrel export
-// Re-export all page components from this directory as they are created.
-// Example: export { DashboardPage } from './DashboardPage';
+export { default as HomePage } from './HomePage';
+export { default as LoginPage } from './LoginPage';
+export { default as RegisterPage } from './RegisterPage';
+export { default as DashboardPage } from './DashboardPage';
+export { default as TransactionsPage } from './TransactionsPage';
+export { default as BudgetsPage } from './BudgetsPage';
+export { default as GoalsPage } from './GoalsPage';
+export { default as ProfilePage } from './ProfilePage';
+export { default as NotFoundPage } from './NotFoundPage';
+export { default as GlobalLoadingPage } from './GlobalLoadingPage';

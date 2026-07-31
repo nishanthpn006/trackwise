@@ -1,3 +1,2 @@
-// Layouts barrel export
-// Re-export layout wrappers from this directory as they are created.
-// Example: export { AppLayout } from './AppLayout';
+export { default as MainLayout } from './MainLayout';
+export { default as AuthLayout } from './AuthLayout';
