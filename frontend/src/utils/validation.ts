@@ -68,3 +68,33 @@ export const transactionSchema = z.object({
 });
 
 export type TransactionFormData = z.infer<typeof transactionSchema>;
+
+export const budgetSchema = z
+  .object({
+    name: z
+      .string()
+      .min(2, 'Budget name must be at least 2 characters')
+      .max(60, 'Budget name cannot exceed 60 characters'),
+    amount: z
+      .number({ message: 'Amount must be a number' })
+      .positive('Amount must be greater than 0'),
+    period: z.enum(['MONTHLY', 'WEEKLY', 'YEARLY'], {
+      message: 'Period is required',
+    }),
+    startDate: z.string().min(1, 'Start date is required'),
+    endDate: z.string().min(1, 'End date is required'),
+    categoryId: z.string().optional(),
+  })
+  .refine(
+    (data) => {
+      if (!data.startDate || !data.endDate) return true;
+      return new Date(data.endDate) >= new Date(data.startDate);
+    },
+    {
+      message: 'End date must be on or after start date',
+      path: ['endDate'],
+    }
+  );
+
+export type BudgetFormData = z.infer<typeof budgetSchema>;
+
