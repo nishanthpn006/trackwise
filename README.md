@@ -15,7 +15,7 @@
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+| ------- | ----------- |
 | Frontend | React 19, Vite 6, TypeScript 5, Tailwind CSS 4, shadcn/ui |
 | Backend | Java 21, Spring Boot 3, Spring Web, Spring Data JPA |
 | Database | PostgreSQL 17 |
@@ -25,7 +25,7 @@
 
 ## Project Structure
 
-```
+```text
 trackwise/
 ├── frontend/          # React 19 + Vite + TypeScript SPA
 ├── backend/           # Spring Boot 3 REST API
@@ -73,7 +73,7 @@ mvnw.cmd spring-boot:run
 ## Development Commands
 
 | Command | Description |
-|---------|-------------|
+| --------- | ------------- |
 | `npm run dev` | Start Vite dev server with HMR |
 | `npm run build` | Production TypeScript build |
 | `npm run lint` | ESLint check |
@@ -85,7 +85,7 @@ mvnw.cmd spring-boot:run
 ## Milestones
 
 | # | Name | Status |
-|---|------|--------|
+| --- | --- | --- |
 | 1 | Project Foundation | ✅ Complete |
 | 2 | Authentication & Users | 🔜 Planned |
 | 3 | Core Expense CRUD | 🔜 Planned |

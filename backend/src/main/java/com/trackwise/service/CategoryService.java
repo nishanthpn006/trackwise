@@ -85,6 +85,7 @@ public class CategoryService {
     }
 
     @Transactional
+    @SuppressWarnings("null")
     public void deleteCategory(UUID id, User user) {
         Category category = categoryRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
@@ -97,6 +98,7 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
+    @SuppressWarnings("null")
     private void ensureDefaultCategoriesExist(User user) {
         List<Category> existing = categoryRepository.findByUser(user);
         if (existing.isEmpty()) {

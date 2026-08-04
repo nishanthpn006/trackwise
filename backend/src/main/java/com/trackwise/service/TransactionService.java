@@ -39,6 +39,7 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
+    @SuppressWarnings("null")
     public PagedResponse<TransactionResponse> getTransactions(
             User user,
             String search,
@@ -110,6 +111,7 @@ public class TransactionService {
     }
 
     @Transactional
+    @SuppressWarnings("null")
     public void deleteTransaction(UUID id, User user) {
         Transaction transaction = transactionRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with ID: " + id));

@@ -1,6 +1,5 @@
 package com.trackwise.repository.specification;
 
-import com.trackwise.entity.Category;
 import com.trackwise.entity.Transaction;
 import com.trackwise.entity.TransactionType;
 import com.trackwise.entity.User;
