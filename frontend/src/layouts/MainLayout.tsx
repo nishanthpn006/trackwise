@@ -2,6 +2,7 @@ import { Outlet } from 'react-router';
 import { SidebarProvider } from '@/context';
 import ToastProvider from '@/context/ToastProvider';
 import { ToastContainer } from '@/components/ui';
+import OfflineBanner from '@/components/common/OfflineBanner';
 import Sidebar from '@/components/layout/Sidebar';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -14,6 +15,7 @@ import Footer from '@/components/layout/Footer';
 export const MainLayout = () => (
   <ToastProvider>
     <SidebarProvider>
+      <OfflineBanner />
       <div className="min-h-screen flex flex-col md:flex-row bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
         {/* Sticky Desktop Sidebar & Mobile Drawer */}
         <Sidebar />

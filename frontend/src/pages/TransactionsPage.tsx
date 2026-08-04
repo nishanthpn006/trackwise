@@ -2,16 +2,21 @@ import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import PageContainer from '@/components/common/PageContainer';
-import Loading from '@/components/common/Loading';
+import EmptyState from '@/components/common/EmptyState';
+import ErrorState from '@/components/common/ErrorState';
+import { SkeletonTable } from '@/components/common/LoadingSkeleton';
 import categoryService from '@/services/categoryService';
+
 import transactionService from '@/services/transactionService';
 import type { Category, PagedResponse, Transaction, TransactionType } from '@/types/transaction';
+import { CreditCard } from 'lucide-react';
 import {
   categorySchema,
   transactionSchema,
   type CategoryFormData,
   type TransactionFormData,
 } from '@/utils/validation';
+
 
 const TransactionsPage = () => {
   const [transactions, setTransactions] = useState<PagedResponse<Transaction> | null>(null);
@@ -399,20 +404,29 @@ const TransactionsPage = () => {
       {/* Transaction Table & UI States */}
       <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
         {isLoading ? (
-          <div className="py-16 flex justify-center items-center">
-            <Loading />
+          <div className="p-6">
+            <SkeletonTable rows={6} />
+          </div>
+        ) : errorMessage ? (
+          <div className="p-6">
+            <ErrorState
+              title="Failed to Load Transactions"
+              message={errorMessage}
+              onRetry={fetchTransactions}
+              isRetrying={isLoading}
+            />
           </div>
         ) : !transactions || transactions.content.length === 0 ? (
-          <div className="py-16 text-center space-y-3">
-            <p className="text-base font-semibold text-foreground">No transactions found</p>
-            <p className="text-sm text-muted-foreground">Try clearing your filters or add a new transaction.</p>
-            <button
-              onClick={handleOpenAddTx}
-              className="px-4 py-2 bg-primary text-primary-foreground text-xs font-medium rounded-lg hover:bg-primary/90"
-            >
-              + Add Transaction
-            </button>
-          </div>
+          <EmptyState
+            icon={<CreditCard className="h-10 w-10 text-muted-foreground/60" />}
+            title="No transactions found"
+            description="No transaction entries match your current search filters or date range."
+            action={{
+              label: "+ Add Transaction",
+              onClick: handleOpenAddTx,
+            }}
+            className="py-12"
+          />
         ) : (
           <>
             <div className="overflow-x-auto">
