@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
  * and handles CSV import of transactions with validation.
  */
 @Service
-@SuppressWarnings("null")
 public class DataExportService {
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
