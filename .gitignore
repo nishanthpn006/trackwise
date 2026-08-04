@@ -45,6 +45,10 @@ backend/.env.local
 ehthumbs.db
 Thumbs.db
 
+# ── Docker / Compose ─────────────────────────────────────────────────────────
+.env
+docker-compose.override.yml
+
 # ── Misc ─────────────────────────────────────
 *.tmp
 *.bak
