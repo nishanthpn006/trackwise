@@ -1,17 +1,30 @@
 import api from './api';
-import type { ApiResponse, PagedResponse } from '@/types/api';
-import type { SavingsGoal, SavingsGoalRequest } from '@/types/goal';
+import type { ApiResponse } from '@/types/api';
+import type {
+  SavingsGoal,
+  SavingsGoalRequest,
+  GoalContributionRequest,
+  GoalSummary,
+} from '@/types/goal';
 
 export const goalService = {
   async getGoals(): Promise<SavingsGoal[]> {
     try {
-      const response = await api.get<ApiResponse<SavingsGoal[] | PagedResponse<SavingsGoal>>>('/goals');
+      const response = await api.get<ApiResponse<SavingsGoal[]>>('/goals');
       const data = response.data.data;
       if (Array.isArray(data)) return data;
-      return data.content || [];
-    } catch {
-      // Fallback empty array when backend goals module is not enabled
       return [];
+    } catch {
+      return [];
+    }
+  },
+
+  async getGoalSummary(): Promise<GoalSummary | null> {
+    try {
+      const response = await api.get<ApiResponse<GoalSummary>>('/goals/summary');
+      return response.data.data;
+    } catch {
+      return null;
     }
   },
 
@@ -32,6 +45,11 @@ export const goalService = {
 
   async deleteGoal(id: string): Promise<void> {
     await api.delete(`/goals/${id}`);
+  },
+
+  async addContribution(id: string, payload: GoalContributionRequest): Promise<SavingsGoal> {
+    const response = await api.post<ApiResponse<SavingsGoal>>(`/goals/${id}/contributions`, payload);
+    return response.data.data;
   },
 };
 

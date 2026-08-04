@@ -9,6 +9,11 @@ import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentTransactionsCard from '@/components/dashboard/RecentTransactionsCard';
 import DashboardCharts from '@/components/dashboard/DashboardCharts';
+import SavingsGoalsWidget from '@/components/dashboard/SavingsGoalsWidget';
+import GoalContributionDialog from '@/components/goals/GoalContributionDialog';
+import goalService from '@/services/goalService';
+import type { SavingsGoal, GoalContributionRequest } from '@/types/goal';
+import { useToast } from '@/hooks/useToast';
 import {
   Wallet,
   TrendingUp,
@@ -22,16 +27,38 @@ import {
 
 /**
  * DashboardPage — Main application dashboard.
- * Features 8 production-ready summary cards, analytics chart grid, quick actions dialogs, and recent transactions.
+ * Features summary cards, analytics chart grid, savings goals widget, quick actions, and recent transactions.
  */
 export const DashboardPage: React.FC = () => {
   const { summary, isLoading, errorMessage, isEmpty, refetch } = useDashboardSummary();
   const [refreshKey, setRefreshKey] = useState<number>(0);
+  const [contribGoal, setContribGoal] = useState<SavingsGoal | null>(null);
+  const [isContribOpen, setIsContribOpen] = useState<boolean>(false);
+  const [isSubmittingContrib, setIsSubmittingContrib] = useState<boolean>(false);
+  const toast = useToast();
 
   const handleQuickActionRefresh = useCallback(() => {
     refetch();
     setRefreshKey((prev) => prev + 1);
   }, [refetch]);
+
+  const handleOpenContrib = (goal: SavingsGoal) => {
+    setContribGoal(goal);
+    setIsContribOpen(true);
+  };
+
+  const handleAddContribution = async (goalId: string, data: GoalContributionRequest) => {
+    setIsSubmittingContrib(true);
+    try {
+      await goalService.addContribution(goalId, data);
+      toast.success(`Successfully added $${data.amount.toLocaleString()} to goal.`);
+      handleQuickActionRefresh();
+    } catch {
+      toast.error('Failed to add savings deposit. Please try again.');
+    } finally {
+      setIsSubmittingContrib(false);
+    }
+  };
 
   return (
     <PageContainer className="py-6 space-y-6">
@@ -115,14 +142,15 @@ export const DashboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* Middle Section: Quick Actions & Analytics Charts Grid */}
+      {/* Middle Section: Quick Actions & Savings Goals Widget & Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Quick Actions (1 col on desktop) */}
-        <div className="lg:col-span-1">
+        {/* Left Column: Quick Actions & Savings Goals Overview */}
+        <div className="lg:col-span-1 space-y-6">
           <QuickActions onRefresh={handleQuickActionRefresh} />
+          <SavingsGoalsWidget onOpenContribution={handleOpenContrib} refreshKey={refreshKey} />
         </div>
 
-        {/* Analytics Charts (2 cols on desktop, full-width on mobile) */}
+        {/* Right Column: Analytics Charts (2 cols on desktop) */}
         <div className="lg:col-span-2">
           <DashboardCharts refreshKey={refreshKey} />
         </div>
@@ -133,6 +161,17 @@ export const DashboardPage: React.FC = () => {
         transactions={summary?.recentTransactions ?? []}
         isLoading={isLoading}
       />
+
+      {/* Quick Deposit Dialog */}
+      {isContribOpen && (
+        <GoalContributionDialog
+          isOpen={isContribOpen}
+          onClose={() => setIsContribOpen(false)}
+          onSubmit={handleAddContribution}
+          goal={contribGoal}
+          isSubmitting={isSubmittingContrib}
+        />
+      )}
     </PageContainer>
   );
 };

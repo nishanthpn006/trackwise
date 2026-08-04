@@ -12,5 +12,4 @@ export { default as CategoryPieChart } from './CategoryPieChart';
 export { default as SpendingTrendChart } from './SpendingTrendChart';
 export { default as FinancialInsightsCard } from './FinancialInsightsCard';
 export { default as DashboardCharts } from './DashboardCharts';
-
-
+export { default as SavingsGoalsWidget } from './SavingsGoalsWidget';
