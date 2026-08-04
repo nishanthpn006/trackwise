@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PageContainer from '@/components/common/PageContainer';
 import { useDashboardSummary } from '@/hooks/useDashboardSummary';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
@@ -22,10 +22,16 @@ import {
 
 /**
  * DashboardPage — Main application dashboard.
- * Features 8 production-ready summary cards, analytics chart grid, quick actions, and recent transactions.
+ * Features 8 production-ready summary cards, analytics chart grid, quick actions dialogs, and recent transactions.
  */
 export const DashboardPage: React.FC = () => {
   const { summary, isLoading, errorMessage, isEmpty, refetch } = useDashboardSummary();
+  const [refreshKey, setRefreshKey] = useState<number>(0);
+
+  const handleQuickActionRefresh = useCallback(() => {
+    refetch();
+    setRefreshKey((prev) => prev + 1);
+  }, [refetch]);
 
   return (
     <PageContainer className="py-6 space-y-6">
@@ -113,12 +119,12 @@ export const DashboardPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Quick Actions (1 col on desktop) */}
         <div className="lg:col-span-1">
-          <QuickActions />
+          <QuickActions onRefresh={handleQuickActionRefresh} />
         </div>
 
         {/* Analytics Charts (2 cols on desktop, full-width on mobile) */}
         <div className="lg:col-span-2">
-          <DashboardCharts />
+          <DashboardCharts refreshKey={refreshKey} />
         </div>
       </div>
 

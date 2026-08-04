@@ -1,5 +1,7 @@
 import { Outlet } from 'react-router';
 import { SidebarProvider } from '@/context';
+import ToastProvider from '@/context/ToastProvider';
+import { ToastContainer } from '@/components/ui';
 import Sidebar from '@/components/layout/Sidebar';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -10,21 +12,24 @@ import Footer from '@/components/layout/Footer';
  * On mobile: Full-width page + slide-out Sidebar drawer triggered by Navbar hamburger.
  */
 export const MainLayout = () => (
-  <SidebarProvider>
-    <div className="min-h-screen flex flex-col md:flex-row bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
-      {/* Sticky Desktop Sidebar & Mobile Drawer */}
-      <Sidebar />
+  <ToastProvider>
+    <SidebarProvider>
+      <div className="min-h-screen flex flex-col md:flex-row bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary">
+        {/* Sticky Desktop Sidebar & Mobile Drawer */}
+        <Sidebar />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <Navbar />
-        <main className="flex-1 flex flex-col min-w-0">
-          <Outlet />
-        </main>
-        <Footer />
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+          <Navbar />
+          <main className="flex-1 flex flex-col min-w-0">
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
       </div>
-    </div>
-  </SidebarProvider>
+      <ToastContainer />
+    </SidebarProvider>
+  </ToastProvider>
 );
 
 export default MainLayout;

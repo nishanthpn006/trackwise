@@ -8,13 +8,17 @@ import SpendingTrendChart from './SpendingTrendChart';
 import FinancialInsightsCard from './FinancialInsightsCard';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
+export interface DashboardChartsProps {
+  refreshKey?: number;
+}
+
 /**
  * DashboardCharts — Orchestrator component for all analytics widgets.
  *
  * Manages its own data-fetch lifecycle independently from the summary fetch in DashboardPage,
  * so a failure here doesn't block the summary cards from rendering.
  */
-export const DashboardCharts: React.FC = () => {
+export const DashboardCharts: React.FC<DashboardChartsProps> = ({ refreshKey }) => {
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -34,7 +38,7 @@ export const DashboardCharts: React.FC = () => {
 
   useEffect(() => {
     fetchAnalytics();
-  }, [fetchAnalytics]);
+  }, [fetchAnalytics, refreshKey]);
 
   if (isLoading) {
     return <AnalyticsSkeleton />;
