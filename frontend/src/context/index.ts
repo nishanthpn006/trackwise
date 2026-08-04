@@ -4,5 +4,8 @@ export { useAuth } from '@/hooks/useAuth';
 export { SidebarContext, type SidebarContextType } from './SidebarContext';
 export { SidebarProvider } from './SidebarProvider';
 export { useSidebar } from '@/hooks/useSidebar';
+export { ToastContext, type ToastContextType } from './ToastContext';
+export { ToastProvider } from './ToastProvider';
+
 
 

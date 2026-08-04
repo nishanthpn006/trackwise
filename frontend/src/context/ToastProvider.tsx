@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { ToastContext, type ToastItem, type ToastType } from './ToastContext';
+import { ToastContainer } from '@/components/ui/ToastContainer';
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
@@ -29,7 +30,12 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     [toasts, showToast, removeToast]
   );
 
-  return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>;
+  return (
+    <ToastContext.Provider value={value}>
+      {children}
+      <ToastContainer />
+    </ToastContext.Provider>
+  );
 };
 
 export default ToastProvider;

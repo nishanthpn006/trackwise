@@ -1,21 +1,24 @@
 import { BrowserRouter } from 'react-router';
 import AppRoutes from '@/routes';
 import ErrorBoundary from '@/components/common/ErrorBoundary';
-import { AuthProvider } from '@/context';
+import { AuthProvider, ToastProvider } from '@/context';
 
 /**
- * App — Root application component wrapping AuthProvider and BrowserRouter.
+ * App — Root application component wrapping ToastProvider, AuthProvider, and BrowserRouter.
  */
 function App() {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <AppRoutes />
+          </BrowserRouter>
+        </AuthProvider>
+      </ToastProvider>
     </ErrorBoundary>
   );
 }
 
 export default App;
+
