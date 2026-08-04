@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-@SuppressWarnings("null")
 class NotificationServiceTest {
 
     @Autowired
