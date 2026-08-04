@@ -61,7 +61,7 @@ export const transactionSchema = z.object({
   type: z.enum(['INCOME', 'EXPENSE'], {
     message: 'Type is required',
   }),
-  categoryId: z.string().optional(),
+  categoryId: z.string().min(1, 'Category is required'),
   date: z.string().min(1, 'Date is required'),
   description: z.string().max(500, 'Description cannot exceed 500 characters').optional(),
 });
