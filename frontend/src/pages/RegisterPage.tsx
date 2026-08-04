@@ -7,6 +7,7 @@ import useToast from '@/hooks/useToast';
 import { parseApiError } from '@/services/api';
 import { registerSchema, type RegisterFormData } from '@/utils/validation';
 import { Loader2 } from 'lucide-react';
+import Logo from '@/components/common/Logo';
 
 const RegisterPage = () => {
   const { register: registerAuth } = useAuth();
@@ -35,16 +36,18 @@ const RegisterPage = () => {
     } catch (err: unknown) {
       const msg = parseApiError(err);
       setErrorMessage(msg);
-      toast.error(msg);
     }
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4 selection:bg-primary/20">
       <div className="w-full max-w-md bg-card border border-border/80 rounded-2xl shadow-xl p-6 sm:p-8 space-y-6 animate-in zoom-in-95 duration-200">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-extrabold tracking-tight text-foreground">Create Account</h1>
-          <p className="text-xs text-muted-foreground">Start tracking your expenses with TrackWise</p>
+        <div className="flex flex-col items-center text-center space-y-3">
+          <Logo variant="auth" size={56} />
+          <div className="space-y-1 pt-1">
+            <h1 className="text-xl font-extrabold tracking-tight text-foreground">Create Account</h1>
+            <p className="text-xs text-muted-foreground">Start tracking your expenses with TrackWise</p>
+          </div>
         </div>
 
         {errorMessage && (

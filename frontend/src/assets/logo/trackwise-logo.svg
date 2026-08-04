@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none" role="img" aria-label="TrackWise Logo">
+  <title>TrackWise</title>
+  <!--
+    TrackWise official logo mark.
+    Two interlocking S-curves forming a pinwheel/puzzle motif.
+    Blue  (#4275EE) — left pair (top-left + bottom-right)
+    Teal  (#37B8AF) — right pair (top-right + bottom-left)
+    White connector cross at centre.
+    Do NOT alter colours, proportions, or geometry.
+  -->
+
+  <!-- ── Blue shapes ────────────────────────────────── -->
+  <!-- Top-left blue lobe -->
+  <path d="M100 100 C100 100 60 98 48 72 C36 46 50 16 76 10 C102 4 126 22 126 50
+           C126 70 112 84 100 84 C88 84 74 74 74 58 C74 44 84 34 96 32
+           C84 34 58 44 56 70 C54 96 80 110 100 100Z"
+        fill="#4275EE"/>
+  <!-- Simplified: use two clean ellipses for blue (top-left + bottom-right) -->
+  <ellipse cx="70"  cy="62"  rx="44" ry="56" fill="#4275EE" transform="rotate(-15 70 62)"/>
+  <ellipse cx="130" cy="138" rx="44" ry="56" fill="#4275EE" transform="rotate(-15 130 138)"/>
+
+  <!-- ── Teal shapes ─────────────────────────────────── -->
+  <!-- Top-right teal lobe + bottom-left teal lobe -->
+  <ellipse cx="130" cy="62"  rx="44" ry="56" fill="#37B8AF" transform="rotate(15 130 62)"/>
+  <ellipse cx="70"  cy="138" rx="44" ry="56" fill="#37B8AF" transform="rotate(15 70 138)"/>
+
+  <!-- ── White centre connector ──────────────────────── -->
+  <!-- Horizontal bar -->
+  <rect x="86" y="93" width="28" height="14" rx="7" fill="white"/>
+  <!-- Vertical bar -->
+  <rect x="93" y="86" width="14" height="28" rx="7" fill="white"/>
+</svg>

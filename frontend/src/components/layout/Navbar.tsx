@@ -6,6 +6,7 @@ import { Menu, Sun, Moon, ChevronRight } from 'lucide-react';
 import NavbarSearch from './NavbarSearch';
 import NavbarNotifications from './NavbarNotifications';
 import NavbarProfile from './NavbarProfile';
+import Logo from '@/components/common/Logo';
 
 /**
  * Navbar — Professional SaaS top navigation bar.
@@ -57,12 +58,7 @@ export const Navbar: React.FC = () => {
           className="flex md:hidden items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-0.5"
           aria-label="TrackWise Home"
         >
-          <span className="h-8 w-8 rounded-xl bg-gradient-to-tr from-primary to-primary/80 text-primary-foreground font-extrabold text-xs flex items-center justify-center shadow-2xs group-hover:scale-105 transition-transform duration-200">
-            TW
-          </span>
-          <span className="text-base font-bold tracking-tight text-foreground hidden sm:inline-block">
-            TrackWise
-          </span>
+          <Logo variant="navbar" className="group-hover:scale-105 transition-transform duration-200" />
         </Link>
 
         {/* Breadcrumb Navigation (Desktop) */}

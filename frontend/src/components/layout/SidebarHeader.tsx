@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { PanelLeftClose, PanelLeftOpen, X } from 'lucide-react';
 import { useSidebar } from '@/hooks/useSidebar';
+import Logo from '@/components/common/Logo';
 
 interface SidebarHeaderProps {
   /** If true, rendered inside the mobile drawer */
@@ -24,22 +25,11 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isMobile = false }
         className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-1 transition-colors"
         aria-label="TrackWise Home"
       >
-        {/* TrackWise Logo Badge */}
-        <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-primary to-primary/80 text-primary-foreground flex items-center justify-center font-extrabold text-sm shadow-xs shrink-0 group-hover:scale-105 transition-transform duration-200">
-          TW
-        </div>
-
-        {/* Title and Subtitle (hidden in desktop collapsed mode) */}
-        {!collapsedView && (
-          <div className="flex flex-col min-w-0">
-            <span className="text-sm font-bold tracking-tight text-foreground group-hover:text-primary transition-colors truncate">
-              TrackWise
-            </span>
-            <span className="text-[10px] text-muted-foreground font-medium truncate">
-              Personal Expense Tracker
-            </span>
-          </div>
-        )}
+        <Logo
+          variant={collapsedView ? 'icon-only' : 'sidebar'}
+          size={collapsedView ? 32 : 34}
+          className="group-hover:scale-105 transition-transform duration-200"
+        />
       </Link>
 
       {/* Desktop Collapse / Expand Toggle Button */}
