@@ -105,4 +105,5 @@ export const IncomeExpenseChart: React.FC<IncomeExpenseChartProps> = ({ data }) 
   );
 };
 
-export default IncomeExpenseChart;
+export default React.memo(IncomeExpenseChart);
+

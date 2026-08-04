@@ -116,4 +116,5 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({ data }) 
   );
 };
 
-export default SpendingTrendChart;
+export default React.memo(SpendingTrendChart);
+
