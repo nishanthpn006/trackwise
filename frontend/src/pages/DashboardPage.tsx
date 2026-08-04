@@ -10,6 +10,7 @@ import QuickActions from '@/components/dashboard/QuickActions';
 import RecentTransactionsCard from '@/components/dashboard/RecentTransactionsCard';
 import DashboardCharts from '@/components/dashboard/DashboardCharts';
 import SavingsGoalsWidget from '@/components/dashboard/SavingsGoalsWidget';
+import RecentNotificationsWidget from '@/components/dashboard/RecentNotificationsWidget';
 import GoalContributionDialog from '@/components/goals/GoalContributionDialog';
 import goalService from '@/services/goalService';
 import type { SavingsGoal, GoalContributionRequest } from '@/types/goal';
@@ -148,6 +149,7 @@ export const DashboardPage: React.FC = () => {
         <div className="lg:col-span-1 space-y-6">
           <QuickActions onRefresh={handleQuickActionRefresh} />
           <SavingsGoalsWidget onOpenContribution={handleOpenContrib} refreshKey={refreshKey} />
+          <RecentNotificationsWidget />
         </div>
 
         {/* Right Column: Analytics Charts (2 cols on desktop) */}
