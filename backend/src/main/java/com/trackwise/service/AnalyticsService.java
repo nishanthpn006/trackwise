@@ -101,6 +101,7 @@ public class AnalyticsService {
      * Uses a fallback colour palette when a category has no colour defined.
      * Sorted by amount descending.
      */
+    @SuppressWarnings("null")
     private List<CategoryBreakdownItem> buildCategoryBreakdown(User user, LocalDate today) {
         // Fetch all-time expenses for category breakdown
         LocalDate allTimeStart = LocalDate.of(2000, 1, 1);
@@ -163,6 +164,7 @@ public class AnalyticsService {
      * Builds daily expense totals for the last 30 days (oldest → newest).
      * Days with no spending are emitted with amount = 0.
      */
+    @SuppressWarnings("null")
     private List<SpendingTrendPoint> buildSpendingTrend(User user, LocalDate today) {
         LocalDate trendStart = today.minusDays(29);
         List<Transaction> expenses = transactionRepository
