@@ -159,6 +159,7 @@ public class ReportService {
         );
     }
 
+    @SuppressWarnings("null")
     private List<ReportCategoryBreakdownDto> buildCategoryBreakdown(List<Transaction> transactions, BigDecimal totalExpenses) {
         Map<String, BigDecimal> categorySumMap = new LinkedHashMap<>();
         Map<String, String> iconMap = new LinkedHashMap<>();
