@@ -1,7 +1,6 @@
 package com.trackwise.service;
 
 import com.trackwise.dto.GoalContributionRequest;
-import com.trackwise.dto.GoalContributionResponse;
 import com.trackwise.dto.GoalRequest;
 import com.trackwise.dto.GoalResponse;
 import com.trackwise.dto.GoalSummaryResponse;
@@ -10,7 +9,6 @@ import com.trackwise.entity.GoalContribution;
 import com.trackwise.entity.GoalStatus;
 import com.trackwise.entity.User;
 import com.trackwise.exception.ResourceNotFoundException;
-import com.trackwise.repository.GoalContributionRepository;
 import com.trackwise.repository.GoalRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -28,11 +25,9 @@ import java.util.stream.Collectors;
 public class GoalService {
 
     private final GoalRepository goalRepository;
-    private final GoalContributionRepository goalContributionRepository;
 
-    public GoalService(GoalRepository goalRepository, GoalContributionRepository goalContributionRepository) {
+    public GoalService(GoalRepository goalRepository) {
         this.goalRepository = goalRepository;
-        this.goalContributionRepository = goalContributionRepository;
     }
 
     @Transactional(readOnly = true)
