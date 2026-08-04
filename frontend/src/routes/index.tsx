@@ -12,6 +12,7 @@ import BudgetsPage from '@/pages/BudgetsPage';
 import GoalsPage from '@/pages/GoalsPage';
 import ReportsPage from '@/pages/ReportsPage';
 import ProfilePage from '@/pages/ProfilePage';
+import SettingsPage from '@/pages/SettingsPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 /**
@@ -41,6 +42,7 @@ const AppRoutes = () => (
         <Route path="/goals" element={<GoalsPage />} />
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
     </Route>
 

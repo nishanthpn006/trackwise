@@ -7,6 +7,7 @@ export { default as CategoriesPage } from './CategoriesPage';
 export { default as BudgetsPage } from './BudgetsPage';
 export { default as GoalsPage } from './GoalsPage';
 export { default as ProfilePage } from './ProfilePage';
+export { default as SettingsPage } from './SettingsPage';
 export { default as ReportsPage } from './ReportsPage';
 export { default as NotFoundPage } from './NotFoundPage';
 export { default as GlobalLoadingPage } from './GlobalLoadingPage';
