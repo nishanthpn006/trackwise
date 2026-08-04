@@ -6,6 +6,7 @@ import {
   Wallet,
   Target,
   BarChart3,
+  Database,
   Settings,
   User,
   LogOut,
@@ -73,6 +74,12 @@ export const NAVIGATION_ITEMS: NavItemConfig[] = [
     path: '/settings',
     icon: Settings,
     ariaLabel: 'Navigate to Settings & User Preferences',
+  },
+  {
+    label: 'Import / Export',
+    path: '/import-export',
+    icon: Database,
+    ariaLabel: 'Navigate to Import, Export & Data Backup',
   },
   {
     label: 'Profile',

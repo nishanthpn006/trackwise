@@ -18,3 +18,5 @@ export type {
 export type { AuthResponseData, LoginPayload, RegisterPayload } from './auth';
 export type { Budget, BudgetRequest } from './budget';
 export type { SavingsGoal, SavingsGoalRequest } from './goal';
+export type { ImportResult, ExportFormat } from './data';
+

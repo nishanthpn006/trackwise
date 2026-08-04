@@ -13,7 +13,9 @@ import GoalsPage from '@/pages/GoalsPage';
 import ReportsPage from '@/pages/ReportsPage';
 import ProfilePage from '@/pages/ProfilePage';
 import SettingsPage from '@/pages/SettingsPage';
+import ImportExportPage from '@/pages/ImportExportPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+
 
 /**
  * AppRoutes — defines the complete client-side route tree.
@@ -43,6 +45,7 @@ const AppRoutes = () => (
         <Route path="/reports" element={<ReportsPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/import-export" element={<ImportExportPage />} />
       </Route>
     </Route>
 

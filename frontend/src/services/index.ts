@@ -6,3 +6,8 @@ export { default as categoryService } from './categoryService';
 export { default as budgetService } from './budgetService';
 export { default as goalService } from './goalService';
 export { default as profileService } from './profileService';
+export { default as reportService } from './reportService';
+export { default as settingsService } from './settingsService';
+export { default as notificationService } from './notificationService';
+export { default as dataService } from './dataService';
+

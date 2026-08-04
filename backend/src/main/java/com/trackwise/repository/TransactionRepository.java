@@ -32,6 +32,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
 
     List<Transaction> findByUserAndType(User user, TransactionType type);
 
+    List<Transaction> findByUserOrderByDateDesc(User user);
+
     List<Transaction> findTop5ByUserOrderByDateDescCreatedAtDesc(User user);
 
     @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.user = :user AND t.type = :type")
