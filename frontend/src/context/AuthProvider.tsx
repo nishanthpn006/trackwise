@@ -28,6 +28,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initializeAuth();
   }, []);
 
+  // Listen for global 401 Unauthorized events emitted by Axios response interceptor
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      authService.logout();
+      setUser(null);
+      setToken(null);
+    };
+
+    window.addEventListener('trackwise:unauthorized', handleUnauthorized);
+    return () => {
+      window.removeEventListener('trackwise:unauthorized', handleUnauthorized);
+    };
+  }, []);
+
   const login = async (payload: LoginPayload) => {
     setIsLoading(true);
     try {

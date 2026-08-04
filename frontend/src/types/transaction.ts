@@ -1,20 +1,10 @@
+import type { Category, CategoryRequest } from './category';
+import type { PagedResponse } from './api';
+import type { DashboardSummary } from './dashboard';
+
+export type { Category, CategoryRequest, PagedResponse, DashboardSummary };
+
 export type TransactionType = 'INCOME' | 'EXPENSE';
-
-export interface Category {
-  id: string;
-  name: string;
-  type: TransactionType;
-  icon?: string;
-  color?: string;
-  createdAt: string;
-}
-
-export interface CategoryRequest {
-  name: string;
-  type: TransactionType;
-  icon?: string;
-  color?: string;
-}
 
 export interface Transaction {
   id: string;
@@ -34,17 +24,6 @@ export interface TransactionRequest {
   categoryId?: string;
   date: string;
   description?: string;
-}
-
-export type { DashboardSummary } from './dashboard';
-
-export interface PagedResponse<T> {
-  content: T[];
-  page: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  last: boolean;
 }
 
 export interface TransactionQueryParams {

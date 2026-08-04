@@ -1,21 +1,12 @@
-export interface User {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-}
+import type { ApiResponse } from './api';
+import type { User } from './user';
+
+export type { ApiResponse, User };
 
 export interface AuthResponseData {
   token: string;
   tokenType: string;
   user: User;
-}
-
-export interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-  timestamp: string;
 }
 
 export interface LoginPayload {

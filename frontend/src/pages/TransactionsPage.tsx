@@ -428,7 +428,7 @@ const TransactionsPage = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border">
-                  {transactions.content.map((tx) => (
+                  {transactions.content.map((tx: Transaction) => (
                     <tr key={tx.id} className="hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-4 whitespace-nowrap text-muted-foreground text-xs">{tx.date}</td>
                       <td className="py-3 px-4">
