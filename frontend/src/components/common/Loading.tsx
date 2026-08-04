@@ -8,7 +8,7 @@ export interface LoadingProps {
 }
 
 /**
- * Loading — Official TrackWise loading screen component with pulsed logo mark and status text.
+ * Loading — Official TrackWise loading screen component with a gentle pulse animation (1000ms).
  */
 export const Loading: React.FC<LoadingProps> = ({
   size = 'md',
@@ -25,12 +25,12 @@ export const Loading: React.FC<LoadingProps> = ({
     <div
       role="status"
       aria-live="polite"
-      className={`flex flex-col items-center justify-center gap-3 p-6 text-muted-foreground ${className}`}
+      className={`flex flex-col items-center justify-center gap-3.5 p-6 text-muted-foreground ${className}`}
     >
-      <div className="animate-pulse">
+      <div className="animate-pulse duration-1000 ease-in-out">
         <Logo variant="icon-only" size={pixelSizes} />
       </div>
-      {text && <span className="text-xs font-semibold tracking-wide text-foreground">{text}</span>}
+      {text && <span className="text-xs font-semibold tracking-wide text-muted-foreground">{text}</span>}
       <span className="sr-only">Loading content, please wait</span>
     </div>
   );

@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { PanelLeftClose, PanelLeftOpen, X } from 'lucide-react';
 import { useSidebar } from '@/hooks/useSidebar';
 import Logo from '@/components/common/Logo';
+import { cn } from '@/lib/utils';
 
 interface SidebarHeaderProps {
   /** If true, rendered inside the mobile drawer */
@@ -19,15 +20,18 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isMobile = false }
   const collapsedView = !isMobile && isCollapsed;
 
   return (
-    <div className="flex items-center justify-between h-16 px-4 border-b border-border/60 shrink-0">
+    <div className={cn(
+      "flex items-center h-16 px-4 border-b border-border/60 shrink-0",
+      collapsedView ? "justify-center px-2" : "justify-between"
+    )}>
       <Link
         to="/"
-        className="flex items-center gap-3 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-1 transition-colors"
+        className="flex items-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-1 transition-colors"
         aria-label="TrackWise Home"
       >
         <Logo
           variant={collapsedView ? 'icon-only' : 'sidebar'}
-          size={collapsedView ? 32 : 36}
+          size={32}
           className="group-hover:scale-105 transition-transform duration-200"
         />
       </Link>

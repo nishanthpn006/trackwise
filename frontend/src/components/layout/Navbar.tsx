@@ -39,7 +39,7 @@ export const Navbar: React.FC = () => {
   return (
     <header className="w-full h-16 bg-card border-b border-border/60 px-4 sm:px-6 flex items-center justify-between gap-3 shadow-2xs shrink-0 select-none z-20">
       {/* ── LEFT: Mobile Menu Trigger + Brand + Breadcrumbs ──────────────── */}
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-4 sm:gap-5 shrink-0">
         {/* Mobile Hamburger Trigger */}
         {isAuthenticated && (
           <button
@@ -55,7 +55,7 @@ export const Navbar: React.FC = () => {
         {/* Brand Logo (Visible on mobile or when unauthenticated) */}
         <Link
           to="/"
-          className="flex md:hidden items-center gap-2 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-0.5"
+          className="flex md:hidden items-center group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg p-0.5"
           aria-label="TrackWise Home"
         >
           <Logo variant="navbar" className="group-hover:scale-105 transition-transform duration-200" />

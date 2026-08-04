@@ -42,11 +42,11 @@ const RegisterPage = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center items-center p-4 selection:bg-primary/20">
       <div className="w-full max-w-md bg-card border border-border/80 rounded-2xl shadow-xl p-6 sm:p-8 space-y-6 animate-in zoom-in-95 duration-200">
-        <div className="flex flex-col items-center text-center space-y-3">
-          <Logo variant="auth" size={56} />
+        <div className="flex flex-col items-center text-center space-y-4">
+          <Logo variant="auth" size={80} subtitle="Take control of your finances." />
           <div className="space-y-1 pt-1">
-            <h1 className="text-xl font-extrabold tracking-tight text-foreground">Create Account</h1>
-            <p className="text-xs text-muted-foreground">Start tracking your expenses with TrackWise</p>
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Create Account</h1>
+            <p className="text-xs sm:text-sm text-muted-foreground">Start tracking your expenses with TrackWise</p>
           </div>
         </div>
 

@@ -5,57 +5,44 @@ import { cn } from '@/lib/utils';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
-/** Controls which combination of mark + wordmark to render. */
 export type LogoVariant =
-  | 'icon-only'       // just the mark (square)
+  | 'icon-only'       // mark only (square)
   | 'horizontal'      // mark + "TrackWise" text side by side
   | 'stacked'         // mark centred above "TrackWise" text
-  | 'navbar'          // horizontal, 36px icon — for mobile navbar
-  | 'sidebar'         // horizontal, 36px icon — for sidebar header
-  | 'auth'            // stacked, 60px icon — for login/register pages
-  | 'footer';         // horizontal, 28px icon — for footer
+  | 'navbar'          // 32px icon, responsive wordmark — for navbar
+  | 'sidebar'         // 32px icon, responsive wordmark — for sidebar
+  | 'auth'            // 80px icon, stacked — for login/register pages
+  | 'footer';         // 28px icon, horizontal — for footer
 
 export interface LogoProps {
   /** Visual variant (controls layout and default sizing). Default: 'horizontal'. */
   variant?: LogoVariant;
   /**
    * Override the rendered icon mark size in pixels.
-   * Default is ~36px for navbar/sidebar/horizontal.
+   * Default is 32px for navbar/sidebar/horizontal.
    */
   size?: number;
   /** Show the "TrackWise" wordmark next to / below the mark. */
   showText?: boolean;
+  /** Optional custom subtitle for stacked auth variant. */
+  subtitle?: string;
   /** Additional classes applied to the root wrapper element. */
   className?: string;
   /** Prefer vector SVG for Retina display sharpness. Default: true. */
   useSvg?: boolean;
 }
 
-// ── Size presets per variant (approx 36px for main navigation) ───────────────
+// ── Size presets per variant ──────────────────────────────────────────────────
 
 const VARIANT_DEFAULTS: Record<LogoVariant, { size: number; showText: boolean; stacked: boolean }> = {
-  'icon-only':  { size: 36,  showText: false, stacked: false },
-  'horizontal': { size: 36,  showText: true,  stacked: false },
-  'stacked':    { size: 56,  showText: true,  stacked: true  },
-  'navbar':     { size: 36,  showText: true,  stacked: false },
-  'sidebar':    { size: 36,  showText: true,  stacked: false },
-  'auth':       { size: 60,  showText: true,  stacked: true  },
+  'icon-only':  { size: 32,  showText: false, stacked: false },
+  'horizontal': { size: 32,  showText: true,  stacked: false },
+  'stacked':    { size: 80,  showText: true,  stacked: true  },
+  'navbar':     { size: 32,  showText: true,  stacked: false },
+  'sidebar':    { size: 32,  showText: true,  stacked: false },
+  'auth':       { size: 80,  showText: true,  stacked: true  },
   'footer':     { size: 28,  showText: true,  stacked: false },
 };
-
-// ── Text size classes derived from mark pixel size ────────────────────────────
-
-function textSizeClass(size: number): string {
-  if (size >= 56) return 'text-2xl font-extrabold tracking-tight';
-  if (size >= 40) return 'text-xl  font-extrabold tracking-tight';
-  if (size >= 32) return 'text-base font-bold    tracking-tight';
-  return                  'text-sm  font-bold    tracking-tight';
-}
-
-function subtitleSizeClass(size: number): string {
-  if (size >= 56) return 'text-sm font-medium';
-  return                  'text-[11px] font-medium';
-}
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -63,17 +50,18 @@ function subtitleSizeClass(size: number): string {
  * Logo — Official TrackWise brand identity component.
  *
  * Features:
- * - Transparent background (no white box)
- * - 36px icon size default for crisp, readable navigation branding
+ * - 32px icon size default for navbar & sidebar
+ * - Responsive 20px / 22px / 24px wordmark with font-weight 700 & -0.02em letter spacing
  * - Perfect vertical centering (`flex items-center`)
  * - Exact 12px spacing between icon and text (`gap-3`)
- * - High-DPI / Retina display crisp vector SVG output
- * - Aspect ratio preserved (`object-contain aspect-square`)
+ * - Transparent background vector SVG output for Retina display sharpness
+ * - Preserved 1:1 aspect ratio without stretching
  */
 const Logo: React.FC<LogoProps> = ({
   variant = 'horizontal',
   size: sizeProp,
   showText: showTextProp,
+  subtitle,
   className,
   useSvg = true,
 }) => {
@@ -98,12 +86,19 @@ const Logo: React.FC<LogoProps> = ({
 
   const wordmark = showText ? (
     <div className={cn('flex flex-col justify-center', stacked ? 'items-center text-center' : 'min-w-0')}>
-      <span className={cn(textSizeClass(size), 'text-foreground leading-none')}>
+      <span
+        className={cn(
+          'font-bold text-foreground leading-none tracking-[-0.02em]',
+          stacked
+            ? 'text-2xl sm:text-3xl'
+            : 'text-[20px] sm:text-[22px] md:text-[24px]'
+        )}
+      >
         TrackWise
       </span>
       {stacked && (
-        <span className={cn(subtitleSizeClass(size), 'text-muted-foreground mt-1')}>
-          Personal Expense Tracker
+        <span className="text-xs sm:text-sm font-medium text-muted-foreground mt-1.5 tracking-tight">
+          {subtitle || 'Personal Expense Tracker • Take control of your finances.'}
         </span>
       )}
     </div>
@@ -113,8 +108,8 @@ const Logo: React.FC<LogoProps> = ({
     <div
       className={cn(
         'flex items-center justify-start shrink-0',
-        stacked ? 'flex-col gap-3 justify-center' : 'flex-row gap-3',
-        className,
+        stacked ? 'flex-col gap-4 justify-center' : 'flex-row gap-3',
+        className
       )}
       role="img"
       aria-label="TrackWise Logo"
