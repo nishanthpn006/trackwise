@@ -171,14 +171,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-4 py-2 rounded-xl border border-border/80 text-foreground hover:bg-muted font-bold text-xs transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="min-h-[44px] px-4 py-2 rounded-xl border border-border/80 text-foreground hover:bg-muted font-bold text-xs transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+          className={`min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
             type === 'INCOME'
               ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
               : 'bg-rose-600 hover:bg-rose-700 text-white'

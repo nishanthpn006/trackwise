@@ -196,14 +196,14 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="px-4 py-2 rounded-xl border border-border/80 text-foreground hover:bg-muted font-bold text-xs transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="min-h-[44px] px-4 py-2 rounded-xl border border-border/80 text-foreground hover:bg-muted font-bold text-xs transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-bold text-xs hover:bg-primary/90 transition-all shadow-xs disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="min-h-[44px] inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground font-bold text-xs hover:bg-primary/90 transition-all shadow-xs disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           {isSubmitting ? (
             <>

@@ -64,7 +64,8 @@ export const Dialog: React.FC<DialogProps> = ({
         aria-labelledby="dialog-title"
         aria-describedby={description ? 'dialog-description' : undefined}
         onClick={(e) => e.stopPropagation()}
-        className={`w-full ${maxWidthClass} bg-card border border-border/80 rounded-2xl shadow-xl p-6 space-y-5 animate-in zoom-in-95 duration-200 focus:outline-none`}
+        className={`w-full ${maxWidthClass} max-h-[90vh] overflow-y-auto bg-card border border-border/80 rounded-2xl shadow-xl p-5 sm:p-6 space-y-5 animate-in zoom-in-95 duration-200 focus:outline-none`}
+
         tabIndex={-1}
       >
         {/* Header */}
