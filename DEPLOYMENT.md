@@ -22,8 +22,8 @@ This guide covers every deployment scenario from local development to production
 
 | Tool | Version | Install |
 | --- | --- | --- |
-| Node.js | 20+ | https://nodejs.org/ |
-| Java | 21 | https://adoptium.net/ |
+| Node.js | 20+ | [nodejs.org](https://nodejs.org/) |
+| Java | 21 | [adoptium.net](https://adoptium.net/) |
 | Maven | 3.9+ | bundled `./mvnw` wrapper |
 
 ### Frontend
@@ -56,7 +56,7 @@ The backend starts at `http://localhost:8080`.
 
 ## Docker Compose Deployment
 
-### Prerequisites
+### Requirement
 
 - Docker Desktop 4.x+
 
