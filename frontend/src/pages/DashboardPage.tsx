@@ -7,7 +7,8 @@ import SummaryCard from '@/components/dashboard/SummaryCard';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentTransactionsCard from '@/components/dashboard/RecentTransactionsCard';
 import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
-import { Wallet, TrendingUp, TrendingDown, PiggyBank, BarChart3, AlertCircle, RefreshCw } from 'lucide-react';
+import DashboardCharts from '@/components/dashboard/DashboardCharts';
+import { Wallet, TrendingUp, TrendingDown, PiggyBank, AlertCircle, RefreshCw } from 'lucide-react';
 
 export const DashboardPage: React.FC = () => {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
@@ -94,34 +95,16 @@ export const DashboardPage: React.FC = () => {
         />
       </div>
 
-      {/* Middle Section: Quick Actions & Charts Placeholder Grid */}
-      {/* Desktop & Tablet responsive layout */}
+      {/* Middle Section: Quick Actions & Analytics Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Quick Actions (1 col on desktop) */}
         <div className="lg:col-span-1">
           <QuickActions />
         </div>
 
-        {/* Charts Section Placeholder (2 cols on desktop) */}
-        <div className="lg:col-span-2 bg-card border border-border/60 rounded-xl shadow-xs p-6 flex flex-col justify-between min-h-[220px]">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-base font-semibold text-foreground tracking-tight">Analytics & Overview</h2>
-              <p className="text-[11px] text-muted-foreground">Income vs Expense trends</p>
-            </div>
-            <div className="p-2 rounded-lg bg-muted/60 text-muted-foreground">
-              <BarChart3 className="h-4 w-4" />
-            </div>
-          </div>
-
-          {/* TODO: Charts section placeholder reserved for future chart & analytics integration */}
-          <div className="border border-dashed border-border/80 rounded-lg p-8 flex flex-col items-center justify-center text-center bg-muted/20">
-            <BarChart3 className="h-8 w-8 text-muted-foreground/40 mb-2" />
-            <p className="text-xs font-semibold text-muted-foreground">Financial Charts Section</p>
-            <p className="text-[11px] text-muted-foreground/80 max-w-xs mt-1">
-              Visual breakdown and interactive charts will be integrated in upcoming analytics releases.
-            </p>
-          </div>
+        {/* Analytics Charts (2 cols on desktop, full-width on mobile) */}
+        <div className="lg:col-span-2">
+          <DashboardCharts />
         </div>
       </div>
 

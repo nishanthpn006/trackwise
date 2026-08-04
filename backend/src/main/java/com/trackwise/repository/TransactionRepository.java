@@ -13,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,4 +38,33 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
     BigDecimal sumAmountByUserAndType(@Param("user") User user, @Param("type") TransactionType type);
 
     long countByCategory(Category category);
+
+    // ─── Analytics queries ────────────────────────────────────────────────────
+
+    /**
+     * Sum of transaction amounts for a given user, type, and date range.
+     * Used for monthly income/expense aggregation.
+     */
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t " +
+           "WHERE t.user = :user AND t.type = :type AND t.date BETWEEN :start AND :end")
+    BigDecimal sumAmountByUserAndTypeAndDateBetween(
+            @Param("user") User user,
+            @Param("type") TransactionType type,
+            @Param("start") LocalDate start,
+            @Param("end") LocalDate end
+    );
+
+    /**
+     * Returns all expense transactions within the given date range.
+     * Used for category breakdown and daily spending trend.
+     */
+    List<Transaction> findByUserAndTypeAndDateBetween(
+            User user, TransactionType type, LocalDate start, LocalDate end
+    );
+
+    /**
+     * Total number of transactions owned by the given user.
+     * Used for the Financial Insights card.
+     */
+    long countByUser(User user);
 }

@@ -5,6 +5,7 @@ import com.trackwise.dto.DashboardSummaryResponse;
 import com.trackwise.entity.Role;
 import com.trackwise.entity.User;
 import com.trackwise.repository.UserRepository;
+import com.trackwise.service.AnalyticsService;
 import com.trackwise.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,14 +23,16 @@ import static org.mockito.Mockito.when;
 class DashboardControllerTest {
 
     private TransactionService transactionService;
+    private AnalyticsService analyticsService;
     private UserRepository userRepository;
     private DashboardController dashboardController;
 
     @BeforeEach
     void setUp() {
         transactionService = Mockito.mock(TransactionService.class);
+        analyticsService = Mockito.mock(AnalyticsService.class);
         userRepository = Mockito.mock(UserRepository.class);
-        dashboardController = new DashboardController(transactionService, userRepository);
+        dashboardController = new DashboardController(transactionService, analyticsService, userRepository);
     }
 
     @Test
