@@ -140,7 +140,6 @@ public class UserService {
         return new UserStatisticsResponse(txCount, catCount, budgetCount, goalCount, 12, user.getCreatedAt());
     }
 
-    @SuppressWarnings("null")
     public void deleteAccount(User user, DeleteAccountRequest request) {
         User existing = userRepository.findById(user.getId())
                 .orElseThrow(() -> new IllegalStateException("User not found"));
