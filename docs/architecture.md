@@ -4,7 +4,7 @@
 
 ## System Architecture
 
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │                        Browser                           │
 │   React 19 + Vite + TypeScript + Tailwind + shadcn/ui   │
@@ -25,7 +25,7 @@
 ## Layers
 
 | Layer | Technology | Responsibility |
-|-------|-----------|----------------|
+| ------- | ----------- | ---------------- |
 | Presentation | React 19, Tailwind CSS, shadcn/ui | UI rendering, routing |
 | API | Spring Boot 3, Spring Web | REST endpoints, request validation |
 | Service | Spring `@Service` | Business logic |

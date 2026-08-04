@@ -1,158 +1,135 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router';
+import React, { useEffect, useState, useCallback } from 'react';
 import PageContainer from '@/components/common/PageContainer';
-import Loading from '@/components/common/Loading';
-import transactionService from '@/services/transactionService';
-import type { DashboardSummary } from '@/types/transaction';
+import dashboardService from '@/services/dashboardService';
+import type { DashboardSummary } from '@/types/dashboard';
+import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import SummaryCard from '@/components/dashboard/SummaryCard';
+import QuickActions from '@/components/dashboard/QuickActions';
+import RecentTransactionsCard from '@/components/dashboard/RecentTransactionsCard';
+import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
+import { Wallet, TrendingUp, TrendingDown, PiggyBank, BarChart3, AlertCircle, RefreshCw } from 'lucide-react';
 
-const DashboardPage = () => {
+export const DashboardPage: React.FC = () => {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchDashboardSummary();
-  }, []);
-
-  const fetchDashboardSummary = async () => {
+  const fetchDashboardSummary = useCallback(async () => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const data = await transactionService.getDashboardSummary();
+      const data = await dashboardService.getSummary();
       setSummary(data);
     } catch {
-      setErrorMessage('Failed to load dashboard summary.');
+      setErrorMessage('Failed to load dashboard summary metrics. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(val || 0);
-  };
+  useEffect(() => {
+    fetchDashboardSummary();
+  }, [fetchDashboardSummary]);
 
   if (isLoading) {
     return (
-      <PageContainer>
-        <div className="flex justify-center items-center py-12">
-          <Loading />
-        </div>
+      <PageContainer className="py-6">
+        <DashboardSkeleton />
       </PageContainer>
     );
   }
 
   return (
-    <PageContainer className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground">Overview of your personal financial activity</p>
-        </div>
-        <Link
-          to="/transactions"
-          className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-lg shadow hover:bg-primary/90 transition-colors"
-        >
-          Manage Transactions
-        </Link>
-      </div>
+    <PageContainer className="py-6 space-y-6">
+      {/* Dashboard Header */}
+      <DashboardHeader />
 
+      {/* Error Alert with Retry */}
       {errorMessage && (
-        <div className="p-4 rounded-lg bg-destructive/10 text-destructive text-sm border border-destructive/20">
-          {errorMessage}
+        <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-xs font-medium border border-destructive/20 flex items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+          <button
+            type="button"
+            onClick={fetchDashboardSummary}
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-destructive text-destructive-foreground text-[11px] font-semibold hover:bg-destructive/90 transition-colors shrink-0"
+          >
+            <RefreshCw className="h-3 w-3 animate-spin-hover" />
+            <span>Retry</span>
+          </button>
         </div>
       )}
 
-      {/* Summary Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Net Balance Card */}
-        <div className="p-6 bg-card border border-border rounded-xl shadow-sm space-y-2">
-          <p className="text-xs font-semibold uppercase text-muted-foreground tracking-wider">Current Balance</p>
-          <p className={`text-3xl font-extrabold ${summary && summary.balance >= 0 ? 'text-primary' : 'text-destructive'}`}>
-            {formatCurrency(summary?.balance || 0)}
-          </p>
+      {/* Summary Cards Grid: Desktop: 4 cols, Tablet: 2 cols, Mobile: 1 col */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <SummaryCard
+          title="Total Balance"
+          amount={summary?.totalBalance ?? 0}
+          icon={<Wallet className="h-5 w-5 text-primary" />}
+          variant="balance"
+          subtitle="Net accumulated balance"
+        />
+        <SummaryCard
+          title="Total Income"
+          amount={summary?.totalIncome ?? 0}
+          icon={<TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />}
+          variant="income"
+          subtitle="All incoming funds"
+        />
+        <SummaryCard
+          title="Total Expense"
+          amount={summary?.totalExpense ?? 0}
+          icon={<TrendingDown className="h-5 w-5 text-rose-600 dark:text-rose-400" />}
+          variant="expense"
+          subtitle="All outgoing spending"
+        />
+        <SummaryCard
+          title="Savings"
+          amount={summary?.savings ?? 0}
+          icon={<PiggyBank className="h-5 w-5 text-blue-600 dark:text-blue-400" />}
+          variant="savings"
+          subtitle="Net savings generated"
+        />
+      </div>
+
+      {/* Middle Section: Quick Actions & Charts Placeholder Grid */}
+      {/* Desktop & Tablet responsive layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        {/* Quick Actions (1 col on desktop) */}
+        <div className="lg:col-span-1">
+          <QuickActions />
         </div>
 
-        {/* Total Income Card */}
-        <div className="p-6 bg-card border border-border rounded-xl shadow-sm space-y-2">
-          <p className="text-xs font-semibold uppercase text-emerald-600 dark:text-emerald-400 tracking-wider">Total Income</p>
-          <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
-            +{formatCurrency(summary?.totalIncome || 0)}
-          </p>
-        </div>
+        {/* Charts Section Placeholder (2 cols on desktop) */}
+        <div className="lg:col-span-2 bg-card border border-border/60 rounded-xl shadow-xs p-6 flex flex-col justify-between min-h-[220px]">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-base font-semibold text-foreground tracking-tight">Analytics & Overview</h2>
+              <p className="text-[11px] text-muted-foreground">Income vs Expense trends</p>
+            </div>
+            <div className="p-2 rounded-lg bg-muted/60 text-muted-foreground">
+              <BarChart3 className="h-4 w-4" />
+            </div>
+          </div>
 
-        {/* Total Expense Card */}
-        <div className="p-6 bg-card border border-border rounded-xl shadow-sm space-y-2">
-          <p className="text-xs font-semibold uppercase text-rose-600 dark:text-rose-400 tracking-wider">Total Expense</p>
-          <p className="text-3xl font-extrabold text-rose-600 dark:text-rose-400">
-            -{formatCurrency(summary?.totalExpense || 0)}
-          </p>
+          {/* TODO: Charts section placeholder reserved for future chart & analytics integration */}
+          <div className="border border-dashed border-border/80 rounded-lg p-8 flex flex-col items-center justify-center text-center bg-muted/20">
+            <BarChart3 className="h-8 w-8 text-muted-foreground/40 mb-2" />
+            <p className="text-xs font-semibold text-muted-foreground">Financial Charts Section</p>
+            <p className="text-[11px] text-muted-foreground/80 max-w-xs mt-1">
+              Visual breakdown and interactive charts will be integrated in upcoming analytics releases.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Recent Transactions List */}
-      <div className="bg-card border border-border rounded-xl shadow-sm p-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-foreground">Recent Transactions</h2>
-          <Link to="/transactions" className="text-xs font-medium text-primary hover:underline">
-            View All →
-          </Link>
-        </div>
-
-        {!summary?.recentTransactions || summary.recentTransactions.length === 0 ? (
-          <div className="py-8 text-center text-sm text-muted-foreground">
-            No recent transactions found.{' '}
-            <Link to="/transactions" className="text-primary hover:underline font-medium">
-              Add your first transaction.
-            </Link>
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="text-xs uppercase text-muted-foreground border-b border-border bg-muted/40">
-                <tr>
-                  <th className="py-3 px-4">Date</th>
-                  <th className="py-3 px-4">Title</th>
-                  <th className="py-3 px-4">Category</th>
-                  <th className="py-3 px-4 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {summary.recentTransactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="py-3 px-4 whitespace-nowrap text-muted-foreground">{tx.date}</td>
-                    <td className="py-3 px-4 font-medium text-foreground">{tx.title}</td>
-                    <td className="py-3 px-4">
-                      {tx.category ? (
-                        <span
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border"
-                          style={{
-                            borderColor: tx.category.color || '#94A3B8',
-                            color: tx.category.color || '#64748B',
-                          }}
-                        >
-                          {tx.category.name}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground italic text-xs">Uncategorized</span>
-                      )}
-                    </td>
-                    <td
-                      className={`py-3 px-4 text-right font-semibold whitespace-nowrap ${
-                        tx.type === 'INCOME' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
-                      }`}
-                    >
-                      {tx.type === 'INCOME' ? '+' : '-'}{formatCurrency(tx.amount)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      {/* Recent Transactions Card */}
+      <RecentTransactionsCard
+        transactions={summary?.recentTransactions ?? []}
+        isLoading={false}
+      />
     </PageContainer>
   );
 };

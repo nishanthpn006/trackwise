@@ -36,12 +36,7 @@ export interface TransactionRequest {
   description?: string;
 }
 
-export interface DashboardSummary {
-  totalIncome: number;
-  totalExpense: number;
-  balance: number;
-  recentTransactions: Transaction[];
-}
+export type { DashboardSummary } from './dashboard';
 
 export interface PagedResponse<T> {
   content: T[];

@@ -78,6 +78,8 @@ class TransactionServiceTest {
         assertEquals(0, new BigDecimal("5000.00").compareTo(summary.getTotalIncome()));
         assertEquals(0, new BigDecimal("200.00").compareTo(summary.getTotalExpense()));
         assertEquals(0, new BigDecimal("4800.00").compareTo(summary.getBalance()));
+        assertEquals(0, new BigDecimal("4800.00").compareTo(summary.getTotalBalance()));
+        assertEquals(0, new BigDecimal("4800.00").compareTo(summary.getSavings()));
         assertEquals(2, summary.getRecentTransactions().size());
     }
 

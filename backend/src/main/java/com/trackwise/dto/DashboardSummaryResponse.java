@@ -8,19 +8,44 @@ import java.util.List;
  */
 public class DashboardSummaryResponse {
 
+    private BigDecimal totalBalance;
     private BigDecimal totalIncome;
     private BigDecimal totalExpense;
-    private BigDecimal balance;
+    private BigDecimal savings;
     private List<TransactionResponse> recentTransactions;
 
     public DashboardSummaryResponse() {
     }
 
-    public DashboardSummaryResponse(BigDecimal totalIncome, BigDecimal totalExpense, BigDecimal balance, List<TransactionResponse> recentTransactions) {
+    public DashboardSummaryResponse(BigDecimal totalBalance, BigDecimal totalIncome, BigDecimal totalExpense, BigDecimal savings, List<TransactionResponse> recentTransactions) {
+        this.totalBalance = totalBalance != null ? totalBalance : BigDecimal.ZERO;
         this.totalIncome = totalIncome != null ? totalIncome : BigDecimal.ZERO;
         this.totalExpense = totalExpense != null ? totalExpense : BigDecimal.ZERO;
-        this.balance = balance != null ? balance : BigDecimal.ZERO;
+        this.savings = savings != null ? savings : BigDecimal.ZERO;
         this.recentTransactions = recentTransactions;
+    }
+
+    // Backward compatibility constructor
+    public DashboardSummaryResponse(BigDecimal totalIncome, BigDecimal totalExpense, BigDecimal balance, List<TransactionResponse> recentTransactions) {
+        this(balance, totalIncome, totalExpense, balance, recentTransactions);
+    }
+
+    public BigDecimal getTotalBalance() {
+        return totalBalance;
+    }
+
+    public void setTotalBalance(BigDecimal totalBalance) {
+        this.totalBalance = totalBalance;
+    }
+
+    // Backward compatibility getter for balance
+    public BigDecimal getBalance() {
+        return totalBalance;
+    }
+
+    // Backward compatibility setter for balance
+    public void setBalance(BigDecimal balance) {
+        this.totalBalance = balance;
     }
 
     public BigDecimal getTotalIncome() {
@@ -39,12 +64,12 @@ public class DashboardSummaryResponse {
         this.totalExpense = totalExpense;
     }
 
-    public BigDecimal getBalance() {
-        return balance;
+    public BigDecimal getSavings() {
+        return savings;
     }
 
-    public void setBalance(BigDecimal balance) {
-        this.balance = balance;
+    public void setSavings(BigDecimal savings) {
+        this.savings = savings;
     }
 
     public List<TransactionResponse> getRecentTransactions() {

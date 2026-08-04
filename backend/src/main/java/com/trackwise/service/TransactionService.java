@@ -126,13 +126,14 @@ public class TransactionService {
         if (totalIncome == null) totalIncome = BigDecimal.ZERO;
         if (totalExpense == null) totalExpense = BigDecimal.ZERO;
 
-        BigDecimal balance = totalIncome.subtract(totalExpense);
+        BigDecimal totalBalance = totalIncome.subtract(totalExpense);
+        BigDecimal savings = totalBalance;
 
         List<Transaction> recentEntities = transactionRepository.findTop5ByUserOrderByDateDescCreatedAtDesc(user);
         List<TransactionResponse> recentDtos = recentEntities.stream()
                 .map(TransactionResponse::fromEntity)
                 .collect(Collectors.toList());
 
-        return new DashboardSummaryResponse(totalIncome, totalExpense, balance, recentDtos);
+        return new DashboardSummaryResponse(totalBalance, totalIncome, totalExpense, savings, recentDtos);
     }
 }
