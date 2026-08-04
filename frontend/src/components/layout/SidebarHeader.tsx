@@ -27,7 +27,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isMobile = false }
       >
         <Logo
           variant={collapsedView ? 'icon-only' : 'sidebar'}
-          size={collapsedView ? 32 : 34}
+          size={collapsedView ? 32 : 36}
           className="group-hover:scale-105 transition-transform duration-200"
         />
       </Link>
