@@ -1,99 +1,113 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import PageContainer from '@/components/common/PageContainer';
-import dashboardService from '@/services/dashboardService';
-import type { DashboardSummary } from '@/types/dashboard';
+import { useDashboardSummary } from '@/hooks/useDashboardSummary';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import SummaryCard from '@/components/dashboard/SummaryCard';
+import DashboardSummarySkeleton from '@/components/dashboard/DashboardSummarySkeleton';
+import DashboardErrorCard from '@/components/dashboard/DashboardErrorCard';
+import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentTransactionsCard from '@/components/dashboard/RecentTransactionsCard';
-import DashboardSkeleton from '@/components/dashboard/DashboardSkeleton';
 import DashboardCharts from '@/components/dashboard/DashboardCharts';
-import { Wallet, TrendingUp, TrendingDown, PiggyBank, AlertCircle, RefreshCw } from 'lucide-react';
+import {
+  Wallet,
+  TrendingUp,
+  TrendingDown,
+  PiggyBank,
+  Tag,
+  Percent,
+  Calendar,
+  Hash,
+} from 'lucide-react';
 
+/**
+ * DashboardPage — Main application dashboard.
+ * Features 8 production-ready summary cards, analytics chart grid, quick actions, and recent transactions.
+ */
 export const DashboardPage: React.FC = () => {
-  const [summary, setSummary] = useState<DashboardSummary | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  const fetchDashboardSummary = useCallback(async () => {
-    setIsLoading(true);
-    setErrorMessage(null);
-    try {
-      const data = await dashboardService.getSummary();
-      setSummary(data);
-    } catch {
-      setErrorMessage('Failed to load dashboard summary metrics. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchDashboardSummary();
-  }, [fetchDashboardSummary]);
-
-  if (isLoading) {
-    return (
-      <PageContainer className="py-6">
-        <DashboardSkeleton />
-      </PageContainer>
-    );
-  }
+  const { summary, isLoading, errorMessage, isEmpty, refetch } = useDashboardSummary();
 
   return (
     <PageContainer className="py-6 space-y-6">
       {/* Dashboard Header */}
       <DashboardHeader />
 
-      {/* Error Alert with Retry */}
+      {/* Inline Error Banner */}
       {errorMessage && (
-        <div className="p-4 rounded-xl bg-destructive/10 text-destructive text-xs font-medium border border-destructive/20 flex items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            <span>{errorMessage}</span>
-          </div>
-          <button
-            type="button"
-            onClick={fetchDashboardSummary}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-destructive text-destructive-foreground text-[11px] font-semibold hover:bg-destructive/90 transition-colors shrink-0"
-          >
-            <RefreshCw className="h-3 w-3 animate-spin-hover" />
-            <span>Retry</span>
-          </button>
-        </div>
+        <DashboardErrorCard message={errorMessage} onRetry={refetch} />
       )}
 
-      {/* Summary Cards Grid: Desktop: 4 cols, Tablet: 2 cols, Mobile: 1 col */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <SummaryCard
-          title="Total Balance"
-          amount={summary?.totalBalance ?? 0}
-          icon={<Wallet className="h-5 w-5 text-primary" />}
-          variant="balance"
-          subtitle="Net accumulated balance"
-        />
-        <SummaryCard
-          title="Total Income"
-          amount={summary?.totalIncome ?? 0}
-          icon={<TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />}
-          variant="income"
-          subtitle="All incoming funds"
-        />
-        <SummaryCard
-          title="Total Expense"
-          amount={summary?.totalExpense ?? 0}
-          icon={<TrendingDown className="h-5 w-5 text-rose-600 dark:text-rose-400" />}
-          variant="expense"
-          subtitle="All outgoing spending"
-        />
-        <SummaryCard
-          title="Savings"
-          amount={summary?.savings ?? 0}
-          icon={<PiggyBank className="h-5 w-5 text-blue-600 dark:text-blue-400" />}
-          variant="savings"
-          subtitle="Net savings generated"
-        />
-      </div>
+      {/* Summary Cards Grid Section */}
+      {isLoading ? (
+        <DashboardSummarySkeleton />
+      ) : isEmpty ? (
+        <DashboardEmptyState />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <SummaryCard
+            title="Total Balance"
+            value={summary?.totalBalance ?? 0}
+            icon={<Wallet className="h-5 w-5" />}
+            variant="balance"
+            subtitle="Net accumulated balance"
+            isCurrency
+          />
+          <SummaryCard
+            title="Total Income"
+            value={summary?.totalIncome ?? 0}
+            icon={<TrendingUp className="h-5 w-5" />}
+            variant="income"
+            subtitle="All incoming funds"
+            isCurrency
+          />
+          <SummaryCard
+            title="Total Expense"
+            value={summary?.totalExpense ?? 0}
+            icon={<TrendingDown className="h-5 w-5" />}
+            variant="expense"
+            subtitle="All outgoing spending"
+            isCurrency
+          />
+          <SummaryCard
+            title="Total Savings"
+            value={summary?.savings ?? summary?.totalSavings ?? 0}
+            icon={<PiggyBank className="h-5 w-5" />}
+            variant="savings"
+            subtitle="Net savings generated"
+            isCurrency
+          />
+          <SummaryCard
+            title="Top Category"
+            value={summary?.topCategory ?? 'None'}
+            icon={<Tag className="h-5 w-5" />}
+            variant="category"
+            subtitle="Highest all-time spending"
+          />
+          <SummaryCard
+            title="Monthly Savings %"
+            value={summary?.monthlySavingsPercentage ?? 0}
+            icon={<Percent className="h-5 w-5" />}
+            variant="percentage"
+            subtitle="Income saved this month"
+            isPercentage
+          />
+          <SummaryCard
+            title="Avg Daily Spend"
+            value={summary?.averageDailySpend ?? 0}
+            icon={<Calendar className="h-5 w-5" />}
+            variant="avgSpend"
+            subtitle="30-day daily average"
+            isCurrency
+          />
+          <SummaryCard
+            title="This Month"
+            value={`${summary?.transactionsThisMonth ?? 0} txs`}
+            icon={<Hash className="h-5 w-5" />}
+            variant="txCount"
+            subtitle="Recorded this month"
+          />
+        </div>
+      )}
 
       {/* Middle Section: Quick Actions & Analytics Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
@@ -111,7 +125,7 @@ export const DashboardPage: React.FC = () => {
       {/* Recent Transactions Card */}
       <RecentTransactionsCard
         transactions={summary?.recentTransactions ?? []}
-        isLoading={false}
+        isLoading={isLoading}
       />
     </PageContainer>
   );

@@ -5,6 +5,11 @@ export interface DashboardSummary {
   totalIncome: number;
   totalExpense: number;
   savings: number;
+  totalSavings?: number;
+  topCategory?: string | null;
+  monthlySavingsPercentage?: number;
+  averageDailySpend?: number;
+  transactionsThisMonth?: number;
   recentTransactions: Transaction[];
 }
 

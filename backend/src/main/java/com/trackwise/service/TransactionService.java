@@ -19,8 +19,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -119,7 +122,12 @@ public class TransactionService {
     }
 
     @Transactional(readOnly = true)
+    @SuppressWarnings("null")
     public DashboardSummaryResponse getDashboardSummary(User user) {
+        LocalDate today = LocalDate.now();
+        LocalDate monthStart = today.withDayOfMonth(1);
+        LocalDate monthEnd = today.withDayOfMonth(today.lengthOfMonth());
+
         BigDecimal totalIncome = transactionRepository.sumAmountByUserAndType(user, TransactionType.INCOME);
         BigDecimal totalExpense = transactionRepository.sumAmountByUserAndType(user, TransactionType.EXPENSE);
 
@@ -129,11 +137,58 @@ public class TransactionService {
         BigDecimal totalBalance = totalIncome.subtract(totalExpense);
         BigDecimal savings = totalBalance;
 
+        // Top spending category (all-time)
+        LocalDate allTimeStart = LocalDate.of(2000, 1, 1);
+        List<Transaction> expenseTxs = transactionRepository
+                .findByUserAndTypeAndDateBetween(user, TransactionType.EXPENSE, allTimeStart, today);
+
+        String topCategory = null;
+        if (!expenseTxs.isEmpty()) {
+            Map<String, BigDecimal> catTotals = new LinkedHashMap<>();
+            for (Transaction tx : expenseTxs) {
+                String catName = tx.getCategory() != null ? tx.getCategory().getName() : "Uncategorized";
+                catTotals.merge(catName, tx.getAmount(), BigDecimal::add);
+            }
+            topCategory = catTotals.entrySet().stream()
+                    .max(Map.Entry.comparingByValue())
+                    .map(Map.Entry::getKey)
+                    .orElse(null);
+        }
+
+        // Monthly savings percentage = (balance / income) * 100
+        BigDecimal monthlySavingsPercentage = BigDecimal.ZERO;
+        if (totalIncome.compareTo(BigDecimal.ZERO) > 0) {
+            monthlySavingsPercentage = totalBalance
+                    .multiply(BigDecimal.valueOf(100))
+                    .divide(totalIncome, 1, RoundingMode.HALF_UP);
+        }
+
+        // Average daily spend over the last 30 days
+        LocalDate trendStart = today.minusDays(29);
+        BigDecimal totalExpense30d = transactionRepository.sumAmountByUserAndTypeAndDateBetween(
+                user, TransactionType.EXPENSE, trendStart, today);
+        if (totalExpense30d == null) totalExpense30d = BigDecimal.ZERO;
+        BigDecimal averageDailySpend = totalExpense30d.divide(BigDecimal.valueOf(30), 2, RoundingMode.HALF_UP);
+
+        // Transactions count this month
+        long transactionsThisMonth = transactionRepository.countByUserAndDateBetween(user, monthStart, monthEnd);
+
         List<Transaction> recentEntities = transactionRepository.findTop5ByUserOrderByDateDescCreatedAtDesc(user);
         List<TransactionResponse> recentDtos = recentEntities.stream()
                 .map(TransactionResponse::fromEntity)
                 .collect(Collectors.toList());
 
-        return new DashboardSummaryResponse(totalBalance, totalIncome, totalExpense, savings, recentDtos);
+        return new DashboardSummaryResponse(
+                totalBalance,
+                totalIncome,
+                totalExpense,
+                savings,
+                topCategory,
+                monthlySavingsPercentage,
+                averageDailySpend,
+                transactionsThisMonth,
+                recentDtos
+        );
     }
 }
+

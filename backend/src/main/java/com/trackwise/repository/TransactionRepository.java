@@ -67,4 +67,11 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
      * Used for the Financial Insights card.
      */
     long countByUser(User user);
+
+    /**
+     * Total number of transactions owned by the user within a date range.
+     * Used for the Transactions This Month KPI.
+     */
+    long countByUserAndDateBetween(User user, LocalDate start, LocalDate end);
 }
+
