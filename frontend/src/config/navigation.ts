@@ -5,6 +5,7 @@ import {
   Tags,
   Wallet,
   Target,
+  BarChart3,
   User,
   LogOut,
 } from 'lucide-react';
@@ -59,6 +60,12 @@ export const NAVIGATION_ITEMS: NavItemConfig[] = [
     path: '/goals',
     icon: Target,
     ariaLabel: 'Navigate to Financial Goals',
+  },
+  {
+    label: 'Reports',
+    path: '/reports',
+    icon: BarChart3,
+    ariaLabel: 'Navigate to Reports & Financial Analytics',
   },
   {
     label: 'Profile',

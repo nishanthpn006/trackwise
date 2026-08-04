@@ -58,6 +58,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
      * Returns all expense transactions within the given date range.
      * Used for category breakdown and daily spending trend.
      */
+    List<Transaction> findByUserAndDateBetween(
+            User user, LocalDate start, LocalDate end
+    );
+
     List<Transaction> findByUserAndTypeAndDateBetween(
             User user, TransactionType type, LocalDate start, LocalDate end
     );
