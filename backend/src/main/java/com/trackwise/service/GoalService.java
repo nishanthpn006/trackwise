@@ -95,6 +95,7 @@ public class GoalService {
         return new GoalResponse(updated);
     }
 
+    @SuppressWarnings("null")
     public void deleteGoal(UUID id, User user) {
         Goal goal = goalRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Goal not found with ID: " + id));
