@@ -44,8 +44,9 @@ export const categorySchema = z.object({
   type: z.enum(['INCOME', 'EXPENSE'], {
     message: 'Transaction type is required',
   }),
-  icon: z.string().optional(),
-  color: z.string().optional(),
+  icon: z.string().min(1, 'Icon is required'),
+  color: z.string().min(1, 'Color is required'),
+  description: z.string().max(255, 'Description cannot exceed 255 characters').optional(),
 });
 
 export type CategoryFormData = z.infer<typeof categorySchema>;

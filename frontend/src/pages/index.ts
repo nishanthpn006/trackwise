@@ -3,6 +3,7 @@ export { default as LoginPage } from './LoginPage';
 export { default as RegisterPage } from './RegisterPage';
 export { default as DashboardPage } from './DashboardPage';
 export { default as TransactionsPage } from './TransactionsPage';
+export { default as CategoriesPage } from './CategoriesPage';
 export { default as BudgetsPage } from './BudgetsPage';
 export { default as GoalsPage } from './GoalsPage';
 export { default as ProfilePage } from './ProfilePage';
