@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping({"/api/v1/auth", "/api/auth"})
 public class AuthController {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AuthController.class);
+
     private final AuthService authService;
 
     public AuthController(AuthService authService) {
@@ -32,6 +34,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
+        log.info("Processing register request for email: {}", request != null ? request.getEmail() : "null");
         AuthResponse authResponse = authService.register(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success("User registered successfully", authResponse));

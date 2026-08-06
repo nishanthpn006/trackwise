@@ -5,13 +5,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,6 +23,8 @@ import java.io.IOException;
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService userDetailsService;
@@ -34,8 +37,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
         String path = request.getServletPath();
-        return path.endsWith("/login") || path.endsWith("/register")
-                || path.startsWith("/api/v1/health") || path.startsWith("/api/health");
+        if (path == null || path.isEmpty()) {
+            path = request.getRequestURI();
+        }
+        boolean bypass = path.contains("/auth/") || path.contains("/health") || path.equals("/error");
+        log.debug("JwtAuthenticationFilter.shouldNotFilter for path '{}': {}", path, bypass);
+        return bypass;
     }
 
     @Override
@@ -55,7 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+            log.error("Cannot set user authentication: {}", e.getMessage(), e);
         }
 
         filterChain.doFilter(request, response);
