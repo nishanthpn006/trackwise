@@ -29,7 +29,7 @@ import java.util.UUID;
  * CategoryController — REST API controller for managing user financial categories.
  */
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping({"/api/v1/categories", "/api/categories"})
 public class CategoryController {
 
     private final CategoryService categoryService;

@@ -25,7 +25,7 @@ import java.util.Collections;
  * DataController — REST API controller for Data Import, Export, and Backup capabilities.
  */
 @RestController
-@RequestMapping("/api/data")
+@RequestMapping({"/api/v1/data", "/api/data"})
 public class DataController {
 
     private final DataExportService dataExportService;

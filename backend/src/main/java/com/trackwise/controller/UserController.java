@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  * UserController — REST endpoints for user profile, account settings, security, preferences, and account lifecycle.
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping({"/api/v1/users", "/api/users"})
 public class UserController {
 
     private final UserService userService;

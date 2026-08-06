@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * AuthController — Exposes REST API endpoints for User Registration, Login, and Profile fetch.
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping({"/api/v1/auth", "/api/auth"})
 public class AuthController {
 
     private final AuthService authService;

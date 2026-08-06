@@ -30,7 +30,7 @@ import java.util.UUID;
  * All endpoints are scoped strictly to the authenticated user.
  */
 @RestController
-@RequestMapping("/api/goals")
+@RequestMapping({"/api/v1/goals", "/api/goals"})
 public class GoalController {
 
     private final GoalService goalService;

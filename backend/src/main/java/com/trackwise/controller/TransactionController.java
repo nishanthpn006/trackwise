@@ -35,7 +35,7 @@ import java.util.UUID;
  * TransactionController — REST API controller for managing user transactions and dashboard metrics.
  */
 @RestController
-@RequestMapping("/api/transactions")
+@RequestMapping({"/api/v1/transactions", "/api/transactions"})
 public class TransactionController {
 
     private final TransactionService transactionService;

@@ -30,7 +30,7 @@ import java.util.UUID;
  * JWT principal on every request. No budget from another user is ever accessible.</p>
  */
 @RestController
-@RequestMapping("/api/budgets")
+@RequestMapping({"/api/v1/budgets", "/api/budgets"})
 public class BudgetController {
 
     private final BudgetService budgetService;

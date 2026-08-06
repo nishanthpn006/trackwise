@@ -22,7 +22,7 @@ import java.time.LocalDate;
  * ReportController — REST API endpoints for user reports, KPI analytics, trends, and export features.
  */
 @RestController
-@RequestMapping("/api/reports")
+@RequestMapping({"/api/v1/reports", "/api/reports"})
 public class ReportController {
 
     private final ReportService reportService;

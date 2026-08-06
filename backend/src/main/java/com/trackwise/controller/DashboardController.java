@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * DashboardController — REST API controller for user dashboard metrics and summary overview.
  */
 @RestController
-@RequestMapping("/api/dashboard")
+@RequestMapping({"/api/v1/dashboard", "/api/dashboard"})
 public class DashboardController {
 
     private final TransactionService transactionService;

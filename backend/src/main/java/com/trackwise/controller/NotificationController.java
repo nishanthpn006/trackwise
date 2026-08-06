@@ -27,7 +27,7 @@ import java.util.UUID;
  * NotificationController — REST endpoints for notifications, alerts, summaries, and unread counts.
  */
 @RestController
-@RequestMapping("/api/notifications")
+@RequestMapping({"/api/v1/notifications", "/api/notifications"})
 public class NotificationController {
 
     private final NotificationService notificationService;
