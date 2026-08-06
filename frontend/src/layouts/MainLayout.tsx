@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import { Outlet } from 'react-router';
 import { SidebarProvider } from '@/context';
 import ToastProvider from '@/context/ToastProvider';
@@ -6,6 +7,8 @@ import OfflineBanner from '@/components/common/OfflineBanner';
 import Sidebar from '@/components/layout/Sidebar';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+
+const CalculatorWidget = React.lazy(() => import('@/components/calculator'));
 
 /**
  * MainLayout — Wraps authenticated application pages in a responsive layout structure.
@@ -30,6 +33,11 @@ export const MainLayout = () => (
         </div>
       </div>
       <ToastContainer />
+
+      {/* Floating Quick Calculator Widget */}
+      <Suspense fallback={null}>
+        <CalculatorWidget />
+      </Suspense>
     </SidebarProvider>
   </ToastProvider>
 );
