@@ -15,6 +15,7 @@ This guide details step-by-step instructions for deploying **TrackWise Personal 
 ## 2. Frontend Deployment Options
 
 ### Option A: Vercel (Recommended Static Edge Deployment)
+
 1. Import the `trackwise` repository into Vercel.
 2. Select Root Directory: `frontend`.
 3. Framework Preset: `Vite`.
@@ -23,6 +24,7 @@ This guide details step-by-step instructions for deploying **TrackWise Personal 
 5. Vercel will automatically read `vercel.json` for SPA fallback routing.
 
 ### Option B: Netlify
+
 1. Connect repository to Netlify.
 2. Base directory: `frontend`.
 3. Build command: `npm run build`.
@@ -35,6 +37,7 @@ This guide details step-by-step instructions for deploying **TrackWise Personal 
 ## 3. Backend Deployment Options
 
 ### Option A: Railway (Container Deployment)
+
 1. Create a new project in Railway and select **Deploy from GitHub repo**.
 2. Set Root Directory: `/`.
 3. Config File: `railway.json`.
@@ -48,6 +51,7 @@ This guide details step-by-step instructions for deploying **TrackWise Personal 
    - `JWT_EXPIRATION_MS`: `86400000`
 
 ### Option B: Render Blueprint
+
 1. Go to Render Dashboard -> **Blueprints** -> **New Blueprint Instance**.
 2. Connect repository and Render will parse `render.yaml`.
 3. Render automatically provisions a PostgreSQL database and containerized Web Service.
@@ -66,6 +70,7 @@ This guide details step-by-step instructions for deploying **TrackWise Personal 
 ## 5. Verification & Health Monitoring
 
 After deployment, verify system health:
+
 - Backend Health Probe: `GET https://<your-backend-domain>/actuator/health`
-- Backend Liveness State: `GET https://<your-backend-domain>/actuator/health/liveness`
-- Backend Readiness State: `GET https://<your-backend-domain>/actuator/health/readiness`
+- Backend Liveness State: `GET https://<your-backend-domain>/actuator/health/readiness`
+- Backend Readiness State: `GET https://<your-backend-domain>/actuator/health/liveness`

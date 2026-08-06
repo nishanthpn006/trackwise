@@ -13,6 +13,7 @@ docker-compose up -d --build
 ```
 
 ### Access Points
+
 - **Frontend App**: `http://localhost`
 - **Backend API**: `http://localhost:8080/api/v1`
 - **Actuator Health Check**: `http://localhost:8080/actuator/health`
@@ -36,6 +37,7 @@ docker-compose down -v
 ## 3. Individual Container Builds
 
 ### Building Frontend Nginx Container
+
 ```bash
 cd frontend
 docker build -t trackwise-frontend:latest .
@@ -43,6 +45,7 @@ docker run -p 80:80 trackwise-frontend:latest
 ```
 
 ### Building Backend Spring Boot Container
+
 ```bash
 cd backend
 docker build -t trackwise-backend:latest .
