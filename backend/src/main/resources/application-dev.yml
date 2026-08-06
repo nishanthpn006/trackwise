@@ -1,0 +1,26 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# TrackWise — Development Profile Configuration (YAML)
+# ─────────────────────────────────────────────────────────────────────────────
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: ${DB_URL:jdbc:h2:mem:trackwisedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driver-class-name: ${DB_DRIVER:org.h2.Driver}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.trackwise: DEBUG

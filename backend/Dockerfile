@@ -1,51 +1,53 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Stage 1 — Build the fat JAR
+# TrackWise Backend — Multi-Stage Production Dockerfile
+# Stage 1: Build Spring Boot JAR with Maven & OpenJDK 21
+# Stage 2: Minimal Runtime with Eclipse Temurin Java 21 JRE Alpine
 # ─────────────────────────────────────────────────────────────────────────────
-FROM eclipse-temurin:21-jdk-alpine AS builder
 
-WORKDIR /workspace
+# --- STAGE 1: Build Phase ---
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS builder
 
-# Cache the Maven wrapper and dependencies before copying source
-COPY .mvn/ .mvn/
-COPY mvnw mvnw.cmd pom.xml ./
+WORKDIR /build
 
-RUN chmod +x mvnw && \
-    ./mvnw dependency:go-offline -B -q
+# Copy Maven wrapper & pom.xml first to optimize layer caching
+COPY pom.xml mvnw ./
+COPY .mvn .mvn
 
-# Copy source and build (tests run in CI; skip here to keep Docker builds fast)
-COPY src/ src/
-RUN ./mvnw package -DskipTests -B -q
+# Download dependencies in offline mode
+RUN ./mvnw dependency:go-offline -B || true
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Stage 2 — Minimal JRE runtime image
-# ─────────────────────────────────────────────────────────────────────────────
-FROM eclipse-temurin:21-jre-alpine AS runtime
+# Copy backend source code
+COPY src src
 
-LABEL org.opencontainers.image.title="TrackWise Backend" \
-      org.opencontainers.image.description="Personal Expense Tracker — Spring Boot 3 API" \
-      org.opencontainers.image.source="https://github.com/nishanthpn006/trackwise"
+# Package production executable JAR without running tests (tests run in CI)
+RUN ./mvnw clean package -DskipTests
 
-# Create a non-root user for security
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# --- STAGE 2: Runtime Phase ---
+FROM eclipse-temurin:21-jre-alpine AS runner
 
 WORKDIR /app
 
-# Copy only the fat JAR from the build stage
-COPY --from=builder /workspace/target/*.jar app.jar
+# Add non-root system user for security
+RUN addgroup -S trackwise && adduser -S trackwise -G trackwise
 
-# Transfer ownership to the non-root user
-RUN chown appuser:appgroup app.jar
+# Copy compiled JAR from builder stage
+COPY --from=builder /build/target/*.jar app.jar
 
-USER appuser
+# Set container ownership
+RUN chown -R trackwise:trackwise /app
+
+# Switch to non-root user
+USER trackwise
+
+# Default environment variables
+ENV SPRING_PROFILES_ACTIVE=prod \
+    SERVER_PORT=8080
 
 EXPOSE 8080
 
-# Health check — waits 30 s then checks every 10 s; 3 retries before unhealthy
-HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
-    CMD wget -qO- http://localhost:8080/actuator/health || exit 1
+# Spring Boot actuator healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1
 
-ENTRYPOINT ["java", \
-    "-XX:+UseContainerSupport", \
-    "-XX:MaxRAMPercentage=75.0", \
-    "-Djava.security.egd=file:/dev/./urandom", \
-    "-jar", "app.jar"]
+# Execute application
+ENTRYPOINT ["java", "-jar", "-Djava.security.egd=file:/dev/./urandom", "app.jar"]

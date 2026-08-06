@@ -1,40 +1,48 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Stage 1 — Build the Vite production bundle
+# TrackWise Frontend — Multi-Stage Production Dockerfile
+# Stage 1: Build static assets with Node.js 20 & Vite
+# Stage 2: Serve with high-performance Nginx 1.25 Alpine image
 # ─────────────────────────────────────────────────────────────────────────────
+
+# --- STAGE 1: Build Phase ---
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Cache node_modules layer separately from source
-COPY package.json package-lock.json ./
-RUN npm ci --prefer-offline
+# Copy dependency manifests
+COPY package.json ./
 
-# Copy source files and build
+# Install dependencies (clean install)
+RUN npm install
+
+# Copy source code
 COPY . .
-RUN npm run build
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Stage 2 — Serve with Nginx
-# ─────────────────────────────────────────────────────────────────────────────
-FROM nginx:1.27-alpine AS runtime
+# Environment build argument override (defaults to production)
+ARG VITE_API_BASE_URL=/api/v1
+ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 
-LABEL org.opencontainers.image.title="TrackWise Frontend" \
-      org.opencontainers.image.description="Personal Expense Tracker — React 19 SPA" \
-      org.opencontainers.image.source="https://github.com/nishanthpn006/trackwise"
+# Run type check and Vite build
+RUN npm run type-check && npm run build
 
-# Remove the default Nginx site
-RUN rm /etc/nginx/conf.d/default.conf
+# --- STAGE 2: Production Nginx Phase ---
+FROM nginx:1.25-alpine AS runner
+
+# Remove default nginx static assets
+RUN rm -rf /usr/share/nginx/html/*
 
 # Copy custom Nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/trackwise.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copy the Vite build output
+# Copy compiled static distribution from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
+# Expose HTTP port 80
 EXPOSE 80
 
-# Health check — verifies Nginx is serving the /health route
-HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
-    CMD wget -qO- http://localhost/health || exit 1
+# Container healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:80/ || exit 1
 
+# Start Nginx in foreground mode
 CMD ["nginx", "-g", "daemon off;"]
