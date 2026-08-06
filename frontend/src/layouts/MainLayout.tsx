@@ -8,7 +8,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 
-const CalculatorWidget = React.lazy(() => import('@/components/calculator'));
+const CalculatorWidget = React.lazy(() => import('@/components/calculator/CalculatorWidget'));
 
 /**
  * MainLayout — Wraps authenticated application pages in a responsive layout structure.
