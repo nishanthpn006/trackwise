@@ -48,11 +48,26 @@ export const parseApiError = (error: unknown): string => {
     if (error.response?.data?.message) {
       return error.response.data.message as string;
     }
+    if (error.response?.status === 400) {
+      return 'Bad request. Please verify the submitted data.';
+    }
+    if (error.response?.status === 401) {
+      return 'Session expired. Please log in again.';
+    }
     if (error.response?.status === 403) {
       return 'Access denied. You do not have permission to perform this action.';
     }
     if (error.response?.status === 404) {
       return 'The requested resource was not found.';
+    }
+    if (error.response?.status === 409) {
+      return 'Resource conflict. A record with this information already exists.';
+    }
+    if (error.response?.status === 422) {
+      return 'Validation failed. Please check your form input values.';
+    }
+    if (error.response?.status === 500) {
+      return 'Internal server error. Please try again later.';
     }
     if (error.code === 'ECONNABORTED') {
       return 'Request timed out. Please check your network connection and try again.';

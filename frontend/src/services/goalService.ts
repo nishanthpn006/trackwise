@@ -9,23 +9,15 @@ import type {
 
 export const goalService = {
   async getGoals(): Promise<SavingsGoal[]> {
-    try {
-      const response = await api.get<ApiResponse<SavingsGoal[]>>('/goals');
-      const data = response.data.data;
-      if (Array.isArray(data)) return data;
-      return [];
-    } catch {
-      return [];
-    }
+    const response = await api.get<ApiResponse<SavingsGoal[]>>('/goals');
+    const data = response.data.data;
+    if (Array.isArray(data)) return data;
+    return [];
   },
 
   async getGoalSummary(): Promise<GoalSummary | null> {
-    try {
-      const response = await api.get<ApiResponse<GoalSummary>>('/goals/summary');
-      return response.data.data;
-    } catch {
-      return null;
-    }
+    const response = await api.get<ApiResponse<GoalSummary>>('/goals/summary');
+    return response.data.data;
   },
 
   async getGoalById(id: string): Promise<SavingsGoal | null> {

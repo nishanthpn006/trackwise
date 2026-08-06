@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { ToastContext, type ToastType } from '@/context/ToastContext';
 
 export const useToast = () => {
@@ -7,12 +7,17 @@ export const useToast = () => {
     throw new Error('useToast must be used within a ToastProvider');
   }
 
-  return {
-    showToast: context.showToast,
-    success: (msg: string) => context.showToast(msg, 'success'),
-    error: (msg: string) => context.showToast(msg, 'error'),
-    info: (msg: string) => context.showToast(msg, 'info'),
-  };
+  const { showToast } = context;
+
+  return useMemo(
+    () => ({
+      showToast,
+      success: (msg: string) => showToast(msg, 'success'),
+      error: (msg: string) => showToast(msg, 'error'),
+      info: (msg: string) => showToast(msg, 'info'),
+    }),
+    [showToast]
+  );
 };
 
 export type { ToastType };

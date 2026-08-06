@@ -23,13 +23,7 @@ import { categorySchema, type CategoryFormData } from '@/utils/validation';
 import categoryService from '@/services/categoryService';
 
 export const TransactionsPage: React.FC = () => {
-  const { toastSuccess, toastError } = (() => {
-    const toast = useToast();
-    return {
-      toastSuccess: toast.success,
-      toastError: toast.error,
-    };
-  })();
+  const toast = useToast();
 
   const {
     transactions,
@@ -108,16 +102,16 @@ export const TransactionsPage: React.FC = () => {
     try {
       if (txToEdit) {
         await updateTransaction(txToEdit.id, payload);
-        toastSuccess('Transaction updated successfully');
+        toast.success('Transaction updated successfully');
       } else {
         await createTransaction(payload);
-        toastSuccess('Transaction added successfully');
+        toast.success('Transaction added successfully');
       }
       setIsTxDialogOpen(false);
       setTxToEdit(null);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to save transaction';
-      toastError(msg);
+      toast.error(msg);
     }
   };
 
@@ -126,11 +120,11 @@ export const TransactionsPage: React.FC = () => {
     if (!txToDelete) return;
     try {
       await deleteTransaction(txToDelete.id);
-      toastSuccess('Transaction deleted successfully');
+      toast.success('Transaction deleted successfully');
       setTxToDelete(null);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to delete transaction';
-      toastError(msg);
+      toast.error(msg);
     }
   };
 
@@ -167,17 +161,17 @@ export const TransactionsPage: React.FC = () => {
 
       if (editingCategory) {
         await categoryService.updateCategory(editingCategory.id, payload);
-        toastSuccess('Category updated successfully');
+        toast.success('Category updated successfully');
       } else {
         await categoryService.createCategory(payload);
-        toastSuccess('Category created successfully');
+        toast.success('Category created successfully');
       }
       setEditingCategory(null);
       resetCat({ name: '', type: 'EXPENSE', color: '#3B82F6', icon: 'tag' });
       await refetchCategories();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to save category';
-      toastError(msg);
+      toast.error(msg);
     }
   };
 
@@ -185,12 +179,12 @@ export const TransactionsPage: React.FC = () => {
     if (!deletingCategory) return;
     try {
       await categoryService.deleteCategory(deletingCategory.id);
-      toastSuccess('Category deleted successfully');
+      toast.success('Category deleted successfully');
       setDeletingCategory(null);
       await refetchCategories();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Failed to delete category';
-      toastError(msg);
+      toast.error(msg);
     }
   };
 

@@ -87,9 +87,7 @@ export const useGoals = () => {
     if (statusFilter !== 'ALL') {
       result = result.filter((g) => {
         const computedStatus = g.status || getCalculatedGoalStatus(g);
-        if (statusFilter === 'COMPLETED') return computedStatus === 'COMPLETED';
-        if (statusFilter === 'OVERDUE') return computedStatus === 'OVERDUE';
-        return computedStatus !== 'COMPLETED';
+        return computedStatus === statusFilter;
       });
     }
 
