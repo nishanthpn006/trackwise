@@ -20,14 +20,14 @@ export const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
   const [showHistory, setShowHistory] = React.useState(false);
 
   return (
-    <div className="bg-muted/40 dark:bg-muted/20 border border-border/60 rounded-2xl p-3.5 space-y-2 relative transition-all">
+    <div className="bg-muted/40 dark:bg-muted/20 border border-border/60 rounded-xl p-2.5 sm:p-3 space-y-1 relative transition-all">
       {/* Top Header Row: History toggle button */}
-      <div className="flex items-center justify-between text-[11px] text-muted-foreground border-b border-border/40 pb-1.5">
-        <div className="flex items-center gap-1 font-semibold uppercase tracking-wider text-[10px]">
-          <Clock className="w-3 h-3 text-primary" />
-          <span>Quick Calculator</span>
+      <div className="flex items-center justify-between text-[10px] text-muted-foreground border-b border-border/40 pb-1">
+        <div className="flex items-center gap-1 font-semibold uppercase tracking-wider text-[9px]">
+          <Clock className="w-2.5 h-2.5 text-primary" />
+          <span>TrackWise Calculator</span>
         </div>
-        <div className="flex items-center gap-2">
+        <div>
           {history.length > 0 && (
             <button
               type="button"
@@ -35,8 +35,8 @@ export const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
               title="Calculation History"
               className="inline-flex items-center gap-1 text-[10px] font-bold text-primary hover:underline cursor-pointer"
             >
-              <History className="w-3 h-3" />
-              <span>{showHistory ? 'Close History' : `History (${history.length})`}</span>
+              <History className="w-2.5 h-2.5" />
+              <span>{showHistory ? 'Close' : `History (${history.length})`}</span>
             </button>
           )}
         </div>
@@ -44,8 +44,8 @@ export const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
 
       {/* History Drawer Dropdown */}
       {showHistory && history.length > 0 ? (
-        <div className="max-h-40 overflow-y-auto space-y-1.5 text-xs py-1 divide-y divide-border/30">
-          <div className="flex justify-between items-center text-[10px] text-muted-foreground pb-1">
+        <div className="max-h-36 overflow-y-auto space-y-1 text-xs py-1 divide-y divide-border/30">
+          <div className="flex justify-between items-center text-[10px] text-muted-foreground pb-0.5">
             <span className="font-bold uppercase">Recent Calculations</span>
             <button
               type="button"
@@ -65,10 +65,10 @@ export const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
               }}
               className="w-full text-left pt-1 hover:bg-muted/50 p-1 rounded-lg transition-colors flex justify-between items-baseline"
             >
-              <span className="text-muted-foreground font-mono text-[11px] truncate max-w-[180px]">
+              <span className="text-muted-foreground font-mono text-[10px] truncate max-w-[160px]">
                 {item.expression}
               </span>
-              <span className="font-bold text-foreground font-mono text-xs">
+              <span className="font-bold text-foreground font-mono text-[11px]">
                 = {formatDisplayResult(item.result)}
               </span>
             </button>
@@ -76,14 +76,14 @@ export const CalculatorDisplay: React.FC<CalculatorDisplayProps> = ({
         </div>
       ) : (
         /* Expression & Result Display */
-        <div className="space-y-1 text-right min-h-[64px] flex flex-col justify-end">
-          {/* Expression Line */}
-          <div className="text-xs font-mono text-muted-foreground truncate h-5 tracking-wide">
+        <div className="space-y-0.5 text-right min-h-[48px] flex flex-col justify-end">
+          {/* Full Expression Line */}
+          <div className="text-[11px] font-mono text-muted-foreground truncate h-4 tracking-wide">
             {expression || '0'}
           </div>
 
-          {/* Large Result Line */}
-          <div className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground font-mono truncate">
+          {/* Prominent Result Line */}
+          <div className="text-xl sm:text-2xl font-black tracking-tight text-foreground font-mono truncate">
             ₹{formatDisplayResult(result)}
           </div>
         </div>

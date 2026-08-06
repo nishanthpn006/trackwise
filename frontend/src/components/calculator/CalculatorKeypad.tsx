@@ -1,6 +1,7 @@
 import React from 'react';
+import { useLocation } from 'react-router';
 import CalculatorButton from './CalculatorButton';
-import { Copy, Delete, RotateCcw } from 'lucide-react';
+import { Copy, Delete, RotateCcw, CheckCircle2 } from 'lucide-react';
 
 export interface CalculatorKeypadProps {
   onAppendToken: (token: string) => void;
@@ -19,10 +20,22 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
   onCalculate,
   onUseResult,
 }) => {
+  const location = useLocation();
+  const path = location.pathname.toLowerCase();
+
+  let contextLabel = 'Copy Result';
+  if (path.includes('/transactions')) {
+    contextLabel = 'Use in Transaction';
+  } else if (path.includes('/budgets')) {
+    contextLabel = 'Use for Budget';
+  } else if (path.includes('/goals')) {
+    contextLabel = 'Use for Goal';
+  }
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-2">
       {/* Keypad Grid (4 columns × 5 rows) */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
         {/* Row 1 */}
         <CalculatorButton
           label="AC"
@@ -32,7 +45,7 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
           className="text-rose-500 hover:text-rose-600 dark:text-rose-400"
         />
         <CalculatorButton
-          label={<Delete className="w-4 h-4" />}
+          label={<Delete className="w-3.5 h-3.5" />}
           variant="action"
           onClick={onBackspace}
           ariaLabel="Backspace"
@@ -119,21 +132,25 @@ export const CalculatorKeypad: React.FC<CalculatorKeypadProps> = ({
         <CalculatorButton label="0" onClick={() => onAppendToken('0')} />
         <CalculatorButton label="." onClick={() => onAppendToken('.')} ariaLabel="Decimal point" />
         <CalculatorButton
-          label={<RotateCcw className="w-4 h-4" />}
+          label={<RotateCcw className="w-3.5 h-3.5" />}
           variant="action"
           onClick={onClear}
           ariaLabel="Reset"
         />
       </div>
 
-      {/* Primary Action Button: "Use Result" / "Copy Result" */}
+      {/* Context-Aware Primary Action Button */}
       <button
         type="button"
         onClick={onUseResult}
-        className="w-full py-2.5 px-4 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/20 hover:border-primary/40 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs active:scale-[0.99]"
+        className="w-full py-2 px-3 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 hover:border-primary/40 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-all duration-150 cursor-pointer shadow-xs active:scale-[0.99]"
       >
-        <Copy className="w-4 h-4" />
-        <span>Use / Copy Result</span>
+        {contextLabel === 'Copy Result' ? (
+          <Copy className="w-3.5 h-3.5" />
+        ) : (
+          <CheckCircle2 className="w-3.5 h-3.5" />
+        )}
+        <span>{contextLabel}</span>
       </button>
     </div>
   );
