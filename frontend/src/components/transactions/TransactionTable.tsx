@@ -121,7 +121,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                   </td>
 
                   {/* Amount Column */}
-                  <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold text-sm">
+                  <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold text-sm tabular-nums font-mono">
                     <span className={isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}>
                       {isIncome ? '+' : '-'}{formatCurrency(tx.amount)}
                     </span>

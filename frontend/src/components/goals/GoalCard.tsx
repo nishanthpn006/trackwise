@@ -40,7 +40,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({
   };
 
   return (
-    <div className="flex flex-col justify-between border border-border/80 bg-card/80 rounded-2xl p-5 shadow-xs hover:shadow-md hover:border-primary/30 transition-all duration-300 group space-y-4">
+    <div className="flex flex-col justify-between border border-border/80 bg-card/80 rounded-2xl p-5 shadow-xs hover:-translate-y-0.5 hover:shadow-md hover:border-primary/30 transition-all duration-200 ease-out group space-y-4">
       <div className="space-y-3">
         {/* Header */}
         <div className="flex items-start justify-between space-x-2">
@@ -105,19 +105,19 @@ export const GoalCard: React.FC<GoalCardProps> = ({
         <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-xl bg-muted/40 text-xs">
           <div>
             <span className="text-[11px] text-muted-foreground block">Target</span>
-            <span className="font-semibold text-foreground truncate block">
+            <span className="font-semibold text-foreground truncate block tabular-nums font-mono">
               {formatCurrency(goal.targetAmount)}
             </span>
           </div>
           <div>
             <span className="text-[11px] text-muted-foreground block">Saved</span>
-            <span className="font-semibold text-emerald-600 dark:text-emerald-400 truncate block">
+            <span className="font-semibold text-emerald-600 dark:text-emerald-400 truncate block tabular-nums font-mono">
               {formatCurrency(goal.currentAmount)}
             </span>
           </div>
           <div>
             <span className="text-[11px] text-muted-foreground block">Remaining</span>
-            <span className="font-semibold text-rose-600 dark:text-rose-400 truncate block">
+            <span className="font-semibold text-rose-600 dark:text-rose-400 truncate block tabular-nums font-mono">
               {formatCurrency(goal.remainingAmount)}
             </span>
           </div>

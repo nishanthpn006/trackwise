@@ -64,7 +64,7 @@ export const BudgetCard: React.FC<BudgetCardProps> = ({ budget, onEdit, onDelete
 
   return (
     <div
-      className="group relative bg-card border border-border/80 rounded-2xl p-5 shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-4 overflow-hidden"
+      className="group relative bg-card border border-border/80 rounded-2xl p-5 shadow-xs hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 ease-out flex flex-col justify-between space-y-4 overflow-hidden"
       style={{ borderTop: `4px solid ${statusConfig.topBorder}` }}
     >
       {/* Header */}
