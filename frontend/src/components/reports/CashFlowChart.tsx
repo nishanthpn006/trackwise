@@ -62,7 +62,7 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data, isLoading })
             <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
             <YAxis tickFormatter={formatCurrency} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
             <Tooltip
-              formatter={(value: any) => [formatCurrency(Number(value || 0))]}
+              formatter={(value: unknown) => [formatCurrency(Number(value || 0))]}
               contentStyle={{
                 backgroundColor: 'var(--card)',
                 borderColor: 'var(--border)',

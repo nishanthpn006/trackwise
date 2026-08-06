@@ -51,7 +51,7 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({ data, is
             <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
             <YAxis tickFormatter={formatCurrency} tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }} />
             <Tooltip
-              formatter={(value: any) => [formatCurrency(Number(value || 0)), 'Spent']}
+              formatter={(value: unknown) => [formatCurrency(Number(value || 0)), 'Spent']}
               contentStyle={{
                 backgroundColor: 'var(--card)',
                 borderColor: 'var(--border)',

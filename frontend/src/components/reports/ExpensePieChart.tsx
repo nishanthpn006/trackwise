@@ -69,7 +69,7 @@ export const ExpensePieChart: React.FC<ExpensePieChartProps> = ({ data, isLoadin
               ))}
             </Pie>
             <Tooltip
-              formatter={(value: any) => [formatCurrency(Number(value || 0)), 'Amount']}
+              formatter={(value: unknown) => [formatCurrency(Number(value || 0)), 'Amount']}
               contentStyle={{
                 backgroundColor: 'var(--card)',
                 borderColor: 'var(--border)',

@@ -133,7 +133,7 @@ export const GoalCharts: React.FC<GoalChartsProps> = ({ goals }) => {
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} tickFormatter={formatCurrency} />
               <Tooltip
-                formatter={(val: any) => [formatCurrency(Number(val) || 0), '']}
+                formatter={(val: unknown) => [formatCurrency(Number(val) || 0), '']}
                 contentStyle={{
                   backgroundColor: 'rgba(15, 23, 42, 0.9)',
                   borderColor: 'rgba(255, 255, 255, 0.1)',
@@ -162,7 +162,7 @@ export const GoalCharts: React.FC<GoalChartsProps> = ({ goals }) => {
                 <XAxis dataKey="date" tick={{ fontSize: 11 }} />
                 <YAxis tick={{ fontSize: 11 }} tickFormatter={formatCurrency} />
                 <Tooltip
-                  formatter={(val: any) => [formatCurrency(Number(val) || 0), 'Savings Added']}
+                  formatter={(val: unknown) => [formatCurrency(Number(val) || 0), 'Savings Added']}
                   contentStyle={{
                     backgroundColor: 'rgba(15, 23, 42, 0.9)',
                     borderColor: 'rgba(255, 255, 255, 0.1)',
