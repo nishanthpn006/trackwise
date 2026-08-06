@@ -52,7 +52,7 @@ public class User {
     private String phone;
 
     @Column(name = "currency", length = 10)
-    private String currency = "USD";
+    private String currency = "INR";
 
     @Column(name = "timezone", length = 50)
     private String timezone = "UTC";
@@ -81,7 +81,7 @@ public class User {
     private String firstDayOfWeek = "Monday";
 
     @Column(name = "number_format", length = 15)
-    private String numberFormat = "en-US";
+    private String numberFormat = "en-IN";
 
     @Column(name = "language", length = 10)
     private String language = "en";

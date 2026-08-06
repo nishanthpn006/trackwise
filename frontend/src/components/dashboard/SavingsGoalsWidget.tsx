@@ -4,6 +4,7 @@ import type { GoalSummary, SavingsGoal } from '@/types/goal';
 import { Target, ArrowRight, Calendar, PlusCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import GoalProgress from '@/components/goals/GoalProgress';
+import { formatCurrency } from '@/utils/currency';
 
 interface SavingsGoalsWidgetProps {
   onOpenContribution?: (goal: SavingsGoal) => void;
@@ -43,8 +44,7 @@ export const SavingsGoalsWidget: React.FC<SavingsGoalsWidgetProps> = ({
     };
   }, [refreshKey]);
 
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
+
 
   if (isLoading) {
     return (

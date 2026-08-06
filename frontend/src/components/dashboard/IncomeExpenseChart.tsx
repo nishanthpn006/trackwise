@@ -11,17 +11,11 @@ import {
 } from 'recharts';
 import { BarChart3 } from 'lucide-react';
 import type { MonthlyDataPoint } from '@/types/dashboard';
+import { formatCurrency } from '@/utils/currency';
 
-interface IncomeExpenseChartProps {
+export interface IncomeExpenseChartProps {
   data: MonthlyDataPoint[];
 }
-
-const formatCurrency = (value: number): string =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(value);
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -78,7 +72,7 @@ export const IncomeExpenseChart: React.FC<IncomeExpenseChartProps> = ({ data }) 
               tickLine={false}
             />
             <YAxis
-              tickFormatter={(v: number) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
+              tickFormatter={(v: number) => `₹${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
               tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
               axisLine={false}
               tickLine={false}

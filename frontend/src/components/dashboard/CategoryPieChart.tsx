@@ -8,17 +8,7 @@ import {
 } from 'recharts';
 import { PieChart as PieIcon } from 'lucide-react';
 import type { CategoryBreakdownItem } from '@/types/dashboard';
-
-interface CategoryPieChartProps {
-  data: CategoryBreakdownItem[];
-}
-
-const formatCurrency = (value: number): string =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value);
+import { formatCurrency } from '@/utils/currency';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -37,6 +27,10 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
   );
 };
 
+export interface CategoryPieChartProps {
+  data: CategoryBreakdownItem[];
+}
+
 /**
  * CategoryPieChart — Donut chart showing expense distribution by category.
  * Shows a legend list alongside the chart with truncation for many categories.
@@ -46,8 +40,8 @@ export const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
   const chartData = useMemo(() => {
     if (data.length <= 6) return data;
     const top = data.slice(0, 5);
-    const otherAmount = data.slice(5).reduce((acc, d) => acc + d.amount, 0);
-    const otherPct = data.slice(5).reduce((acc, d) => acc + d.percentage, 0);
+    const otherAmount = data.slice(5).reduce((acc: number, d: CategoryBreakdownItem) => acc + d.amount, 0);
+    const otherPct = data.slice(5).reduce((acc: number, d: CategoryBreakdownItem) => acc + d.percentage, 0);
     return [
       ...top,
       { categoryName: 'Other', color: '#94a3b8', amount: otherAmount, percentage: otherPct },
@@ -84,7 +78,7 @@ export const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
                   strokeWidth={2}
                   stroke="hsl(var(--card))"
                 >
-                  {chartData.map((entry, index) => (
+                  {chartData.map((entry: CategoryBreakdownItem, index: number) => (
                     <Cell key={`cell-${index}`} fill={entry.color || '#6366f1'} />
                   ))}
                 </Pie>
@@ -95,7 +89,7 @@ export const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
 
           {/* Legend */}
           <div className="flex-1 min-w-0 space-y-1.5">
-            {chartData.map((item) => (
+            {chartData.map((item: CategoryBreakdownItem) => (
               <div key={item.categoryName} className="flex items-center gap-2 group">
                 <span
                   className="w-2.5 h-2.5 rounded-sm shrink-0"

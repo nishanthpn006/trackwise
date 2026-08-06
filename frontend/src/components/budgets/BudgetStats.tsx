@@ -2,21 +2,19 @@ import React from 'react';
 import type { BudgetStatsSummary } from '@/types/budget';
 import {
   PiggyBank,
-  DollarSign,
+  IndianRupee,
   TrendingUp,
   AlertTriangle,
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react';
 import { Skeleton } from '@/components/common/LoadingSkeleton';
+import { formatCurrency } from '@/utils/currency';
 
 export interface BudgetStatsProps {
   stats: BudgetStatsSummary;
   isLoading?: boolean;
 }
-
-const formatCurrency = (val: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val || 0);
 
 export const BudgetStats: React.FC<BudgetStatsProps> = ({ stats, isLoading = false }) => {
   if (isLoading) {
@@ -55,7 +53,7 @@ export const BudgetStats: React.FC<BudgetStatsProps> = ({ stats, isLoading = fal
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Allocated</span>
           <div className="p-1.5 rounded-lg bg-purple-500/10 text-purple-600 dark:text-purple-400">
-            <DollarSign className="h-3.5 w-3.5" />
+            <IndianRupee className="h-3.5 w-3.5" />
           </div>
         </div>
         <p className="text-sm font-bold tracking-tight text-foreground truncate">{formatCurrency(stats.totalAllocated)}</p>

@@ -9,7 +9,7 @@ import {
   Heart,
   Briefcase,
   GraduationCap,
-  DollarSign,
+  IndianRupee,
   Wallet,
 } from 'lucide-react';
 
@@ -34,7 +34,9 @@ export const renderGoalIcon = (iconName?: string, className = 'h-5 w-5') => {
     case 'graduationcap':
       return <GraduationCap className={className} />;
     case 'dollarsign':
-      return <DollarSign className={className} />;
+    case 'indianrupee':
+    case 'rupee':
+      return <IndianRupee className={className} />;
     case 'wallet':
       return <Wallet className={className} />;
     case 'target':

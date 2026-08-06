@@ -2,15 +2,13 @@ import React from 'react';
 import type { Budget } from '@/types/budget';
 import { getBudgetStatus, getBudgetPercent } from '@/hooks/useBudgets';
 import { Edit2, Trash2, Calendar, Tag } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 export interface BudgetCardProps {
   budget: Budget;
   onEdit: (budget: Budget) => void;
   onDelete: (budget: Budget) => void;
 }
-
-const formatCurrency = (val: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
 
 const formatDate = (dateStr: string) => {
   try {

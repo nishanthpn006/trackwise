@@ -154,7 +154,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
           {/* Amount Field */}
           <div className="space-y-1">
             <label htmlFor="dialog-tx-amount" className="block font-bold text-foreground text-xs">
-              Amount ($) <span className="text-destructive">*</span>
+              Amount (₹) <span className="text-destructive">*</span>
             </label>
             <input
               id="dialog-tx-amount"

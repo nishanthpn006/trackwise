@@ -2,6 +2,7 @@ import React from 'react';
 import Dialog from '@/components/ui/Dialog';
 import type { Transaction } from '@/types/transaction';
 import { AlertTriangle, Loader2 } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 export interface DeleteTransactionDialogProps {
   isOpen: boolean;
@@ -34,8 +35,7 @@ export const DeleteTransactionDialog: React.FC<DeleteTransactionDialogProps> = (
           <div className="space-y-1">
             <p className="font-bold">Are you sure?</p>
             <p className="text-muted-foreground text-xs">
-              Transaction <span className="font-semibold text-foreground">&quot;{transaction.title}&quot;</span> ($
-              {transaction.amount.toFixed(2)}) will be permanently deleted from your records.
+              Transaction <span className="font-semibold text-foreground">&quot;{transaction.title}&quot;</span> ({formatCurrency(transaction.amount)}) will be permanently deleted from your records.
             </p>
           </div>
         </div>

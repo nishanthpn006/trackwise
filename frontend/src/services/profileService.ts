@@ -22,7 +22,7 @@ export const profileService = {
         email: current?.email || '',
         role: current?.role || 'ROLE_USER',
         fullName: payload.fullName,
-        currency: payload.currency || 'USD',
+        currency: payload.currency || 'INR',
         timezone: payload.timezone || 'UTC',
       };
       authService.setUser(updated);

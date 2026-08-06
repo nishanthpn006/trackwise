@@ -149,7 +149,7 @@ export const GoalDialog: React.FC<GoalDialogProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="space-y-1">
             <label htmlFor="target-amount" className="block text-xs font-bold text-foreground">
-              Target Amount ($) <span className="text-destructive">*</span>
+              Target Amount (₹) <span className="text-destructive">*</span>
             </label>
             <input
               id="target-amount"
@@ -168,7 +168,7 @@ export const GoalDialog: React.FC<GoalDialogProps> = ({
 
           <div className="space-y-1">
             <label htmlFor="current-amount" className="block text-xs font-bold text-foreground">
-              Current Saved ($)
+              Current Saved (₹)
             </label>
             <input
               id="current-amount"

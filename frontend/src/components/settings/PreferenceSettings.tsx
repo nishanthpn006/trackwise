@@ -13,20 +13,20 @@ export const PreferenceSettings: React.FC<PreferenceSettingsProps> = ({
   onSave,
   isSaving,
 }) => {
-  const [currency, setCurrency] = useState<string>('USD');
+  const [currency, setCurrency] = useState<string>('INR');
   const [dateFormat, setDateFormat] = useState<string>('YYYY-MM-DD');
   const [timeFormat, setTimeFormat] = useState<string>('24h');
   const [firstDayOfWeek, setFirstDayOfWeek] = useState<string>('Monday');
-  const [numberFormat, setNumberFormat] = useState<string>('en-US');
+  const [numberFormat, setNumberFormat] = useState<string>('en-IN');
   const [language, setLanguage] = useState<string>('en');
 
   useEffect(() => {
     if (preferences) {
-      setCurrency(preferences.currency || 'USD');
+      setCurrency(preferences.currency || 'INR');
       setDateFormat(preferences.dateFormat || 'YYYY-MM-DD');
       setTimeFormat(preferences.timeFormat || '24h');
       setFirstDayOfWeek(preferences.firstDayOfWeek || 'Monday');
-      setNumberFormat(preferences.numberFormat || 'en-US');
+      setNumberFormat(preferences.numberFormat || 'en-IN');
       setLanguage(preferences.language || 'en');
     }
   }, [preferences]);

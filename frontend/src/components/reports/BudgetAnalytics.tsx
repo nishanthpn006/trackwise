@@ -1,6 +1,7 @@
 import React from 'react';
 import { Wallet, AlertTriangle, CheckCircle2, ShieldCheck } from 'lucide-react';
 import type { ReportBudgetAnalytics } from '@/types/report';
+import { formatCurrency } from '@/utils/currency';
 
 interface BudgetAnalyticsProps {
   data: ReportBudgetAnalytics | undefined;
@@ -8,8 +9,6 @@ interface BudgetAnalyticsProps {
 }
 
 export const BudgetAnalytics: React.FC<BudgetAnalyticsProps> = ({ data, isLoading }) => {
-  const formatCurrency = (val: number | undefined) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
 
   if (isLoading) {
     return (

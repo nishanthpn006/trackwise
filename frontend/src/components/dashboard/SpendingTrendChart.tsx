@@ -10,17 +10,11 @@ import {
 } from 'recharts';
 import { TrendingDown } from 'lucide-react';
 import type { SpendingTrendPoint } from '@/types/dashboard';
+import { formatCurrency } from '@/utils/currency';
 
-interface SpendingTrendChartProps {
+export interface SpendingTrendChartProps {
   data: SpendingTrendPoint[];
 }
-
-const formatCurrency = (value: number): string =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(value);
 
 /** Format ISO date string to short label like "Jan 5" */
 const formatDateLabel = (dateStr: string): string => {
@@ -87,7 +81,7 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({ data }) 
               interval={0}
             />
             <YAxis
-              tickFormatter={(v: number) => `$${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
+              tickFormatter={(v: number) => `₹${v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v}`}
               tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }}
               axisLine={false}
               tickLine={false}

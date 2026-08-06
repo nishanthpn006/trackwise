@@ -10,6 +10,7 @@ import {
   Clock,
   Tag,
 } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 interface GoalCardProps {
   goal: SavingsGoal;
@@ -24,8 +25,6 @@ export const GoalCard: React.FC<GoalCardProps> = ({
   onDelete,
   onAddSavings,
 }) => {
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount || 0);
 
   const formatDate = (dateStr: string) => {
     if (!dateStr) return 'No target date';

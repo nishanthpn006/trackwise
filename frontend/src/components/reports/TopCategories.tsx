@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tag, TrendingUp } from 'lucide-react';
 import type { ReportCategoryBreakdown } from '@/types/report';
+import { formatCurrency } from '@/utils/currency';
 
 interface TopCategoriesProps {
   categories: ReportCategoryBreakdown[];
@@ -8,8 +9,6 @@ interface TopCategoriesProps {
 }
 
 export const TopCategories: React.FC<TopCategoriesProps> = ({ categories, isLoading }) => {
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
   if (isLoading) {
     return (

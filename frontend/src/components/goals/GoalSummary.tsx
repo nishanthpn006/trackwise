@@ -9,7 +9,7 @@ import {
   Percent,
 } from 'lucide-react';
 import type { GoalSummary as GoalSummaryType } from '@/types/goal';
-
+import { formatCurrency } from '@/utils/currency';
 interface GoalSummaryProps {
   summary: GoalSummaryType | null;
   isLoading?: boolean;
@@ -28,9 +28,6 @@ export const GoalSummary: React.FC<GoalSummaryProps> = ({ summary, isLoading }) 
       </div>
     );
   }
-
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val || 0);
 
   const cards = [
     {

@@ -15,6 +15,7 @@ import {
   Line,
   CartesianGrid,
 } from 'recharts';
+import { formatCurrency } from '@/utils/currency';
 
 interface GoalChartsProps {
   goals: SavingsGoal[];
@@ -81,7 +82,6 @@ export const GoalCharts: React.FC<GoalChartsProps> = ({ goals }) => {
       return { date: label, Savings: amount };
     });
 
-  const formatCurrency = (val: number) => `$${val.toLocaleString()}`;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

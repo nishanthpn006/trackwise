@@ -11,6 +11,7 @@ import type {
 import { parseApiError } from '@/services/api';
 import { useDebounce } from './useDebounce';
 import { useToast } from './useToast';
+import { formatCurrency } from '@/utils/currency';
 
 export function getCalculatedGoalStatus(goal: SavingsGoal): GoalStatus {
   if (goal.currentAmount >= goal.targetAmount) {
@@ -181,7 +182,7 @@ export const useGoals = () => {
       setIsSubmitting(true);
       try {
         const updated = await goalService.addContribution(id, payload);
-        toast.success(`Added $${payload.amount.toLocaleString()} toward "${updated.name}".`);
+        toast.success(`Added ${formatCurrency(payload.amount)} toward "${updated.name}".`);
         await fetchGoals();
         return updated;
       } catch (err: unknown) {

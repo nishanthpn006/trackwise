@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import type { ReportTrendPoint } from '@/types/report';
+import { formatCurrency } from '@/utils/currency';
 
 interface CashFlowChartProps {
   data: ReportTrendPoint[];
@@ -34,8 +35,6 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data, isLoading })
     );
   }
 
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(val);
 
   return (
     <div className="rounded-xl bg-card border border-border p-5 shadow-xs flex flex-col">

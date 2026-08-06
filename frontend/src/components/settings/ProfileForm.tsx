@@ -11,7 +11,7 @@ interface ProfileFormProps {
 export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSave, isSaving }) => {
   const [fullName, setFullName] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
-  const [currency, setCurrency] = useState<string>('USD');
+  const [currency, setCurrency] = useState<string>('INR');
   const [timezone, setTimezone] = useState<string>('UTC');
   const [bio, setBio] = useState<string>('');
 
@@ -19,7 +19,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ profile, onSave, isSav
     if (profile) {
       setFullName(profile.fullName || '');
       setPhone(profile.phone || '');
-      setCurrency(profile.currency || 'USD');
+      setCurrency(profile.currency || 'INR');
       setTimezone(profile.timezone || 'UTC');
       setBio(profile.bio || '');
     }

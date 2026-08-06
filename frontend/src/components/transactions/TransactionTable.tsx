@@ -2,6 +2,7 @@ import React from 'react';
 import type { Transaction } from '@/types/transaction';
 import { ArrowUpRight, ArrowDownRight, Edit2, Trash2, Tag, Calendar } from 'lucide-react';
 import { SkeletonTable } from '@/components/common/LoadingSkeleton';
+import { formatCurrency } from '@/utils/currency';
 
 export interface TransactionTableProps {
   transactions: Transaction[];
@@ -9,13 +10,6 @@ export interface TransactionTableProps {
   onEdit: (transaction: Transaction) => void;
   onDelete: (transaction: Transaction) => void;
 }
-
-const formatCurrency = (val: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(val || 0);
-};
 
 const formatDate = (dateStr: string) => {
   try {

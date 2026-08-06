@@ -148,7 +148,7 @@ export const BudgetDialog: React.FC<BudgetDialogProps> = ({
               Limit Amount <span className="text-destructive">*</span>
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs pointer-events-none">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-xs pointer-events-none">₹</span>
               <input
                 id="budget-dialog-amount"
                 type="number"

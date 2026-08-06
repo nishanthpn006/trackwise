@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ReportSummary } from '@/types/report';
+import { formatCurrency } from '@/utils/currency';
 
 interface YearlyReportTabProps {
   summary: ReportSummary | null;
@@ -7,8 +8,6 @@ interface YearlyReportTabProps {
 }
 
 export const YearlyReportTab: React.FC<YearlyReportTabProps> = ({ summary, isLoading }) => {
-  const formatCurrency = (val: number | undefined) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
 
   if (isLoading) {
     return (

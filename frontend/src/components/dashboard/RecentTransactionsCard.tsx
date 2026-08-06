@@ -3,28 +3,17 @@ import { Link } from 'react-router';
 import type { Transaction } from '@/types/transaction';
 import EmptyState from '@/components/common/EmptyState';
 import { ArrowRight, ArrowUpRight, ArrowDownRight, CreditCard } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 export interface RecentTransactionsCardProps {
   transactions: Transaction[];
   isLoading?: boolean;
 }
 
-/**
- * RecentTransactionsCard — Renders the 5 most recent financial transactions.
- * Features a mobile-native stacked card view for small mobile screens (<640px)
- * and a table layout for larger screens (≥640px).
- */
 export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
   transactions,
   isLoading = false,
 }) => {
-  const formatCurrency = (val: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(val || 0);
-  };
-
   const formatDate = (dateStr: string) => {
     try {
       const date = new Date(dateStr);

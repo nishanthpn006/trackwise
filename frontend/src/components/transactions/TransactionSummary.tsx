@@ -1,22 +1,14 @@
 import React from 'react';
 import type { DashboardSummary } from '@/types/transaction';
-import { ArrowUpRight, ArrowDownRight, DollarSign, CreditCard } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, IndianRupee, CreditCard } from 'lucide-react';
 import { Skeleton } from '@/components/common/LoadingSkeleton';
+import { formatCurrency } from '@/utils/currency';
 
 export interface TransactionSummaryProps {
   summary: DashboardSummary | null;
   totalTransactions?: number;
   isLoading?: boolean;
 }
-
-const formatCurrency = (val: number | undefined) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(val || 0);
-};
 
 export const TransactionSummary: React.FC<TransactionSummaryProps> = ({
   summary,
@@ -50,7 +42,7 @@ export const TransactionSummary: React.FC<TransactionSummaryProps> = ({
         <div className="flex items-center justify-between">
           <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Net Balance</span>
           <div className="p-2 rounded-xl bg-primary/10 text-primary">
-            <DollarSign className="h-4 w-4" />
+            <IndianRupee className="h-4 w-4" />
           </div>
         </div>
         <div className="flex items-baseline justify-between">

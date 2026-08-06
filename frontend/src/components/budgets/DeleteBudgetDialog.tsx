@@ -2,6 +2,7 @@ import React from 'react';
 import type { Budget } from '@/types/budget';
 import Dialog from '@/components/ui/Dialog';
 import { AlertTriangle, Loader2 } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 export interface DeleteBudgetDialogProps {
   isOpen: boolean;
@@ -10,9 +11,6 @@ export interface DeleteBudgetDialogProps {
   budget: Budget | null;
   isDeleting?: boolean;
 }
-
-const formatCurrency = (val: number) =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
 
 export const DeleteBudgetDialog: React.FC<DeleteBudgetDialogProps> = ({
   isOpen,

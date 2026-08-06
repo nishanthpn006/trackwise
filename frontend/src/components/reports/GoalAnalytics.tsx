@@ -1,6 +1,7 @@
 import React from 'react';
 import { Target, Calendar, Sparkles } from 'lucide-react';
 import type { ReportGoalAnalytics } from '@/types/report';
+import { formatCurrency } from '@/utils/currency';
 
 interface GoalAnalyticsProps {
   data: ReportGoalAnalytics | undefined;
@@ -8,8 +9,6 @@ interface GoalAnalyticsProps {
 }
 
 export const GoalAnalytics: React.FC<GoalAnalyticsProps> = ({ data, isLoading }) => {
-  const formatCurrency = (val: number | undefined) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
 
   if (isLoading) {
     return (

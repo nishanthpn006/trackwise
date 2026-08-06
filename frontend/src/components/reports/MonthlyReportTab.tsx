@@ -1,6 +1,7 @@
 import React from 'react';
 import type { ReportSummary } from '@/types/report';
 import { Calendar, TrendingUp, TrendingDown, PiggyBank, Wallet, Target, Tag } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 interface MonthlyReportTabProps {
   summary: ReportSummary | null;
@@ -8,8 +9,6 @@ interface MonthlyReportTabProps {
 }
 
 export const MonthlyReportTab: React.FC<MonthlyReportTabProps> = ({ summary, isLoading }) => {
-  const formatCurrency = (val: number | undefined) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
 
   if (isLoading) {
     return (

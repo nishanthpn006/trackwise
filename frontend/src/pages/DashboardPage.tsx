@@ -15,6 +15,7 @@ import GoalContributionDialog from '@/components/goals/GoalContributionDialog';
 import goalService from '@/services/goalService';
 import type { SavingsGoal, GoalContributionRequest } from '@/types/goal';
 import { useToast } from '@/hooks/useToast';
+import { formatCurrency } from '@/utils/currency';
 import {
   Wallet,
   TrendingUp,
@@ -52,7 +53,7 @@ export const DashboardPage: React.FC = () => {
     setIsSubmittingContrib(true);
     try {
       await goalService.addContribution(goalId, data);
-      toast.success(`Successfully added $${data.amount.toLocaleString()} to goal.`);
+      toast.success(`Successfully added ${formatCurrency(data.amount)} to goal.`);
       handleQuickActionRefresh();
     } catch {
       toast.error('Failed to add savings deposit. Please try again.');

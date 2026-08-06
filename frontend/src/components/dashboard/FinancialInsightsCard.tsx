@@ -1,17 +1,11 @@
 import React from 'react';
-import { Sparkles, TrendingUp, Activity, Hash, DollarSign } from 'lucide-react';
+import { Sparkles, TrendingUp, Activity, Hash, IndianRupee } from 'lucide-react';
 import type { FinancialInsights } from '@/types/dashboard';
+import { formatCurrency } from '@/utils/currency';
 
-interface FinancialInsightsCardProps {
+export interface FinancialInsightsCardProps {
   insights: FinancialInsights;
 }
-
-const formatCurrency = (value: number): string =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-  }).format(value);
 
 interface InsightTileProps {
   icon: React.ReactNode;
@@ -81,7 +75,7 @@ export const FinancialInsightsCard: React.FC<FinancialInsightsCardProps> = ({ in
         />
 
         <InsightTile
-          icon={<DollarSign className="h-3 w-3" />}
+          icon={<IndianRupee className="h-3 w-3" />}
           label="Avg Daily Spend"
           value={formatCurrency(Number(insights.averageDailySpending))}
           sub="Last 30 days average"

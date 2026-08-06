@@ -1,20 +1,14 @@
 import React from 'react';
 import type { CategoryWithStats } from '@/types/category';
 import CategoryIcon from './CategoryIcon';
-import { Edit2, Trash2, Calendar, Receipt, DollarSign } from 'lucide-react';
+import { Edit2, Trash2, Calendar, Receipt, IndianRupee } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 export interface CategoryCardProps {
   category: CategoryWithStats;
   onEdit: (category: CategoryWithStats) => void;
   onDelete: (category: CategoryWithStats) => void;
 }
-
-const formatCurrency = (val: number) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(val || 0);
-};
 
 const formatDate = (dateStr: string) => {
   try {
@@ -102,7 +96,7 @@ export const CategoryCard: React.FC<CategoryCardProps> = ({
 
         <div className="bg-muted/30 p-2.5 rounded-xl border border-border/30 space-y-0.5">
           <div className="flex items-center gap-1 text-muted-foreground text-[11px]">
-            <DollarSign className="h-3 w-3" />
+            <IndianRupee className="h-3 w-3" />
             <span>Total Volume</span>
           </div>
           <p className={`font-bold text-sm ${isIncome ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>

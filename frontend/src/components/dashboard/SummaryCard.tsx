@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatCurrency } from '@/utils/currency';
 
 export type SummaryCardVariant =
   | 'balance'
@@ -51,11 +52,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
     }
 
     if (isCurrency || variant === 'balance' || variant === 'income' || variant === 'expense' || variant === 'savings' || variant === 'avgSpend') {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-      }).format(rawVal);
+      return formatCurrency(rawVal);
     }
 
     return rawVal.toLocaleString();

@@ -5,6 +5,7 @@ import Dialog from '@/components/ui/Dialog';
 import type { SavingsGoal, GoalContributionRequest } from '@/types/goal';
 import { goalContributionSchema, type GoalContributionFormData } from '@/utils/validation';
 import { Loader2, PiggyBank } from 'lucide-react';
+import { formatCurrency } from '@/utils/currency';
 
 interface GoalContributionDialogProps {
   isOpen: boolean;
@@ -56,9 +57,6 @@ export const GoalContributionDialog: React.FC<GoalContributionDialogProps> = ({
     onClose();
   };
 
-  const formatCurrency = (val: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val || 0);
-
   return (
     <Dialog
       isOpen={isOpen}
@@ -92,7 +90,7 @@ export const GoalContributionDialog: React.FC<GoalContributionDialogProps> = ({
           {/* Deposit Amount */}
           <div className="space-y-1">
             <label htmlFor="deposit-amount" className="block text-xs font-bold text-foreground">
-              Deposit Amount ($) <span className="text-destructive">*</span>
+              Deposit Amount (₹) <span className="text-destructive">*</span>
             </label>
             <input
               id="deposit-amount"
