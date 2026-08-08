@@ -3,6 +3,12 @@ import axios from 'axios';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 /**
+ * Public authentication endpoints that must NOT receive an Authorization header.
+ * A stale/expired token sent to these endpoints can cause a 403 from Spring Security.
+ */
+const PUBLIC_AUTH_PATHS = ['/auth/register', '/auth/login'];
+
+/**
  * api — Centralized Axios instance configured with base URL, timeout, headers, and interceptors.
  */
 export const api = axios.create({
@@ -13,11 +19,17 @@ export const api = axios.create({
   },
 });
 
-// Request interceptor: attach Authorization header if token exists
+// Request interceptor: attach Authorization header for protected endpoints only.
+// Public auth endpoints (/auth/register, /auth/login) must never receive a JWT —
+// a stale or expired token would cause Spring Security to return 403.
 api.interceptors.request.use(
   (config) => {
+    const url = config.url ?? '';
+    const isPublicAuthEndpoint = PUBLIC_AUTH_PATHS.some((path) => url.endsWith(path));
+
     const token = localStorage.getItem('trackwise_token');
-    if (token && config.headers) {
+
+    if (token && config.headers && !isPublicAuthEndpoint) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
