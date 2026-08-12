@@ -7,42 +7,21 @@ import type {
   UserPreferences,
   UserNotifications,
   UserStatistics,
-  ThemeMode,
 } from '@/types/settings';
 import { parseApiError } from '@/services/api';
 import { useToast } from './useToast';
+import { useTheme } from './useTheme';
 
 export const useSettings = () => {
   const [profile, setProfile] = useState<UserProfileData | null>(null);
   const [statistics, setStatistics] = useState<UserStatistics | null>(null);
-  const [theme, setThemeState] = useState<ThemeMode>(() => {
-    return (localStorage.getItem('trackwise_theme') as ThemeMode) || 'system';
-  });
-
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const toast = useToast();
-
-  const applyTheme = useCallback((newTheme: ThemeMode) => {
-    const root = document.documentElement;
-    localStorage.setItem('trackwise_theme', newTheme);
-    setThemeState(newTheme);
-
-    if (newTheme === 'dark') {
-      root.classList.add('dark');
-    } else if (newTheme === 'light') {
-      root.classList.remove('dark');
-    } else {
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (systemDark) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
-    }
-  }, []);
+  // Delegate all theme DOM/localStorage management to ThemeContext
+  const { setTheme } = useTheme();
 
   const fetchProfileAndStats = useCallback(async () => {
     setIsLoading(true);
@@ -54,8 +33,9 @@ export const useSettings = () => {
       ]);
       setProfile(profData);
       setStatistics(statsData);
+      // Sync server-stored theme preference via ThemeContext
       if (profData?.preferences?.theme) {
-        applyTheme(profData.preferences.theme);
+        setTheme(profData.preferences.theme);
       }
     } catch (err: unknown) {
       const msg = parseApiError(err);
@@ -64,7 +44,7 @@ export const useSettings = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [applyTheme, toast]);
+  }, [setTheme, toast]);
 
   useEffect(() => {
     fetchProfileAndStats();
@@ -111,9 +91,7 @@ export const useSettings = () => {
       try {
         const updated = await settingsService.updatePreferences(payload);
         setProfile(updated);
-        if (payload.theme) {
-          applyTheme(payload.theme);
-        }
+        // Theme is already applied by ThemeContext before this API call
         toast.success('Preferences saved.');
       } catch (err: unknown) {
         const msg = parseApiError(err);
@@ -122,7 +100,7 @@ export const useSettings = () => {
         setIsSaving(false);
       }
     },
-    [applyTheme, toast]
+    [toast]
   );
 
   const handleUpdateNotifications = useCallback(
@@ -215,7 +193,6 @@ export const useSettings = () => {
   return {
     profile,
     statistics,
-    theme,
     isLoading,
     isSaving,
     error,
@@ -226,7 +203,6 @@ export const useSettings = () => {
     updateNotifications: handleUpdateNotifications,
     updateAvatar: handleUpdateAvatar,
     deleteAvatar: handleDeleteAvatar,
-    setTheme: applyTheme,
     exportData: handleExportData,
     deleteAccount: handleDeleteAccount,
   };

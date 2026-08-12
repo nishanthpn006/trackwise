@@ -1,7 +1,66 @@
 /*
  * animations.css — TrackWise animation utilities
  *
- * Additional keyframes and transition classes beyond what Tailwind provides.
- * Import this file in index.css when needed:
- *   @import './styles/animations.css';
+ * Purposeful keyframes for UI transitions.
+ * Imported by index.css via: @import "./styles/animations.css";
  */
+
+/* ── Fade in (opacity) ─────────────────────────────────────────────── */
+@keyframes tw-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Slide up + fade in ────────────────────────────────────────────── */
+@keyframes tw-slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Zoom in (subtle) ──────────────────────────────────────────────── */
+@keyframes tw-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Skeleton shimmer ──────────────────────────────────────────────── */
+@keyframes tw-shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Utility classes ───────────────────────────────────────────────── */
+.tw-animate-fade-in {
+  animation: tw-fade-in 200ms ease-out both;
+}
+
+.tw-animate-slide-up-fade {
+  animation: tw-slide-up-fade 250ms ease-out both;
+}
+
+.tw-animate-zoom-in {
+  animation: tw-zoom-in 200ms ease-out both;
+}
+
+.tw-animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.08) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: tw-shimmer 1.8s ease-in-out infinite;
+}

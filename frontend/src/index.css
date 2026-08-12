@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/animations.css";
 
 /* ─────────────────────────────────────────────
    TrackWise — CSS Custom Properties (Design Tokens)
@@ -6,7 +7,7 @@
 ───────────────────────────────────────────── */
 
 :root {
-  --background: 0 0% 100%;
+  --background: 210 20% 98%;
   --foreground: 222.2 84% 4.9%;
 
   --card: 0 0% 100%;
@@ -42,16 +43,21 @@
   --brand-accent: 143 71% 45%;
   --brand-warning: 38 92% 50%;
   --brand-danger: 0 84% 60%;
+
+  /* Sidebar tokens */
+  --sidebar-width: 250px;
+  --sidebar-collapsed-width: 72px;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
+  --background: 222 47% 7%;
   --foreground: 210 40% 98%;
 
-  --card: 222.2 84% 4.9%;
+  /* Card is slightly lighter than background for depth */
+  --card: 222 47% 10%;
   --card-foreground: 210 40% 98%;
 
-  --popover: 222.2 84% 4.9%;
+  --popover: 222 47% 10%;
   --popover-foreground: 210 40% 98%;
 
   --primary: 217.2 91.2% 59.8%;
@@ -69,12 +75,14 @@
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
 
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
+  --border: 217.2 32.6% 20%;
+  --input: 217.2 32.6% 20%;
   --ring: 224.3 76.3% 48%;
 }
 
-/* Base resets using native CSS (no @apply — Tailwind v4 CSS-first) */
+/* ─────────────────────────────────────────────
+   Base resets (Tailwind v4 CSS-first)
+───────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -92,4 +100,94 @@ body {
   font-feature-settings: "rlig" 1, "calt" 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent layout shift from scrollbar */
+  scrollbar-gutter: stable;
+}
+
+/* ─────────────────────────────────────────────
+   Focus-visible ring — keyboard only, not mouse
+───────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────
+   Interactive element base transitions
+───────────────────────────────────────────── */
+button,
+a,
+[role="button"] {
+  transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+/* Active press feedback */
+button:active:not(:disabled),
+[role="button"]:active:not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+/* ─────────────────────────────────────────────
+   Form inputs — consistent focus treatment
+───────────────────────────────────────────── */
+input,
+select,
+textarea {
+  transition-property: border-color, box-shadow, background-color;
+  transition-duration: 150ms;
+  transition-timing-function: ease-out;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+  border-color: hsl(var(--ring));
+}
+
+/* ─────────────────────────────────────────────
+   Reduced motion — respect user preference
+───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  button:active:not(:disabled),
+  [role="button"]:active:not([aria-disabled="true"]) {
+    transform: none;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Scrollbar styling (thin, theme-aware)
+───────────────────────────────────────────── */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--muted-foreground) / 0.2) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--muted-foreground) / 0.2);
+  border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--muted-foreground) / 0.35);
 }

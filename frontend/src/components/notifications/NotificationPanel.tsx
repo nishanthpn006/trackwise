@@ -23,6 +23,13 @@ interface NotificationPanelProps {
   onRefresh: () => void;
 }
 
+/**
+ * NotificationPanel — Dropdown notification center.
+ *
+ * Kept mounted at all times (controlled by isOpen) so both open and close
+ * CSS transitions play correctly. Uses opacity + translateY for smooth entry/exit.
+ * Correct z-index: sits above the Navbar (z-20) and backdrop (z-40).
+ */
 export const NotificationPanel: React.FC<NotificationPanelProps> = ({
   isOpen,
   onClose,
@@ -47,29 +54,39 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
         onClose();
       }
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleKeyDown);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
 
   return (
     <div
       ref={panelRef}
-      className="absolute right-0 top-12 w-80 sm:w-96 bg-card border border-border rounded-2xl shadow-xl z-50 overflow-hidden flex flex-col max-h-[540px] animate-in fade-in zoom-in-95 duration-150"
+      role="dialog"
+      aria-label="Notification Center"
+      aria-modal="false"
+      className={`absolute right-0 top-12 w-80 sm:w-96 bg-card/95 backdrop-blur-md border border-border rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[560px] transition-all duration-200 ease-out origin-top-right ${
+        isOpen
+          ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
+          : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
+      }`}
     >
       {/* Panel Header */}
-      <div className="p-4 border-b border-border bg-muted/20 flex items-center justify-between">
+      <div className="p-4 border-b border-border/60 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-extrabold text-foreground">Notification Center</h3>
+          <h3 className="text-sm font-bold text-foreground">Notifications</h3>
           {unreadCount > 0 && (
-            <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white">
-              {unreadCount} unread
+            <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white tabular-nums">
+              {unreadCount}
             </span>
           )}
         </div>
@@ -81,9 +98,10 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
               onClick={onMarkAllRead}
               disabled={isUpdating}
               title="Mark all as read"
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+              aria-label="Mark all notifications as read"
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-emerald-600 hover:bg-emerald-500/10 transition-colors duration-150 disabled:opacity-40"
             >
-              <CheckCheck className="w-4 h-4 text-emerald-500" />
+              <CheckCheck className="w-4 h-4" />
             </button>
           )}
 
@@ -93,7 +111,8 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
               onClick={onClearAll}
               disabled={isUpdating}
               title="Clear all notifications"
-              className="p-1.5 rounded-lg text-muted-foreground hover:text-rose-600 hover:bg-rose-500/10 transition-colors disabled:opacity-50"
+              aria-label="Clear all notifications"
+              className="p-1.5 rounded-lg text-muted-foreground hover:text-rose-600 hover:bg-rose-500/10 transition-colors duration-150 disabled:opacity-40"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -102,16 +121,16 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
       </div>
 
       {/* Filters */}
-      <div className="p-3 border-b border-border bg-card">
+      <div className="px-3 py-2 border-b border-border/40 shrink-0">
         <NotificationFilters filters={filters} onFilterChange={onFilterChange} />
       </div>
 
       {/* Notification Cards Viewport */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-2.5 min-h-[220px]">
+      <div className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[200px]">
         {isLoading ? (
-          <div className="space-y-2.5 py-4">
+          <div className="space-y-2.5 py-2">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-20 rounded-xl bg-muted/40 animate-pulse border border-border" />
+              <div key={i} className="h-20 rounded-xl bg-muted/50 animate-pulse border border-border/40" />
             ))}
           </div>
         ) : notifications.length === 0 ? (
@@ -130,21 +149,25 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
       </div>
 
       {/* Panel Footer */}
-      <div className="p-3 border-t border-border bg-muted/20 flex items-center justify-between text-xs">
+      <div className="p-3 border-t border-border/40 flex items-center justify-between text-xs shrink-0">
         <button
           type="button"
           onClick={onGenerateSummary}
           disabled={isUpdating}
-          className="flex items-center gap-1.5 text-[11px] font-bold text-primary hover:underline disabled:opacity-50"
+          className="flex items-center gap-1.5 text-[11px] font-semibold text-primary hover:text-primary/80 transition-colors duration-150 disabled:opacity-40"
         >
-          {isUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-          <span>Generate Summary Digest</span>
+          {isUpdating ? (
+            <Loader2 className="w-3.5 h-3.5 animate-spin" />
+          ) : (
+            <Sparkles className="w-3.5 h-3.5" />
+          )}
+          <span>Generate Summary</span>
         </button>
 
         <Link
           to="/settings"
           onClick={onClose}
-          className="flex items-center gap-1 text-[11px] font-bold text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1 text-[11px] font-semibold text-muted-foreground hover:text-foreground transition-colors duration-150"
         >
           <Settings className="w-3.5 h-3.5" />
           <span>Preferences</span>

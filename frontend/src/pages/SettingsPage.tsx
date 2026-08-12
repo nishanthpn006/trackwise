@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PageContainer from '@/components/common/PageContainer';
 import useSettings from '@/hooks/useSettings';
+import { useTheme } from '@/hooks/useTheme';
 import {
   ProfileForm,
   PasswordDialog,
@@ -18,7 +19,6 @@ export const SettingsPage: React.FC = () => {
   const {
     profile,
     statistics,
-    theme,
     isLoading,
     isSaving,
     error,
@@ -29,10 +29,12 @@ export const SettingsPage: React.FC = () => {
     updateNotifications,
     updateAvatar,
     deleteAvatar,
-    setTheme,
     exportData,
     deleteAccount,
   } = useSettings();
+
+  // Use the centralized theme context — same source of truth as the Navbar toggle
+  const { theme, setTheme } = useTheme();
 
   const [activeTab, setActiveTab] = useState<'profile' | 'appearance' | 'preferences' | 'notifications' | 'security' | 'data'>('profile');
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState<boolean>(false);
@@ -118,7 +120,9 @@ export const SettingsPage: React.FC = () => {
                 <AppearanceSettings
                   currentTheme={theme}
                   onThemeChange={(newTheme) => {
+                    // Apply immediately via ThemeContext (updates Navbar toggle too)
                     setTheme(newTheme);
+                    // Persist to server profile
                     updatePreferences({ theme: newTheme });
                   }}
                   isSaving={isSaving}

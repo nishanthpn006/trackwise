@@ -12,9 +12,16 @@ interface SidebarItemProps {
 }
 
 /**
- * SidebarItem — Navigation link/button component supporting active route detection,
- * left accent border, active primary colors, hover animations, focus-visible accessibility,
- * and collapsed icon-only mode.
+ * SidebarItem — Navigation link/button.
+ *
+ * Supports:
+ * - Active route detection with left accent border
+ * - Hover state with background + foreground color change
+ * - Active/pressed scale feedback
+ * - Icon scale on active
+ * - Collapsed icon-only mode (desktop)
+ * - Keyboard focus-visible ring
+ * - Tooltip in collapsed mode
  */
 export const SidebarItem: React.FC<SidebarItemProps> = ({ item, onClick, isMobile = false }) => {
   const { isCollapsed } = useSidebar();
@@ -23,57 +30,63 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, onClick, isMobil
   const collapsedView = !isMobile && isCollapsed;
   const Icon = item.icon;
 
-  // Determine if this item matches the current active location
   const isActive = item.path ? location.pathname === item.path : false;
 
   const baseClasses =
-    'relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring';
+    'relative flex items-center gap-3 rounded-xl text-xs font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none active:scale-[0.97]';
+
+  const paddingClasses = collapsedView ? 'justify-center p-2.5' : 'px-3 py-2.5';
 
   const activeClasses =
-    'bg-primary/10 text-primary font-semibold shadow-2xs before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-1 before:rounded-r-md before:bg-primary';
+    'bg-primary/10 text-primary before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-[3px] before:rounded-r-full before:bg-primary';
 
   const inactiveClasses =
     'text-muted-foreground hover:text-foreground hover:bg-muted/60';
 
-  const combinedClasses = `${baseClasses} ${isActive ? activeClasses : inactiveClasses} ${
-    collapsedView ? 'justify-center px-0' : ''
-  }`;
+  const combinedClasses = `${baseClasses} ${paddingClasses} ${isActive ? activeClasses : inactiveClasses}`;
 
   const content = (
     <>
       <Icon
-        className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
-          isActive ? 'text-primary scale-110' : 'text-muted-foreground group-hover:text-foreground group-hover:scale-105'
+        className={`h-4 w-4 shrink-0 transition-all duration-150 ${
+          isActive
+            ? 'text-primary scale-110'
+            : 'text-muted-foreground'
         }`}
+        aria-hidden="true"
       />
       {!collapsedView && (
-        <span className="truncate flex-1 text-left">{item.label}</span>
+        <span className="truncate flex-1 text-left leading-none">{item.label}</span>
       )}
       {!collapsedView && item.badge && (
-        <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-primary text-primary-foreground shrink-0">
+        <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-primary text-primary-foreground shrink-0 leading-none">
           {item.badge}
         </span>
       )}
     </>
   );
 
-  // If this item is an action (e.g., Logout), render a button
+  // Action item (e.g. Logout) — renders as button
   if (item.isAction) {
     return (
       <button
         type="button"
         onClick={onClick}
-        className={`${combinedClasses} w-full group text-destructive hover:bg-destructive/10 hover:text-destructive`}
+        className={`${baseClasses} ${paddingClasses} w-full text-destructive/70 hover:text-destructive hover:bg-destructive/10`}
         aria-label={item.ariaLabel}
         title={collapsedView ? item.label : undefined}
       >
-        <Icon className="h-4 w-4 shrink-0 transition-transform duration-200 text-destructive group-hover:scale-110" />
-        {!collapsedView && <span className="truncate flex-1 text-left">{item.label}</span>}
+        <Icon
+          className="h-4 w-4 shrink-0 transition-colors duration-150 text-destructive/70"
+          aria-hidden="true"
+        />
+        {!collapsedView && (
+          <span className="truncate flex-1 text-left leading-none">{item.label}</span>
+        )}
       </button>
     );
   }
 
-  // Otherwise render a standard NavLink
   return (
     <NavLink
       to={item.path}
