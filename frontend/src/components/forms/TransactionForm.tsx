@@ -16,6 +16,7 @@ const transactionSchema = z.object({
     .number({ message: 'Amount must be a valid number' })
     .positive('Amount must be greater than 0'),
   categoryId: z.string().optional(),
+  accountId: z.string().optional(),
   date: z.string().min(1, 'Date is required'),
   description: z
     .string()
@@ -42,6 +43,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   isSubmitting = false,
 }) => {
   const { categories, isLoading: isLoadingCategories } = useCategories(type);
+  const [accounts, setAccounts] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    import('@/services/accountService').then((m) => {
+      m.default.getAccounts().then(setAccounts).catch(() => {});
+    });
+  }, []);
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -89,7 +97,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         {/* Amount Field */}
         <div className="space-y-1">
           <label htmlFor="tx-amount" className="font-bold text-foreground">
-            Amount ($) <span className="text-destructive">*</span>
+            Amount (₹) <span className="text-destructive">*</span>
           </label>
           <input
             id="tx-amount"
@@ -127,25 +135,47 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         </div>
       </div>
 
-      {/* Category Selection Field */}
-      <div className="space-y-1">
-        <label htmlFor="tx-category" className="font-bold text-foreground">
-          Category
-        </label>
-        <select
-          id="tx-category"
-          disabled={isSubmitting || isLoadingCategories}
-          className="w-full px-3 py-2 rounded-xl bg-background border border-border/80 text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all disabled:opacity-50"
-          {...register('categoryId')}
-        >
-          <option value="">Select a category (Optional)</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+      {/* Category & Account Selection Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="space-y-1">
+          <label htmlFor="tx-category" className="font-bold text-foreground">
+            Category
+          </label>
+          <select
+            id="tx-category"
+            disabled={isSubmitting || isLoadingCategories}
+            className="w-full px-3 py-2 rounded-xl bg-background border border-border/80 text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all disabled:opacity-50"
+            {...register('categoryId')}
+          >
+            <option value="">Select a category (Optional)</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="tx-account" className="font-bold text-foreground">
+            Account
+          </label>
+          <select
+            id="tx-account"
+            disabled={isSubmitting}
+            className="w-full px-3 py-2 rounded-xl bg-background border border-border/80 text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all disabled:opacity-50"
+            {...register('accountId')}
+          >
+            <option value="">Select account (Optional)</option>
+            {accounts.map((acc) => (
+              <option key={acc.id} value={acc.id}>
+                {acc.name} ({acc.type})
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
+
 
       {/* Description / Notes Field */}
       <div className="space-y-1">

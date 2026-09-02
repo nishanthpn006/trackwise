@@ -1,0 +1,154 @@
+package com.trackwise.service;
+
+import com.trackwise.dto.AccountRequest;
+import com.trackwise.dto.AccountResponse;
+import com.trackwise.entity.Account;
+import com.trackwise.entity.Transaction;
+import com.trackwise.entity.TransactionType;
+import com.trackwise.entity.User;
+import com.trackwise.exception.ResourceNotFoundException;
+import com.trackwise.repository.AccountRepository;
+import com.trackwise.repository.TransactionRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+@Service
+@Transactional
+public class AccountService {
+
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+
+    public AccountService(AccountRepository accountRepository, TransactionRepository transactionRepository) {
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public List<AccountResponse> getAccounts(User user, boolean includeArchived) {
+        List<Account> accounts = includeArchived
+                ? accountRepository.findByUserOrderByCreatedAtDesc(user)
+                : accountRepository.findByUserAndIsArchivedFalseOrderByCreatedAtDesc(user);
+
+        return accounts.stream()
+                .map(acc -> {
+                    BigDecimal computedBalance = calculateCurrentBalance(acc, user);
+                    acc.setCurrentBalance(computedBalance);
+                    long txCount = transactionRepository.countByAccount(acc);
+                    return AccountResponse.fromEntity(acc, txCount);
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public AccountResponse getAccountById(UUID id, User user) {
+        Account account = accountRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
+
+        BigDecimal computedBalance = calculateCurrentBalance(account, user);
+        account.setCurrentBalance(computedBalance);
+        long txCount = transactionRepository.countByAccount(account);
+        return AccountResponse.fromEntity(account, txCount);
+    }
+
+    public AccountResponse createAccount(AccountRequest request, User user) {
+        String name = request.getName().trim();
+        if (accountRepository.existsByNameAndUser(name, user)) {
+            throw new IllegalArgumentException("Account with name '" + name + "' already exists");
+        }
+
+        BigDecimal initial = request.getInitialBalance() != null ? request.getInitialBalance() : BigDecimal.ZERO;
+        Account account = new Account(
+                name,
+                request.getType(),
+                initial,
+                request.getCurrency() != null ? request.getCurrency() : "INR",
+                request.getColor() != null ? request.getColor() : "#3B82F6",
+                request.getIcon() != null ? request.getIcon() : "wallet",
+                request.getDescription(),
+                user
+        );
+
+        Account saved = accountRepository.save(account);
+        return AccountResponse.fromEntity(saved, 0L);
+    }
+
+    public AccountResponse updateAccount(UUID id, AccountRequest request, User user) {
+        Account account = accountRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
+
+        String name = request.getName().trim();
+        if (accountRepository.existsByNameAndUserAndIdNot(name, user, id)) {
+            throw new IllegalArgumentException("Account with name '" + name + "' already exists");
+        }
+
+        account.setName(name);
+        account.setType(request.getType());
+        if (request.getInitialBalance() != null) {
+            account.setInitialBalance(request.getInitialBalance());
+        }
+        if (request.getCurrency() != null) account.setCurrency(request.getCurrency());
+        if (request.getColor() != null) account.setColor(request.getColor());
+        if (request.getIcon() != null) account.setIcon(request.getIcon());
+        account.setDescription(request.getDescription());
+
+        Account updated = accountRepository.save(account);
+        BigDecimal computed = calculateCurrentBalance(updated, user);
+        updated.setCurrentBalance(computed);
+        long txCount = transactionRepository.countByAccount(updated);
+        return AccountResponse.fromEntity(updated, txCount);
+    }
+
+    public AccountResponse toggleArchive(UUID id, User user) {
+        Account account = accountRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
+
+        account.setArchived(!account.isArchived());
+        Account saved = accountRepository.save(account);
+        BigDecimal computed = calculateCurrentBalance(saved, user);
+        saved.setCurrentBalance(computed);
+        long txCount = transactionRepository.countByAccount(saved);
+        return AccountResponse.fromEntity(saved, txCount);
+    }
+
+    @SuppressWarnings("null")
+    public void deleteAccount(UUID id, User user) {
+        Account account = accountRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
+
+        long txCount = transactionRepository.countByAccount(account);
+        if (txCount > 0) {
+            // Safe operation: archive rather than breaking transaction records
+            account.setArchived(true);
+            accountRepository.save(account);
+        } else {
+            accountRepository.delete(account);
+        }
+    }
+
+    /**
+     * Computes the balance dynamically from initial balance + income - expenses linked to this account.
+     */
+    @SuppressWarnings("null")
+    public BigDecimal calculateCurrentBalance(Account account, User user) {
+        BigDecimal initial = account.getInitialBalance() != null ? account.getInitialBalance() : BigDecimal.ZERO;
+        List<Transaction> txs = transactionRepository.findByUserAndAccountOrderByDateDesc(user, account);
+
+        BigDecimal income = txs.stream()
+                .filter(t -> t.getType() == TransactionType.INCOME)
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal expense = txs.stream()
+                .filter(t -> t.getType() == TransactionType.EXPENSE)
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return initial.add(income).subtract(expense);
+    }
+}

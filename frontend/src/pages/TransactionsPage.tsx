@@ -4,6 +4,7 @@ import EmptyState from '@/components/common/EmptyState';
 import ErrorState from '@/components/common/ErrorState';
 import { useTransactions } from '@/hooks/useTransactions';
 import { useCategories } from '@/hooks/useCategories';
+import { useAccounts } from '@/hooks/useAccounts';
 import { useToast } from '@/hooks/useToast';
 import type { Category, CategoryRequest, Transaction, TransactionRequest } from '@/types/transaction';
 import { CreditCard, Plus, Tag } from 'lucide-react';
@@ -60,6 +61,8 @@ export const TransactionsPage: React.FC = () => {
   } = useTransactions({ initialSize: 10 });
 
   const { categories, isLoading: isLoadingCategories, refetch: refetchCategories } = useCategories();
+  const { accounts } = useAccounts();
+
 
   // Modals state
   const [isTxDialogOpen, setIsTxDialogOpen] = useState<boolean>(false);
@@ -302,8 +305,10 @@ export const TransactionsPage: React.FC = () => {
         onSubmit={handleSaveTransaction}
         transactionToEdit={txToEdit}
         categories={categories}
+        accounts={accounts}
         isSubmitting={isSubmitting}
       />
+
 
       {/* Delete Transaction Dialog */}
       <DeleteTransactionDialog

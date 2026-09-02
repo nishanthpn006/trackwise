@@ -74,7 +74,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
       role="dialog"
       aria-label="Notification Center"
       aria-modal="false"
-      className={`absolute right-0 top-12 w-80 sm:w-96 bg-card/95 backdrop-blur-md border border-border rounded-2xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[560px] transition-all duration-200 ease-out origin-top-right ${
+      className={`absolute right-0 top-12 w-[calc(100vw-1.5rem)] sm:w-96 max-w-sm bg-card/95 backdrop-blur-md border border-border rounded-2xl shadow-2xl z-[var(--z-drawer)] overflow-hidden flex flex-col max-h-[560px] transition-all duration-200 ease-out origin-top-right ${
         isOpen
           ? 'opacity-100 scale-100 translate-y-0 pointer-events-auto'
           : 'opacity-0 scale-95 -translate-y-2 pointer-events-none'
@@ -130,7 +130,7 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
         {isLoading ? (
           <div className="space-y-2.5 py-2">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-20 rounded-xl bg-muted/50 animate-pulse border border-border/40" />
+              <div key={i} className="h-20 rounded-xl tw-animate-shimmer border border-border/40" />
             ))}
           </div>
         ) : notifications.length === 0 ? (

@@ -5,9 +5,9 @@ import React from 'react';
  * Mirrors the final 2×2 chart grid layout to prevent layout shift.
  */
 export const AnalyticsSkeleton: React.FC = () => (
-  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 animate-pulse" data-testid="analytics-skeleton">
+  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6" data-testid="analytics-skeleton">
     {/* Bar chart skeleton */}
-    <div className="bg-card border border-border/60 rounded-xl p-6 space-y-4 shadow-xs">
+    <div className="bg-card border border-border/60 rounded-xl p-6 space-y-4 shadow-xs tw-animate-shimmer">
       <div className="flex items-center justify-between">
         <div className="space-y-1.5">
           <div className="h-4 w-48 bg-muted rounded" />

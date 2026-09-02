@@ -54,7 +54,7 @@ export const Sidebar: React.FC = () => {
     <>
       {/* ── Desktop Sidebar ──────────────────────────────────────────────── */}
       <aside
-        className={`hidden md:flex flex-col h-screen sticky top-0 bg-card border-r border-border z-30 select-none transition-[width] duration-200 ease-in-out ${
+        className={`hidden md:flex flex-col h-screen sticky top-0 sidebar-surface border-r z-[var(--z-sidebar)] select-none transition-[width] duration-200 ease-in-out ${
           isCollapsed ? 'w-[72px]' : 'w-[250px]'
         }`}
         aria-label="Desktop Main Navigation"
@@ -83,19 +83,19 @@ export const Sidebar: React.FC = () => {
         pointer-events:none when closed so it doesn't block interactions.
       */}
       <div
-        className={`fixed inset-0 z-40 md:hidden transition-opacity duration-300 ease-in-out ${
+        className={`fixed inset-0 z-[var(--z-backdrop)] md:hidden transition-opacity duration-300 ease-in-out ${
           isMobileOpen
             ? 'opacity-100 pointer-events-auto'
             : 'opacity-0 pointer-events-none'
         }`}
-        style={{ backgroundColor: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(3px)' }}
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
         onClick={closeMobile}
         aria-hidden="true"
       />
 
       {/* ── Mobile Slide-Out Drawer ──────────────────────────────────────── */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[280px] bg-card border-r border-border shadow-2xl flex flex-col md:hidden transition-transform duration-300 ease-in-out select-none ${
+        className={`fixed inset-y-0 left-0 z-[var(--z-drawer)] w-[280px] sidebar-surface border-r shadow-2xl flex flex-col md:hidden transition-transform duration-300 ease-in-out select-none ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-label="Mobile Navigation Drawer"

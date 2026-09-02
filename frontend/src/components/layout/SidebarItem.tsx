@@ -33,7 +33,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, onClick, isMobil
   const isActive = item.path ? location.pathname === item.path : false;
 
   const baseClasses =
-    'relative flex items-center gap-3 rounded-xl text-xs font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none active:scale-[0.97]';
+    'group relative flex items-center gap-3 rounded-xl text-xs font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring select-none active:scale-[0.97]';
 
   const paddingClasses = collapsedView ? 'justify-center p-2.5' : 'px-3 py-2.5';
 
@@ -51,7 +51,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, onClick, isMobil
         className={`h-4 w-4 shrink-0 transition-all duration-150 ${
           isActive
             ? 'text-primary scale-110'
-            : 'text-muted-foreground'
+            : 'text-muted-foreground group-hover:text-foreground'
         }`}
         aria-hidden="true"
       />
@@ -61,6 +61,21 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, onClick, isMobil
       {!collapsedView && item.badge && (
         <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-md bg-primary text-primary-foreground shrink-0 leading-none">
           {item.badge}
+        </span>
+      )}
+
+      {/* Floating tooltip for collapsed icon-only desktop mode */}
+      {collapsedView && (
+        <span
+          role="tooltip"
+          className="absolute left-full ml-3 px-2.5 py-1 rounded-lg bg-popover text-popover-foreground text-xs font-medium shadow-lg border border-border opacity-0 scale-95 pointer-events-none transition-all duration-150 group-hover:opacity-100 group-hover:scale-100 whitespace-nowrap z-[var(--z-drawer)]"
+        >
+          {item.label}
+          {item.badge && (
+            <span className="ml-1.5 px-1.5 py-0.5 rounded-md bg-primary text-primary-foreground text-[10px] font-bold">
+              {item.badge}
+            </span>
+          )}
         </span>
       )}
     </>
@@ -74,14 +89,21 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, onClick, isMobil
         onClick={onClick}
         className={`${baseClasses} ${paddingClasses} w-full text-destructive/70 hover:text-destructive hover:bg-destructive/10`}
         aria-label={item.ariaLabel}
-        title={collapsedView ? item.label : undefined}
       >
         <Icon
-          className="h-4 w-4 shrink-0 transition-colors duration-150 text-destructive/70"
+          className="h-4 w-4 shrink-0 transition-colors duration-150 text-destructive/70 group-hover:text-destructive"
           aria-hidden="true"
         />
         {!collapsedView && (
           <span className="truncate flex-1 text-left leading-none">{item.label}</span>
+        )}
+        {collapsedView && (
+          <span
+            role="tooltip"
+            className="absolute left-full ml-3 px-2.5 py-1 rounded-lg bg-popover text-destructive text-xs font-medium shadow-lg border border-border opacity-0 scale-95 pointer-events-none transition-all duration-150 group-hover:opacity-100 group-hover:scale-100 whitespace-nowrap z-[var(--z-drawer)]"
+          >
+            {item.label}
+          </span>
         )}
       </button>
     );
@@ -94,7 +116,6 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, onClick, isMobil
       className={combinedClasses}
       aria-label={item.ariaLabel}
       aria-current={isActive ? 'page' : undefined}
-      title={collapsedView ? item.label : undefined}
     >
       {content}
     </NavLink>

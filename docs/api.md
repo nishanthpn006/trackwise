@@ -47,7 +47,7 @@ removes the stored token and redirects to `/login`.
 
 Register a new user account.
 
-**Request body**
+**Request body:**
 
 ```json
 {
@@ -80,7 +80,7 @@ Register a new user account.
 
 Authenticate and receive a JWT token.
 
-**Request body**
+**Request body:**
 
 ```json
 {
@@ -114,7 +114,7 @@ Authenticate and receive a JWT token.
 
 List paginated transactions for the authenticated user.
 
-**Query parameters**
+**Query parameters:**
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -161,7 +161,7 @@ List paginated transactions for the authenticated user.
 
 Create a new transaction.
 
-**Request body**
+**Request body:**
 
 ```json
 {
@@ -206,7 +206,7 @@ Delete a transaction.
 
 List all categories for the authenticated user.
 
-**Query parameters**
+**Query parameters:**
 
 | Parameter | Type | Description |
 | --- | --- | --- |

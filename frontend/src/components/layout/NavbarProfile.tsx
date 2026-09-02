@@ -91,7 +91,7 @@ export const NavbarProfile: React.FC = () => {
 
       {/* Profile Dropdown Popover */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-[240px] bg-card border border-border/70 rounded-2xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+        <div className="absolute right-0 mt-2 w-[240px] bg-popover border border-border/70 rounded-2xl shadow-xl z-[var(--z-dropdown)] overflow-hidden tw-animate-slide-down-fade">
           {/* User Info Header */}
           <div className="p-3.5 border-b border-border/60 bg-muted/20 flex items-center gap-3">
             <div className="h-9 w-9 rounded-full bg-primary/10 text-primary font-extrabold text-sm flex items-center justify-center shrink-0 border border-primary/20">

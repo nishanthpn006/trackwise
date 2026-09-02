@@ -57,6 +57,9 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                 Category
               </th>
               <th scope="col" className="py-3.5 px-4">
+                Account
+              </th>
+              <th scope="col" className="py-3.5 px-4">
                 Date
               </th>
               <th scope="col" className="py-3.5 px-4 text-right">
@@ -115,10 +118,22 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                     )}
                   </td>
 
+                  {/* Account Column */}
+                  <td className="py-3.5 px-4 whitespace-nowrap">
+                    {tx.account ? (
+                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg text-xs font-medium bg-muted/60 text-muted-foreground border border-border/40">
+                        {tx.account.name}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground/50">—</span>
+                    )}
+                  </td>
+
                   {/* Date Column */}
                   <td className="py-3.5 px-4 whitespace-nowrap text-xs text-muted-foreground font-medium">
                     {formatDate(tx.date)}
                   </td>
+
 
                   {/* Amount Column */}
                   <td className="py-3.5 px-4 text-right whitespace-nowrap font-bold text-sm tabular-nums font-mono">
@@ -193,10 +208,16 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                       ) : (
                         <span className="text-[10px] text-muted-foreground italic">Uncategorized</span>
                       )}
+                      {tx.account && (
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">
+                          {tx.account.name}
+                        </span>
+                      )}
                       <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
                         <Calendar className="h-2.5 w-2.5" />
                         {formatDate(tx.date)}
                       </span>
+
                     </div>
                   </div>
                 </div>

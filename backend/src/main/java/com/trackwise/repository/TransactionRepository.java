@@ -41,6 +41,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID>,
 
     long countByCategory(Category category);
 
+    long countByAccount(com.trackwise.entity.Account account);
+
+    List<Transaction> findByUserAndAccountOrderByDateDesc(User user, com.trackwise.entity.Account account);
+
     // ─── Analytics queries ────────────────────────────────────────────────────
 
     /**

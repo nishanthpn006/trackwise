@@ -30,7 +30,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         action.href ? (
           <Link
             to={action.href}
-            className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-primary-foreground bg-primary rounded-lg shadow-sm hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-primary-foreground bg-primary rounded-xl shadow-xs hover:bg-primary/90 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
           >
             {action.label}
           </Link>
@@ -38,7 +38,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <button
             type="button"
             onClick={action.onClick}
-            className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-primary-foreground bg-primary rounded-lg shadow-sm hover:bg-primary/90 transition-colors"
+            className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-primary-foreground bg-primary rounded-xl shadow-xs hover:bg-primary/90 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring active:scale-[0.98]"
           >
             {action.label}
           </button>

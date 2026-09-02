@@ -9,7 +9,11 @@ import GlobalLoadingPage from '@/pages/GlobalLoadingPage';
 const LoginPage        = lazy(() => import('@/pages/LoginPage'));
 const RegisterPage     = lazy(() => import('@/pages/RegisterPage'));
 const DashboardPage    = lazy(() => import('@/pages/DashboardPage'));
+const AccountsPage     = lazy(() => import('@/pages/AccountsPage'));
 const TransactionsPage = lazy(() => import('@/pages/TransactionsPage'));
+const SubscriptionsPage = lazy(() => import('@/pages/SubscriptionsPage'));
+const BillsPage        = lazy(() => import('@/pages/BillsPage'));
+const RecurringPage    = lazy(() => import('@/pages/RecurringPage'));
 const CategoriesPage   = lazy(() => import('@/pages/CategoriesPage'));
 const BudgetsPage      = lazy(() => import('@/pages/BudgetsPage'));
 const GoalsPage        = lazy(() => import('@/pages/GoalsPage'));
@@ -46,7 +50,11 @@ const AppRoutes = () => (
         <Route element={<MainLayout />}>
           <Route path="/"              element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard"     element={<DashboardPage />} />
+          <Route path="/accounts"      element={<AccountsPage />} />
           <Route path="/transactions"  element={<TransactionsPage />} />
+          <Route path="/subscriptions" element={<SubscriptionsPage />} />
+          <Route path="/bills"         element={<BillsPage />} />
+          <Route path="/recurring"     element={<RecurringPage />} />
           <Route path="/categories"    element={<CategoriesPage />} />
           <Route path="/budgets"       element={<BudgetsPage />} />
           <Route path="/goals"         element={<GoalsPage />} />
@@ -56,6 +64,7 @@ const AppRoutes = () => (
           <Route path="/import-export" element={<ImportExportPage />} />
         </Route>
       </Route>
+
 
       {/* ── 404 ──────────────────────────────────────────────────────── */}
       <Route path="/not-found" element={<NotFoundPage />} />

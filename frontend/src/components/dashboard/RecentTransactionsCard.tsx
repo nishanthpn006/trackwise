@@ -48,7 +48,7 @@ export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
       {isLoading ? (
         <div className="space-y-3 py-2">
           {[1, 2, 3].map((idx) => (
-            <div key={idx} className="h-12 bg-muted/40 animate-pulse rounded-lg" />
+            <div key={idx} className="h-12 bg-muted/40 tw-animate-shimmer rounded-xl border border-border/40" />
           ))}
         </div>
       ) : recentTxs.length === 0 ? (

@@ -53,7 +53,7 @@ export const Dialog: React.FC<DialogProps> = ({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-xs animate-in fade-in duration-200"
+      className="fixed inset-0 z-[var(--z-modal)] flex items-center justify-center p-4 bg-background/75 backdrop-blur-sm tw-animate-fade-in"
       onClick={onClose}
       role="presentation"
     >
@@ -64,8 +64,7 @@ export const Dialog: React.FC<DialogProps> = ({
         aria-labelledby="dialog-title"
         aria-describedby={description ? 'dialog-description' : undefined}
         onClick={(e) => e.stopPropagation()}
-        className={`w-full ${maxWidthClass} max-h-[90vh] overflow-y-auto bg-card border border-border/80 rounded-2xl shadow-xl p-5 sm:p-6 space-y-5 animate-in zoom-in-95 duration-200 focus:outline-none`}
-
+        className={`w-full ${maxWidthClass} max-h-[90vh] overflow-y-auto bg-card border border-border/80 rounded-2xl shadow-xl p-5 sm:p-6 space-y-5 tw-animate-zoom-in focus:outline-none`}
         tabIndex={-1}
       >
         {/* Header */}

@@ -7,77 +7,159 @@
 ───────────────────────────────────────────── */
 
 :root {
-  --background: 210 20% 98%;
-  --foreground: 222.2 84% 4.9%;
+  /* ── Core surfaces (light mode) ───────────────────────────────── */
+  --background: 210 18% 96%;        /* App shell — very light grey-blue */
+  --foreground: 222 35% 10%;        /* Primary text — near-black with blue tint */
 
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card: 0 0% 100%;                /* Primary surface — white */
+  --card-foreground: 222 35% 10%;
+
+  --surface-elevated: 210 20% 98%;  /* Elevated surface (panels, popovers) */
+  --surface-overlay: 0 0% 100%;     /* Top-layer overlays (modals, dropdowns) */
 
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
+  --popover-foreground: 222 35% 10%;
 
-  --primary: 221.2 83.2% 53.3%;
+  --primary: 221 83% 53%;
   --primary-foreground: 210 40% 98%;
 
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  --secondary: 210 30% 93%;
+  --secondary-foreground: 222 30% 18%;
 
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
+  --muted: 210 25% 93%;
+  --muted-foreground: 215 16% 40%;  /* Secondary text — clearly readable */
 
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: 210 30% 93%;
+  --accent-foreground: 222 30% 18%;
 
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: 0 84% 58%;
+  --destructive-foreground: 0 0% 100%;
 
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 221.2 83.2% 53.3%;
+  --success: 142 71% 36%;
+  --success-foreground: 0 0% 100%;
 
-  --radius: 0.5rem;
+  --warning: 38 92% 46%;
+  --warning-foreground: 0 0% 8%;
 
-  /* TrackWise brand tokens */
+  --border: 214 24% 87%;
+  --input: 214 24% 87%;
+  --ring: 221 83% 53%;
+
+  /* ── Border radius ────────────────────────────────────────────── */
+  --radius: 0.5rem;                 /* Base: 8px */
+  --radius-sm: 0.375rem;            /* 6px */
+  --radius-lg: 0.75rem;             /* 12px */
+  --radius-xl: 1rem;                /* 16px */
+
+  /* ── Sidebar tokens ───────────────────────────────────────────── */
+  --sidebar-width: 250px;
+  --sidebar-collapsed-width: 72px;
+  --sidebar-bg: 0 0% 100%;          /* Light: white sidebar */
+  --sidebar-border: 214 24% 84%;    /* Slightly stronger than default border */
+
+  /* ── Z-index scale (use these; never ad-hoc values) ─────────────
+     --z-navbar:   20  (Navbar bar)
+     --z-sidebar:  30  (Desktop sidebar — below mobile backdrop)
+     --z-backdrop: 40  (Mobile overlay backdrop)
+     --z-drawer:   50  (Mobile sidebar drawer / dropdowns)
+     --z-modal:    60  (Dialog / modal)
+     --z-toast:    70  (Toast notifications — always on top)
+  ──────────────────────────────────────────────────────────────── */
+  --z-navbar: 20;
+  --z-sidebar: 30;
+  --z-backdrop: 40;
+  --z-drawer: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+
+  /* ── Brand tokens ─────────────────────────────────────────────── */
   --brand-primary: 248 100% 62%;
   --brand-secondary: 199 89% 48%;
   --brand-accent: 143 71% 45%;
   --brand-warning: 38 92% 50%;
   --brand-danger: 0 84% 60%;
-
-  /* Sidebar tokens */
-  --sidebar-width: 250px;
-  --sidebar-collapsed-width: 72px;
 }
 
+/* ─────────────────────────────────────────────
+   Dark mode — 5 distinct surface depth levels:
+   Level 0 (--background): deepest, app shell
+   Level 1 (--card):       sidebar, cards
+   Level 2 (--surface-elevated): section headers, inner panels
+   Level 3 (--surface-overlay): dropdowns, notification panel
+   Level 4 (modals, dialogs): highest
+───────────────────────────────────────────── */
 .dark {
-  --background: 222 47% 7%;
-  --foreground: 210 40% 98%;
+  --background: 224 30% 7%;         /* Level 0 — deepest */
+  --foreground: 213 28% 90%;        /* Primary text */
 
-  /* Card is slightly lighter than background for depth */
-  --card: 222 47% 10%;
-  --card-foreground: 210 40% 98%;
+  --card: 224 28% 11%;              /* Level 1 — sidebar, primary cards */
+  --card-foreground: 213 28% 90%;
 
-  --popover: 222 47% 10%;
-  --popover-foreground: 210 40% 98%;
+  --surface-elevated: 224 26% 15%;  /* Level 2 — inner panels, section bg */
+  --surface-overlay: 224 24% 18%;   /* Level 3 — dropdowns, popovers */
 
-  --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
+  --popover: 224 24% 18%;
+  --popover-foreground: 213 28% 90%;
 
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
+  --primary: 217 91% 62%;
+  --primary-foreground: 222 30% 8%;
 
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
+  --secondary: 224 25% 18%;
+  --secondary-foreground: 213 28% 85%;
 
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --muted: 224 25% 15%;
+  --muted-foreground: 215 18% 58%;  /* Clearly readable secondary text */
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --accent: 224 25% 18%;
+  --accent-foreground: 213 28% 90%;
 
-  --border: 217.2 32.6% 20%;
-  --input: 217.2 32.6% 20%;
-  --ring: 224.3 76.3% 48%;
+  --destructive: 0 68% 50%;
+  --destructive-foreground: 0 0% 98%;
+
+  --success: 142 58% 42%;
+  --success-foreground: 0 0% 98%;
+
+  --warning: 38 85% 52%;
+  --warning-foreground: 0 0% 8%;
+
+  --border: 224 20% 19%;            /* Visible separator without being heavy */
+  --input: 224 20% 19%;
+  --ring: 217 91% 62%;
+
+  /* ── Sidebar tokens (dark) ───────────────────────────────────────
+     Sidebar at Level 1 (--card) — visually distinct from Level 0
+     background even at split-screen intermediate widths.
+  ─────────────────────────────────────────────────────────────────── */
+  --sidebar-bg: 224 28% 11%;        /* Level 1 — same as --card */
+  --sidebar-border: 224 20% 22%;    /* Slightly stronger than --border */
+}
+
+/* ─────────────────────────────────────────────
+   Tailwind v4 — dark mode variant declaration
+   REQUIRED for `dark:` utilities to apply when
+   the `.dark` class is on <html>.
+───────────────────────────────────────────── */
+@variant dark (&:where(.dark, .dark *));
+
+/* ─────────────────────────────────────────────
+   Sidebar surface utility
+   Applies sidebar-specific background and border.
+   At intermediate/split-screen widths, a shadow
+   provides visual separation from the canvas.
+───────────────────────────────────────────── */
+.sidebar-surface {
+  background-color: hsl(var(--sidebar-bg));
+  border-right-color: hsl(var(--sidebar-border));
+}
+
+@media (min-width: 768px) and (max-width: 1100px) {
+  .sidebar-surface {
+    box-shadow: 1px 0 10px 0 rgb(0 0 0 / 0.05);
+  }
+  .dark .sidebar-surface {
+    box-shadow: 1px 0 20px 0 rgb(0 0 0 / 0.4);
+    border-right-color: hsl(224 20% 26%);
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -89,6 +171,14 @@
   box-sizing: border-box;
   border-width: 0;
   border-style: solid;
+}
+
+/* Ensure correct color-scheme metadata for browser chrome (scrollbars, inputs) */
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
 }
 
 body {
@@ -144,7 +234,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.4);
   border-color: hsl(var(--ring));
 }
 

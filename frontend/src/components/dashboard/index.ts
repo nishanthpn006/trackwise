@@ -13,3 +13,8 @@ export { default as SpendingTrendChart } from './SpendingTrendChart';
 export { default as FinancialInsightsCard } from './FinancialInsightsCard';
 export { default as DashboardCharts } from './DashboardCharts';
 export { default as SavingsGoalsWidget } from './SavingsGoalsWidget';
+export { default as BudgetStatusWidget } from './BudgetStatusWidget';
+export { default as AccountsSummaryWidget } from './AccountsSummaryWidget';
+export { default as UpcomingPaymentsWidget } from './UpcomingPaymentsWidget';
+
+

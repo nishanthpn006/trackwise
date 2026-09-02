@@ -10,7 +10,7 @@ export const DashboardSummarySkeleton: React.FC = () => {
       {Array.from({ length: 8 }).map((_, idx) => (
         <div
           key={idx}
-          className="p-5 bg-card border border-border/60 rounded-xl shadow-2xs space-y-3 animate-pulse h-[116px] flex flex-col justify-between"
+          className="p-5 bg-card border border-border/60 rounded-xl shadow-2xs space-y-3 tw-animate-shimmer h-[116px] flex flex-col justify-between"
         >
           <div className="flex items-center justify-between">
             <div className="h-3.5 w-24 bg-muted/80 rounded-md" />

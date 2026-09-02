@@ -2,9 +2,13 @@ import type { LucideIcon } from 'lucide-react';
 import {
   LayoutDashboard,
   Receipt,
+  Landmark,
   Tags,
   Wallet,
   Target,
+  Sparkles,
+  CalendarClock,
+  Repeat,
   BarChart3,
   Database,
   Settings,
@@ -40,10 +44,34 @@ export const NAVIGATION_ITEMS: NavItemConfig[] = [
     ariaLabel: 'Navigate to Dashboard overview',
   },
   {
+    label: 'Accounts',
+    path: '/accounts',
+    icon: Landmark,
+    ariaLabel: 'Navigate to Financial Accounts & Ledgers',
+  },
+  {
     label: 'Transactions',
     path: '/transactions',
     icon: Receipt,
     ariaLabel: 'Navigate to Transactions list',
+  },
+  {
+    label: 'Subscriptions',
+    path: '/subscriptions',
+    icon: Sparkles,
+    ariaLabel: 'Navigate to Subscription Tracking',
+  },
+  {
+    label: 'Bills',
+    path: '/bills',
+    icon: CalendarClock,
+    ariaLabel: 'Navigate to Bill Reminders',
+  },
+  {
+    label: 'Recurring',
+    path: '/recurring',
+    icon: Repeat,
+    ariaLabel: 'Navigate to Recurring Automation Rules',
   },
   {
     label: 'Categories',

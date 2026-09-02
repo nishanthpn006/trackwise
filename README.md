@@ -163,6 +163,7 @@ cd backend
 | `FRONTEND_PORT` | No | `80` | Host port for the frontend |
 
 > **Generating a secure JWT secret:**
+>
 > ```bash
 > openssl rand -hex 32
 > ```

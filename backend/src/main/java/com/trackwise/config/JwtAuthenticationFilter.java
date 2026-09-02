@@ -40,9 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (path == null || path.isEmpty()) {
             path = request.getRequestURI();
         }
-        boolean bypass = path.contains("/auth/") || path.contains("/health") || path.equals("/error");
-        log.debug("JwtAuthenticationFilter.shouldNotFilter for path '{}': {}", path, bypass);
-        return bypass;
+        return path.endsWith("/register") || path.endsWith("/login") || path.contains("/health") || path.equals("/error");
     }
 
     @Override

@@ -9,8 +9,12 @@ import DashboardEmptyState from '@/components/dashboard/DashboardEmptyState';
 import QuickActions from '@/components/dashboard/QuickActions';
 import RecentTransactionsCard from '@/components/dashboard/RecentTransactionsCard';
 import DashboardCharts from '@/components/dashboard/DashboardCharts';
+import BudgetStatusWidget from '@/components/dashboard/BudgetStatusWidget';
+import AccountsSummaryWidget from '@/components/dashboard/AccountsSummaryWidget';
+import UpcomingPaymentsWidget from '@/components/dashboard/UpcomingPaymentsWidget';
 import SavingsGoalsWidget from '@/components/dashboard/SavingsGoalsWidget';
 import RecentNotificationsWidget from '@/components/dashboard/RecentNotificationsWidget';
+
 import GoalContributionDialog from '@/components/goals/GoalContributionDialog';
 import goalService from '@/services/goalService';
 import type { SavingsGoal, GoalContributionRequest } from '@/types/goal';
@@ -29,7 +33,7 @@ import {
 
 /**
  * DashboardPage — Main application dashboard.
- * Features summary cards, analytics chart grid, savings goals widget, quick actions, and recent transactions.
+ * Features summary cards, analytics chart grid, live budget status, savings goals widget, quick actions, and recent transactions.
  */
 export const DashboardPage: React.FC = () => {
   const { summary, isLoading, errorMessage, isEmpty, refetch } = useDashboardSummary();
@@ -144,20 +148,25 @@ export const DashboardPage: React.FC = () => {
         </div>
       )}
 
-      {/* Middle Section: Quick Actions & Savings Goals Widget & Analytics Charts */}
+      {/* Middle Section: Quick Actions & Live Budget / Goals & Analytics Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-        {/* Left Column: Quick Actions & Savings Goals Overview */}
+        {/* Left Column: Quick Actions, Live Budget Status, Savings Goals, Notifications, Accounts & Upcoming */}
         <div className="lg:col-span-1 space-y-6">
           <QuickActions onRefresh={handleQuickActionRefresh} />
+          <AccountsSummaryWidget refreshKey={refreshKey} />
+          <UpcomingPaymentsWidget refreshKey={refreshKey} />
+          <BudgetStatusWidget refreshKey={refreshKey} />
           <SavingsGoalsWidget onOpenContribution={handleOpenContrib} refreshKey={refreshKey} />
           <RecentNotificationsWidget />
         </div>
+
 
         {/* Right Column: Analytics Charts (2 cols on desktop) */}
         <div className="lg:col-span-2">
           <DashboardCharts refreshKey={refreshKey} />
         </div>
       </div>
+
 
       {/* Recent Transactions Card */}
       <RecentTransactionsCard

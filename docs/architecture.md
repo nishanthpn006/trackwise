@@ -52,7 +52,7 @@ TrackWise follows a classic three-tier architecture: a React SPA client, a Sprin
 
 The frontend is a React 19 Single Page Application built with Vite 8.
 
-### Layer Structure
+### Frontend Layer Structure
 
 ```text
 src/
@@ -118,7 +118,7 @@ Vendor libraries are split into separate chunks by `vite.config.ts` `manualChunk
 
 The backend is a Spring Boot 3.3 REST API following a layered architecture.
 
-### Layer Structure
+### Backend Layer Structure
 
 ```text
 com.trackwise/
@@ -285,7 +285,7 @@ Host Machine
 
 ### Startup Order
 
-```
+```text
 postgres (healthy)
     └─► backend (healthy)
             └─► frontend (healthy)

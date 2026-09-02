@@ -20,6 +20,7 @@ public class TransactionResponse {
     private String description;
     private LocalDate date;
     private CategoryResponse category;
+    private AccountResponse account;
     private LocalDateTime createdAt;
 
     public TransactionResponse() {
@@ -28,6 +29,12 @@ public class TransactionResponse {
     public TransactionResponse(UUID id, String title, BigDecimal amount, TransactionType type,
                                String description, LocalDate date, CategoryResponse category,
                                LocalDateTime createdAt) {
+        this(id, title, amount, type, description, date, category, null, createdAt);
+    }
+
+    public TransactionResponse(UUID id, String title, BigDecimal amount, TransactionType type,
+                               String description, LocalDate date, CategoryResponse category,
+                               AccountResponse account, LocalDateTime createdAt) {
         this.id = id;
         this.title = title;
         this.amount = amount;
@@ -35,8 +42,10 @@ public class TransactionResponse {
         this.description = description;
         this.date = date;
         this.category = category;
+        this.account = account;
         this.createdAt = createdAt;
     }
+
 
     public static TransactionResponse fromEntity(Transaction transaction) {
         if (transaction == null) return null;
@@ -48,9 +57,11 @@ public class TransactionResponse {
                 transaction.getDescription(),
                 transaction.getDate(),
                 CategoryResponse.fromEntity(transaction.getCategory()),
+                AccountResponse.fromEntity(transaction.getAccount()),
                 transaction.getCreatedAt()
         );
     }
+
 
     public UUID getId() {
         return id;
@@ -108,9 +119,18 @@ public class TransactionResponse {
         this.category = category;
     }
 
+    public AccountResponse getAccount() {
+        return account;
+    }
+
+    public void setAccount(AccountResponse account) {
+        this.account = account;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;

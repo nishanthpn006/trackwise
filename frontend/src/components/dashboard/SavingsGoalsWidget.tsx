@@ -48,13 +48,14 @@ export const SavingsGoalsWidget: React.FC<SavingsGoalsWidgetProps> = ({
 
   if (isLoading) {
     return (
-      <div className="p-5 rounded-2xl bg-card border border-border/80 space-y-3 animate-pulse">
-        <div className="h-5 w-40 bg-muted rounded-md" />
-        <div className="h-10 w-full bg-muted rounded-md" />
-        <div className="h-16 w-full bg-muted rounded-md" />
+      <div className="p-5 rounded-2xl bg-card border border-border/80 space-y-3">
+        <div className="h-4 w-36 rounded-md tw-animate-shimmer" />
+        <div className="h-14 w-full rounded-xl tw-animate-shimmer" />
+        <div className="h-16 w-full rounded-xl tw-animate-shimmer" />
       </div>
     );
   }
+
 
   const nearestGoal = summary?.nearestGoal || (goals.length > 0 ? goals[0] : null);
 

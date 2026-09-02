@@ -62,6 +62,10 @@ public class Transaction {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     @NotNull(message = "User ownership is required")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -80,12 +84,18 @@ public class Transaction {
 
     public Transaction(String title, BigDecimal amount, TransactionType type, String description,
                        LocalDate date, Category category, User user) {
+        this(title, amount, type, description, date, category, null, user);
+    }
+
+    public Transaction(String title, BigDecimal amount, TransactionType type, String description,
+                       LocalDate date, Category category, Account account, User user) {
         this.title = title;
         this.amount = amount;
         this.type = type;
         this.description = description;
         this.date = date;
         this.category = category;
+        this.account = account;
         this.user = user;
     }
 
@@ -143,6 +153,14 @@ public class Transaction {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
     public User getUser() {

@@ -3,6 +3,9 @@
  *
  * Purposeful keyframes for UI transitions.
  * Imported by index.css via: @import "./styles/animations.css";
+ *
+ * All durations are fast (150–250ms) and easing is ease-out.
+ * All animations are suppressed by prefers-reduced-motion (via index.css).
  */
 
 /* ── Fade in (opacity) ─────────────────────────────────────────────── */
@@ -11,7 +14,7 @@
   to   { opacity: 1; }
 }
 
-/* ── Slide up + fade in ────────────────────────────────────────────── */
+/* ── Slide up + fade in (toasts, modals entering from below) ────────── */
 @keyframes tw-slide-up-fade {
   from {
     opacity: 0;
@@ -23,7 +26,19 @@
   }
 }
 
-/* ── Zoom in (subtle) ──────────────────────────────────────────────── */
+/* ── Slide down + fade in (dropdowns, popovers entering from above) ─── */
+@keyframes tw-slide-down-fade {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Zoom in (subtle) — modals, dialogs ────────────────────────────── */
 @keyframes tw-zoom-in {
   from {
     opacity: 0;
@@ -43,24 +58,45 @@
 
 /* ── Utility classes ───────────────────────────────────────────────── */
 .tw-animate-fade-in {
-  animation: tw-fade-in 200ms ease-out both;
+  animation: tw-fade-in 180ms ease-out both;
 }
 
 .tw-animate-slide-up-fade {
-  animation: tw-slide-up-fade 250ms ease-out both;
+  animation: tw-slide-up-fade 200ms ease-out both;
+}
+
+.tw-animate-slide-down-fade {
+  animation: tw-slide-down-fade 180ms ease-out both;
 }
 
 .tw-animate-zoom-in {
-  animation: tw-zoom-in 200ms ease-out both;
+  animation: tw-zoom-in 180ms ease-out both;
 }
 
 .tw-animate-shimmer {
   background: linear-gradient(
     90deg,
     hsl(var(--muted)) 25%,
-    hsl(var(--muted-foreground) / 0.08) 50%,
+    hsl(var(--muted-foreground) / 0.07) 50%,
     hsl(var(--muted)) 75%
   );
   background-size: 200% 100%;
   animation: tw-shimmer 1.8s ease-in-out infinite;
+}
+
+/* ── Page enter (every route transition) ───────────────────────────── */
+/* Subtle: 4px vertical rise + fade-in. 180ms keeps it fast and responsive. */
+@keyframes tw-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tw-animate-page-enter {
+  animation: tw-page-enter 180ms ease-out both;
 }

@@ -28,6 +28,8 @@ public class TransactionRequest {
 
     private UUID categoryId;
 
+    private UUID accountId;
+
     @NotNull(message = "Date is required")
     private LocalDate date;
 
@@ -38,13 +40,19 @@ public class TransactionRequest {
     }
 
     public TransactionRequest(String title, BigDecimal amount, TransactionType type, UUID categoryId, LocalDate date, String description) {
+        this(title, amount, type, categoryId, null, date, description);
+    }
+
+    public TransactionRequest(String title, BigDecimal amount, TransactionType type, UUID categoryId, UUID accountId, LocalDate date, String description) {
         this.title = title;
         this.amount = amount;
         this.type = type;
         this.categoryId = categoryId;
+        this.accountId = accountId;
         this.date = date;
         this.description = description;
     }
+
 
     public String getTitle() {
         return title;
@@ -78,9 +86,18 @@ public class TransactionRequest {
         this.categoryId = categoryId;
     }
 
+    public UUID getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(UUID accountId) {
+        this.accountId = accountId;
+    }
+
     public LocalDate getDate() {
         return date;
     }
+
 
     public void setDate(LocalDate date) {
         this.date = date;

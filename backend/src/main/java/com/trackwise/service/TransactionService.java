@@ -36,10 +36,14 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final com.trackwise.repository.AccountRepository accountRepository;
 
-    public TransactionService(TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
+    public TransactionService(TransactionRepository transactionRepository,
+                              CategoryRepository categoryRepository,
+                              com.trackwise.repository.AccountRepository accountRepository) {
         this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Transactional(readOnly = true)
@@ -78,6 +82,12 @@ public class TransactionService {
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + request.getCategoryId()));
         }
 
+        com.trackwise.entity.Account account = null;
+        if (request.getAccountId() != null) {
+            account = accountRepository.findByIdAndUser(request.getAccountId(), user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Account not found with ID: " + request.getAccountId()));
+        }
+
         Transaction transaction = new Transaction(
                 request.getTitle().trim(),
                 request.getAmount(),
@@ -85,6 +95,7 @@ public class TransactionService {
                 request.getDescription(),
                 request.getDate(),
                 category,
+                account,
                 user
         );
 
@@ -103,16 +114,24 @@ public class TransactionService {
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + request.getCategoryId()));
         }
 
+        com.trackwise.entity.Account account = null;
+        if (request.getAccountId() != null) {
+            account = accountRepository.findByIdAndUser(request.getAccountId(), user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Account not found with ID: " + request.getAccountId()));
+        }
+
         transaction.setTitle(request.getTitle().trim());
         transaction.setAmount(request.getAmount());
         transaction.setType(request.getType());
         transaction.setDescription(request.getDescription());
         transaction.setDate(request.getDate());
         transaction.setCategory(category);
+        transaction.setAccount(account);
 
         Transaction updated = transactionRepository.save(transaction);
         return TransactionResponse.fromEntity(updated);
     }
+
 
     @Transactional
     @SuppressWarnings("null")

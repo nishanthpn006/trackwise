@@ -173,7 +173,7 @@ SPRING_PROFILES_ACTIVE=postgres \
 
 API available at `http://localhost:8080`.
 
-### Frontend
+### Frontend (Dev Server)
 
 ```bash
 cd frontend
@@ -213,7 +213,7 @@ docker build -t trackwise-backend  ./backend
 
 ## Testing
 
-### Frontend
+### Frontend Testing
 
 ```bash
 cd frontend
@@ -222,7 +222,7 @@ npm run lint         # OXLint (0 warnings/errors expected)
 npm run build        # Production build (no warnings expected)
 ```
 
-### Backend
+### Backend Testing
 
 ```bash
 cd backend
@@ -294,7 +294,7 @@ openssl rand -base64 24
 
 Follow this pattern to add a new module (e.g. "Subscriptions"):
 
-### Backend
+### Backend Steps
 
 1. **Entity** — create `Subscription.java` in `entity/` with JPA annotations.
 2. **Repository** — create `SubscriptionRepository.java` extending `JpaRepository`.
@@ -303,7 +303,7 @@ Follow this pattern to add a new module (e.g. "Subscriptions"):
 5. **Controller** — create `SubscriptionController.java` with `@RestController`, `@RequestMapping("/api/subscriptions")`.
 6. **Tests** — create `SubscriptionControllerTest.java` and `SubscriptionServiceTest.java`.
 
-### Frontend
+### Frontend Steps
 
 1. **Types** — add `Subscription` types to `src/types/`.
 2. **Service** — create `subscriptionService.ts` in `src/services/`.

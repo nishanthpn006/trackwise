@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Dialog from '@/components/ui/Dialog';
 import type { Category, Transaction, TransactionRequest } from '@/types/transaction';
+import type { Account } from '@/types/account';
 import { transactionSchema, type TransactionFormData } from '@/utils/validation';
 import { Loader2 } from 'lucide-react';
 
@@ -12,6 +13,7 @@ export interface TransactionDialogProps {
   onSubmit: (data: TransactionRequest) => Promise<void>;
   transactionToEdit?: Transaction | null;
   categories: Category[];
+  accounts?: Account[];
   isSubmitting?: boolean;
 }
 
@@ -21,6 +23,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   onSubmit,
   transactionToEdit = null,
   categories,
+  accounts = [],
   isSubmitting = false,
 }) => {
   const isEditing = Boolean(transactionToEdit);
@@ -45,6 +48,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
       amount: 0,
       type: 'EXPENSE',
       categoryId: '',
+      accountId: '',
       date: todayStr,
       description: '',
     },
@@ -61,22 +65,25 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
           amount: transactionToEdit.amount,
           type: transactionToEdit.type,
           categoryId: transactionToEdit.category?.id || '',
+          accountId: transactionToEdit.account?.id || '',
           date: transactionToEdit.date,
           description: transactionToEdit.description || '',
         });
       } else {
         const firstCategory = categories.length > 0 ? categories[0].id : '';
+        const firstAccount = accounts.length > 0 ? accounts[0].id : '';
         reset({
           title: '',
           amount: undefined as unknown as number, // Let user type clean number
           type: 'EXPENSE',
           categoryId: firstCategory,
+          accountId: firstAccount,
           date: todayStr,
           description: '',
         });
       }
     }
-  }, [isOpen, transactionToEdit, categories, todayStr, reset]);
+  }, [isOpen, transactionToEdit, categories, accounts, todayStr, reset]);
 
   const handleFormSubmit = async (data: TransactionFormData) => {
     const payload: TransactionRequest = {
@@ -84,11 +91,13 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
       amount: data.amount,
       type: data.type,
       categoryId: data.categoryId,
+      accountId: data.accountId || undefined,
       date: data.date,
       description: data.description?.trim() || undefined,
     };
     await onSubmit(payload);
   };
+
 
   // Filter available categories matching selected type if needed, or show all
   const filteredCategories = categories.filter(
@@ -188,30 +197,54 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
           </div>
         </div>
 
-        {/* Category Field */}
-        <div className="space-y-1">
-          <label htmlFor="dialog-tx-category" className="block font-bold text-foreground text-xs">
-            Category <span className="text-destructive">*</span>
-          </label>
-          <select
-            id="dialog-tx-category"
-            disabled={isSubmitting}
-            className={`w-full px-3 py-2 rounded-xl bg-background border ${
-              errors.categoryId ? 'border-destructive focus:ring-destructive' : 'border-border/80 focus:ring-primary'
-            } text-foreground focus:outline-none focus:ring-2 transition-all disabled:opacity-50 text-xs sm:text-sm`}
-            {...register('categoryId')}
-          >
-            <option value="">Select category...</option>
-            {displayCategories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name} ({c.type})
-              </option>
-            ))}
-          </select>
-          {errors.categoryId && (
-            <p className="text-[11px] font-semibold text-destructive">{errors.categoryId.message}</p>
-          )}
+        {/* Category & Account Fields Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Category Field */}
+          <div className="space-y-1">
+            <label htmlFor="dialog-tx-category" className="block font-bold text-foreground text-xs">
+              Category <span className="text-destructive">*</span>
+            </label>
+            <select
+              id="dialog-tx-category"
+              disabled={isSubmitting}
+              className={`w-full px-3 py-2 rounded-xl bg-background border ${
+                errors.categoryId ? 'border-destructive focus:ring-destructive' : 'border-border/80 focus:ring-primary'
+              } text-foreground focus:outline-none focus:ring-2 transition-all disabled:opacity-50 text-xs sm:text-sm`}
+              {...register('categoryId')}
+            >
+              <option value="">Select category...</option>
+              {displayCategories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} ({c.type})
+                </option>
+              ))}
+            </select>
+            {errors.categoryId && (
+              <p className="text-[11px] font-semibold text-destructive">{errors.categoryId.message}</p>
+            )}
+          </div>
+
+          {/* Account Field */}
+          <div className="space-y-1">
+            <label htmlFor="dialog-tx-account" className="block font-bold text-foreground text-xs">
+              Account <span className="text-muted-foreground font-normal">(Optional)</span>
+            </label>
+            <select
+              id="dialog-tx-account"
+              disabled={isSubmitting}
+              className="w-full px-3 py-2 rounded-xl bg-background border border-border/80 text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all disabled:opacity-50 text-xs sm:text-sm"
+              {...register('accountId')}
+            >
+              <option value="">None (Unassigned)</option>
+              {accounts.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.name} ({a.type})
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
+
 
         {/* Notes / Description Field */}
         <div className="space-y-1">
