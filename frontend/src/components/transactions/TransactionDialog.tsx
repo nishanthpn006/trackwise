@@ -15,6 +15,7 @@ export interface TransactionDialogProps {
   categories: Category[];
   accounts?: Account[];
   isSubmitting?: boolean;
+  onOpenCreateCategory?: () => void;
 }
 
 export const TransactionDialog: React.FC<TransactionDialogProps> = ({
@@ -25,6 +26,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
   categories,
   accounts = [],
   isSubmitting = false,
+  onOpenCreateCategory,
 }) => {
   const isEditing = Boolean(transactionToEdit);
   const titleText = isEditing ? 'Edit Transaction' : 'Add New Transaction';
@@ -70,12 +72,14 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
           description: transactionToEdit.description || '',
         });
       } else {
-        const firstCategory = categories.length > 0 ? categories[0].id : '';
+        const initialType = 'EXPENSE';
+        const typeCats = categories.filter((c) => c.type === initialType);
+        const firstCategory = typeCats.length > 0 ? typeCats[0].id : '';
         const firstAccount = accounts.length > 0 ? accounts[0].id : '';
         reset({
           title: '',
           amount: undefined as unknown as number, // Let user type clean number
-          type: 'EXPENSE',
+          type: initialType,
           categoryId: firstCategory,
           accountId: firstAccount,
           date: todayStr,
@@ -84,6 +88,12 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
       }
     }
   }, [isOpen, transactionToEdit, categories, accounts, todayStr, reset]);
+
+  const handleTypeSelect = (newType: 'EXPENSE' | 'INCOME') => {
+    setValue('type', newType, { shouldValidate: true });
+    const availableForType = categories.filter((c) => c.type === newType);
+    setValue('categoryId', availableForType.length > 0 ? availableForType[0].id : '', { shouldValidate: true });
+  };
 
   const handleFormSubmit = async (data: TransactionFormData) => {
     const payload: TransactionRequest = {
@@ -98,12 +108,10 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
     await onSubmit(payload);
   };
 
-
-  // Filter available categories matching selected type if needed, or show all
-  const filteredCategories = categories.filter(
-    (cat) => !selectedType || cat.type === selectedType
+  // Strictly filter available categories matching selected type
+  const matchingCategories = categories.filter(
+    (cat) => cat.type === selectedType
   );
-  const displayCategories = filteredCategories.length > 0 ? filteredCategories : categories;
 
   return (
     <Dialog isOpen={isOpen} onClose={onClose} title={titleText} description={descriptionText} maxWidth="md">
@@ -116,7 +124,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
           <div className="grid grid-cols-2 gap-2 p-1 bg-muted/50 rounded-xl border border-border/60">
             <button
               type="button"
-              onClick={() => setValue('type', 'EXPENSE', { shouldValidate: true })}
+              onClick={() => handleTypeSelect('EXPENSE')}
               className={`py-2 px-3 rounded-lg font-bold text-xs transition-all ${
                 selectedType === 'EXPENSE'
                   ? 'bg-rose-600 text-white shadow-xs'
@@ -127,7 +135,7 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => setValue('type', 'INCOME', { shouldValidate: true })}
+              onClick={() => handleTypeSelect('INCOME')}
               className={`py-2 px-3 rounded-lg font-bold text-xs transition-all ${
                 selectedType === 'INCOME'
                   ? 'bg-emerald-600 text-white shadow-xs'
@@ -201,9 +209,20 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Category Field */}
           <div className="space-y-1">
-            <label htmlFor="dialog-tx-category" className="block font-bold text-foreground text-xs">
-              Category <span className="text-destructive">*</span>
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="dialog-tx-category" className="block font-bold text-foreground text-xs">
+                Category <span className="text-destructive">*</span>
+              </label>
+              {onOpenCreateCategory && (
+                <button
+                  type="button"
+                  onClick={onOpenCreateCategory}
+                  className="text-[11px] text-primary hover:underline font-semibold"
+                >
+                  + Add Category
+                </button>
+              )}
+            </div>
             <select
               id="dialog-tx-category"
               disabled={isSubmitting}
@@ -213,15 +232,28 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
               {...register('categoryId')}
             >
               <option value="">Select category...</option>
-              {displayCategories.map((c) => (
+              {matchingCategories.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.name} ({c.type})
+                  {c.name}
                 </option>
               ))}
             </select>
-            {errors.categoryId && (
+            {matchingCategories.length === 0 ? (
+              <p className="text-[11px] text-amber-500 mt-1 flex items-center justify-between">
+                <span>No {selectedType.toLowerCase()} categories found.</span>
+                {onOpenCreateCategory && (
+                  <button
+                    type="button"
+                    onClick={onOpenCreateCategory}
+                    className="font-bold underline text-primary hover:text-primary/80"
+                  >
+                    Create one
+                  </button>
+                )}
+              </p>
+            ) : errors.categoryId ? (
               <p className="text-[11px] font-semibold text-destructive">{errors.categoryId.message}</p>
-            )}
+            ) : null}
           </div>
 
           {/* Account Field */}

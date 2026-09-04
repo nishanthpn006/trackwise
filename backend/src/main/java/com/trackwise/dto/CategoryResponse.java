@@ -16,18 +16,26 @@ public class CategoryResponse {
     private TransactionType type;
     private String icon;
     private String color;
+    private String description;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     public CategoryResponse() {
     }
 
     public CategoryResponse(UUID id, String name, TransactionType type, String icon, String color, LocalDateTime createdAt) {
+        this(id, name, type, icon, color, null, createdAt, null);
+    }
+
+    public CategoryResponse(UUID id, String name, TransactionType type, String icon, String color, String description, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.type = type;
         this.icon = icon;
         this.color = color;
+        this.description = description;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static CategoryResponse fromEntity(Category category) {
@@ -38,7 +46,9 @@ public class CategoryResponse {
                 category.getType(),
                 category.getIcon(),
                 category.getColor(),
-                category.getCreatedAt()
+                category.getDescription(),
+                category.getCreatedAt(),
+                category.getUpdatedAt()
         );
     }
 
@@ -82,11 +92,27 @@ public class CategoryResponse {
         this.color = color;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

@@ -148,12 +148,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {...register('categoryId')}
           >
             <option value="">Select a category (Optional)</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
+            {categories
+              .filter((cat) => cat.type === type)
+              .map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
           </select>
+          {categories.filter((c) => c.type === type).length === 0 && !isLoadingCategories && (
+            <p className="text-[11px] text-amber-500 mt-0.5">
+              No {type.toLowerCase()} categories found.
+            </p>
+          )}
         </div>
 
         <div className="space-y-1">

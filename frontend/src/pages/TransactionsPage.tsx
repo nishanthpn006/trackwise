@@ -307,6 +307,7 @@ export const TransactionsPage: React.FC = () => {
         categories={categories}
         accounts={accounts}
         isSubmitting={isSubmitting}
+        onOpenCreateCategory={() => handleOpenCategoryModal()}
       />
 
 

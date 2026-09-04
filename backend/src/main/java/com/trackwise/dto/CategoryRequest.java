@@ -21,14 +21,22 @@ public class CategoryRequest {
 
     private String color;
 
+    @Size(max = 255, message = "Description cannot exceed 255 characters")
+    private String description;
+
     public CategoryRequest() {
     }
 
     public CategoryRequest(String name, TransactionType type, String icon, String color) {
+        this(name, type, icon, color, null);
+    }
+
+    public CategoryRequest(String name, TransactionType type, String icon, String color, String description) {
         this.name = name;
         this.type = type;
         this.icon = icon;
         this.color = color;
+        this.description = description;
     }
 
     public String getName() {
@@ -61,5 +69,13 @@ public class CategoryRequest {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

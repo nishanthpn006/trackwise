@@ -29,15 +29,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
+    private final CategoryService categoryService;
 
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager,
-                       JwtUtils jwtUtils) {
+                       JwtUtils jwtUtils,
+                       CategoryService categoryService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
+        this.categoryService = categoryService;
     }
 
     @Transactional
@@ -52,6 +55,9 @@ public class AuthService {
         User user = new User(request.getFullName().trim(), normalizedEmail, encodedPassword, Role.ROLE_USER);
 
         User savedUser = userRepository.save(user);
+
+        // Seed sensible starter categories for the new user
+        categoryService.seedDefaultCategories(savedUser);
 
         String token = jwtUtils.generateTokenFromEmail(savedUser.getEmail());
         UserSummaryDto userSummary = UserSummaryDto.fromEntity(savedUser);

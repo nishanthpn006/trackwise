@@ -56,11 +56,18 @@ public class CategoryService {
     @Transactional
     public CategoryResponse createCategory(CategoryRequest request, User user) {
         String name = request.getName().trim();
-        if (categoryRepository.existsByUserAndName(user, name)) {
+        if (categoryRepository.existsByUserAndNameIgnoreCase(user, name)) {
             throw new IllegalArgumentException("Category with name '" + name + "' already exists");
         }
 
-        Category category = new Category(name, request.getType(), request.getIcon(), request.getColor(), user);
+        Category category = new Category(
+                name,
+                request.getType(),
+                request.getIcon(),
+                request.getColor(),
+                request.getDescription() != null ? request.getDescription().trim() : null,
+                user
+        );
         Category savedCategory = categoryRepository.save(category);
         return CategoryResponse.fromEntity(savedCategory);
     }
@@ -71,7 +78,7 @@ public class CategoryService {
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + id));
 
         String newName = request.getName().trim();
-        if (categoryRepository.existsByUserAndNameAndIdNot(user, newName, id)) {
+        if (categoryRepository.existsByUserAndNameIgnoreCaseAndIdNot(user, newName, id)) {
             throw new IllegalArgumentException("Category with name '" + newName + "' already exists");
         }
 
@@ -79,6 +86,7 @@ public class CategoryService {
         category.setType(request.getType());
         category.setIcon(request.getIcon());
         category.setColor(request.getColor());
+        category.setDescription(request.getDescription() != null ? request.getDescription().trim() : null);
 
         Category updated = categoryRepository.save(category);
         return CategoryResponse.fromEntity(updated);
@@ -98,21 +106,29 @@ public class CategoryService {
         categoryRepository.delete(category);
     }
 
+    @Transactional
     @SuppressWarnings("null")
-    private void ensureDefaultCategoriesExist(User user) {
+    public void seedDefaultCategories(User user) {
         List<Category> existing = categoryRepository.findByUser(user);
         if (existing.isEmpty()) {
             List<Category> defaults = Arrays.asList(
-                    new Category("Salary", TransactionType.INCOME, "wallet", "#10B981", user),
-                    new Category("Freelance & Business", TransactionType.INCOME, "briefcase", "#3B82F6", user),
-                    new Category("Investments", TransactionType.INCOME, "trending-up", "#8B5CF6", user),
-                    new Category("Food & Dining", TransactionType.EXPENSE, "utensils", "#EF4444", user),
-                    new Category("Shopping & Retail", TransactionType.EXPENSE, "shopping-bag", "#F59E0B", user),
-                    new Category("Housing & Utilities", TransactionType.EXPENSE, "home", "#6366F1", user),
-                    new Category("Transportation", TransactionType.EXPENSE, "car", "#EC4899", user),
-                    new Category("Entertainment", TransactionType.EXPENSE, "film", "#14B8A6", user)
+                    new Category("Salary", TransactionType.INCOME, "wallet", "#10B981", "Regular employment and monthly wages", user),
+                    new Category("Freelance & Business", TransactionType.INCOME, "briefcase", "#3B82F6", "Client contracts, side gigs, and consulting", user),
+                    new Category("Investments", TransactionType.INCOME, "trending-up", "#8B5CF6", "Dividends, capital gains, and interest", user),
+                    new Category("Other Income", TransactionType.INCOME, "plus-circle", "#06B6D4", "Gifts, refunds, and miscellaneous earnings", user),
+                    new Category("Food & Dining", TransactionType.EXPENSE, "utensils", "#EF4444", "Groceries, dining out, and beverages", user),
+                    new Category("Transportation", TransactionType.EXPENSE, "car", "#EC4899", "Fuel, public transit, and vehicle maintenance", user),
+                    new Category("Shopping & Retail", TransactionType.EXPENSE, "shopping-bag", "#F59E0B", "Clothing, electronics, and personal goods", user),
+                    new Category("Bills & Utilities", TransactionType.EXPENSE, "file-text", "#6366F1", "Electricity, water, internet, and mobile recharges", user),
+                    new Category("Entertainment", TransactionType.EXPENSE, "film", "#14B8A6", "Movies, gaming, subscriptions, and leisure", user),
+                    new Category("Other Expense", TransactionType.EXPENSE, "more-horizontal", "#64748B", "General or unclassified expenses", user)
             );
             categoryRepository.saveAll(defaults);
         }
+    }
+
+    @SuppressWarnings("null")
+    private void ensureDefaultCategoriesExist(User user) {
+        seedDefaultCategories(user);
     }
 }

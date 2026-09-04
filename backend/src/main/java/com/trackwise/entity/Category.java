@@ -55,6 +55,9 @@ public class Category {
     @Column(name = "color", length = 20)
     private String color;
 
+    @Column(name = "description", length = 255)
+    private String description;
+
     @NotNull(message = "User ownership is required")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
@@ -72,10 +75,15 @@ public class Category {
     }
 
     public Category(String name, TransactionType type, String icon, String color, User user) {
+        this(name, type, icon, color, null, user);
+    }
+
+    public Category(String name, TransactionType type, String icon, String color, String description, User user) {
         this.name = name;
         this.type = type;
         this.icon = icon;
         this.color = color;
+        this.description = description;
         this.user = user;
     }
 
@@ -117,6 +125,14 @@ public class Category {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public User getUser() {
