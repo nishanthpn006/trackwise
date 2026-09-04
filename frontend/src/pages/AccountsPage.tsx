@@ -21,8 +21,9 @@ import { Input } from '@/components/ui/Input';
 import Dialog from '@/components/ui/Dialog';
 import { useToast } from '@/hooks/useToast';
 import accountService from '@/services/accountService';
+import { parseApiError } from '@/services/api';
 import type { Account, AccountType, AccountRequest } from '@/types/account';
-
+import { ShieldAlert } from 'lucide-react';
 
 const ACCOUNT_TYPE_CONFIG: Record<
   AccountType,
@@ -52,6 +53,8 @@ export const AccountsPage: React.FC = () => {
   const [includeArchived, setIncludeArchived] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingAccount, setEditingAccount] = useState<Account | null>(null);
+  const [accountToDelete, setAccountToDelete] = useState<Account | null>(null);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const [formData, setFormData] = useState<AccountRequest>({
     name: '',
@@ -67,8 +70,8 @@ export const AccountsPage: React.FC = () => {
       setLoading(true);
       const data = await accountService.getAccounts(includeArchived);
       setAccounts(data);
-    } catch {
-      toast.error('Failed to load financial accounts');
+    } catch (err: unknown) {
+      toast.error(parseApiError(err));
     } finally {
       setLoading(false);
     }
@@ -120,8 +123,8 @@ export const AccountsPage: React.FC = () => {
       }
       setDialogOpen(false);
       fetchAccounts();
-    } catch {
-      toast.error('Failed to save account');
+    } catch (err: unknown) {
+      toast.error(parseApiError(err));
     } finally {
       setSaving(false);
     }
@@ -133,20 +136,27 @@ export const AccountsPage: React.FC = () => {
       toast.success(
         acc.isArchived ? 'Account restored to active' : 'Account moved to archive'
       );
+      if (accountToDelete?.id === acc.id) {
+        setAccountToDelete(null);
+      }
       fetchAccounts();
-    } catch {
-      toast.error('Failed to update account archive status');
+    } catch (err: unknown) {
+      toast.error(parseApiError(err));
     }
   };
 
-  const handleDelete = async (acc: Account) => {
-    if (!window.confirm(`Are you sure you want to delete or archive "${acc.name}"?`)) return;
+  const handleConfirmPermanentDelete = async () => {
+    if (!accountToDelete) return;
     try {
-      await accountService.deleteAccount(acc.id);
-      toast.success('Account safely removed/archived');
+      setIsDeletingAccount(true);
+      await accountService.deleteAccount(accountToDelete.id);
+      toast.success('Account safely deleted');
+      setAccountToDelete(null);
       fetchAccounts();
-    } catch {
-      toast.error('Failed to delete account');
+    } catch (err: unknown) {
+      toast.error(parseApiError(err));
+    } finally {
+      setIsDeletingAccount(false);
     }
   };
 
@@ -341,7 +351,7 @@ export const AccountsPage: React.FC = () => {
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleDelete(acc)}
+                      onClick={() => setAccountToDelete(acc)}
                       className="p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-500 transition-colors"
                       title="Delete Account"
                     >
@@ -420,10 +430,81 @@ export const AccountsPage: React.FC = () => {
             <Button variant="primary" type="submit" isLoading={saving}>
               {editingAccount ? 'Save Changes' : 'Create Account'}
             </Button>
-
           </div>
         </form>
       </Dialog>
+
+      {/* Account Deletion / Archival Safety Modal */}
+      {accountToDelete && (
+        <Dialog
+          isOpen={Boolean(accountToDelete)}
+          onClose={() => setAccountToDelete(null)}
+          title={
+            (accountToDelete.transactionCount ?? 0) > 0
+              ? 'Account Has Transaction History'
+              : 'Delete Account?'
+          }
+          maxWidth="sm"
+        >
+          <div className="space-y-4 pt-1">
+            {(accountToDelete.transactionCount ?? 0) > 0 ? (
+              <>
+                <div className="flex items-start gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400">
+                  <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5" />
+                  <div className="text-xs space-y-1">
+                    <p className="font-bold">Safe Deletion Protection</p>
+                    <p className="leading-relaxed">
+                      &quot;{accountToDelete.name}&quot; is associated with{' '}
+                      <span className="font-bold">{accountToDelete.transactionCount}</span> transaction(s).
+                      To preserve financial history and ledger integrity, accounts with recorded transactions cannot be deleted.
+                    </p>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  You can <strong>Archive</strong> this account instead. It will be hidden from everyday selectors while keeping all historical transaction records completely intact.
+                </p>
+                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <Button variant="outline" size="sm" onClick={() => setAccountToDelete(null)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    onClick={() => handleToggleArchive(accountToDelete)}
+                  >
+                    Archive Account
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Are you sure you want to permanently delete &quot;{accountToDelete.name}&quot;?
+                  This account has no linked transactions and will be removed permanently.
+                </p>
+                <div className="flex justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setAccountToDelete(null)}
+                    disabled={isDeletingAccount}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleConfirmPermanentDelete}
+                    isLoading={isDeletingAccount}
+                  >
+                    Delete Permanently
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        </Dialog>
+      )}
     </PageContainer>
   );
 };

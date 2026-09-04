@@ -1,38 +1,44 @@
 import type { Transaction } from './transaction';
+import type { Account } from './account';
+
+export type DashboardPeriod = 'THIS_MONTH' | 'LAST_MONTH' | 'ALL_TIME' | 'CUSTOM';
+
+export interface CategoryBreakdownItem {
+  categoryName: string;
+  color?: string;
+  amount: number;
+  percentage: number;
+}
 
 export interface DashboardSummary {
   totalBalance: number;
   totalIncome: number;
   totalExpense: number;
+  netCashFlow: number;
   savings: number;
-  totalSavings?: number;
+  savingsRate?: number;
   topCategory?: string | null;
   monthlySavingsPercentage?: number;
   averageDailySpend?: number;
   transactionsThisMonth?: number;
+  transactionCount?: number;
+  period?: string;
+  startDate?: string;
+  endDate?: string;
   recentTransactions: Transaction[];
+  categoryBreakdown?: CategoryBreakdownItem[];
+  accounts?: Account[];
 }
 
 // ─── Analytics types ─────────────────────────────────────────────────────────
 
 export interface MonthlyDataPoint {
-  /** Human-readable month label, e.g. "Jan 2025" */
   month: string;
   income: number;
   expense: number;
 }
 
-export interface CategoryBreakdownItem {
-  categoryName: string;
-  /** Hex colour string */
-  color: string;
-  amount: number;
-  /** Percentage of total expenses (0–100) */
-  percentage: number;
-}
-
 export interface SpendingTrendPoint {
-  /** ISO-8601 date string, e.g. "2025-01-15" */
   date: string;
   amount: number;
 }
@@ -51,4 +57,3 @@ export interface DashboardAnalytics {
   spendingTrend: SpendingTrendPoint[];
   financialInsights: FinancialInsights;
 }
-

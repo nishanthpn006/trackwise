@@ -1,16 +1,23 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import dashboardService from '@/services/dashboardService';
-import type { DashboardSummary } from '@/types/dashboard';
+import type { DashboardPeriod, DashboardSummary } from '@/types/dashboard';
 
 export interface UseDashboardSummaryResult {
   summary: DashboardSummary | null;
   isLoading: boolean;
   errorMessage: string | null;
   isEmpty: boolean;
+  hasAccounts: boolean;
+  hasTransactions: boolean;
+  hasExpenses: boolean;
   refetch: () => Promise<void>;
 }
 
-export const useDashboardSummary = (): UseDashboardSummaryResult => {
+export const useDashboardSummary = (
+  period: DashboardPeriod = 'THIS_MONTH',
+  startDate?: string,
+  endDate?: string
+): UseDashboardSummaryResult => {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -19,34 +26,45 @@ export const useDashboardSummary = (): UseDashboardSummaryResult => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const data = await dashboardService.getSummary();
+      const data = await dashboardService.getSummary(period, startDate, endDate);
       setSummary(data);
     } catch {
       setErrorMessage('Failed to load dashboard summary metrics. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [period, startDate, endDate]);
 
   useEffect(() => {
     fetchSummary();
   }, [fetchSummary]);
 
-  // Derived empty state check: true if user has zero income, zero expense, and no recent transactions
+  const hasAccounts = useMemo(() => {
+    return (summary?.accounts?.length ?? 0) > 0;
+  }, [summary]);
+
+  const hasTransactions = useMemo(() => {
+    return (summary?.transactionCount ?? 0) > 0 || (summary?.recentTransactions?.length ?? 0) > 0;
+  }, [summary]);
+
+  const hasExpenses = useMemo(() => {
+    return (summary?.totalExpense ?? 0) > 0;
+  }, [summary]);
+
+  // Overall empty check: completely new user (no accounts and no transactions)
   const isEmpty = useMemo(() => {
     if (!summary) return false;
-    return (
-      summary.totalIncome === 0 &&
-      summary.totalExpense === 0 &&
-      (!summary.recentTransactions || summary.recentTransactions.length === 0)
-    );
-  }, [summary]);
+    return !hasAccounts && !hasTransactions;
+  }, [summary, hasAccounts, hasTransactions]);
 
   return {
     summary,
     isLoading,
     errorMessage,
     isEmpty,
+    hasAccounts,
+    hasTransactions,
+    hasExpenses,
     refetch: fetchSummary,
   };
 };

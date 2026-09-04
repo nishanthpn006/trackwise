@@ -8,15 +8,23 @@ import FinancialInsightsCard from './FinancialInsightsCard';
 import { AlertCircle, RefreshCw, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
+import type { CategoryBreakdownItem } from '@/types/dashboard';
+
 export interface DashboardChartsProps {
   refreshKey?: number;
+  categoryBreakdown?: CategoryBreakdownItem[];
+  periodLabel?: string;
 }
 
 /**
  * DashboardCharts — Orchestrator component for all 4 analytics widgets (Pie, Bar, Line, Insights).
  * Uses React.memo and custom hook useDashboardAnalytics for optimal performance and zero unnecessary re-renders.
  */
-export const DashboardCharts: React.FC<DashboardChartsProps> = ({ refreshKey }) => {
+export const DashboardCharts: React.FC<DashboardChartsProps> = ({
+  refreshKey,
+  categoryBreakdown,
+  periodLabel,
+}) => {
   const { analytics, isLoading, errorMessage, isEmpty, refetch } = useDashboardAnalytics(refreshKey);
   const navigate = useNavigate();
 
@@ -69,7 +77,10 @@ export const DashboardCharts: React.FC<DashboardChartsProps> = ({ refreshKey }) 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
       <IncomeExpenseChart data={analytics.monthlyData} />
-      <CategoryPieChart data={analytics.categoryBreakdown} />
+      <CategoryPieChart
+        data={categoryBreakdown && categoryBreakdown.length > 0 ? categoryBreakdown : analytics.categoryBreakdown}
+        subtitle={periodLabel ? `${periodLabel} spending breakdown` : 'Period spending breakdown'}
+      />
       <SpendingTrendChart data={analytics.spendingTrend} />
       <FinancialInsightsCard insights={analytics.financialInsights} />
     </div>

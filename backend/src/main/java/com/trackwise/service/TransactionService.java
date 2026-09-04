@@ -4,11 +4,13 @@ import com.trackwise.dto.DashboardSummaryResponse;
 import com.trackwise.dto.PagedResponse;
 import com.trackwise.dto.TransactionRequest;
 import com.trackwise.dto.TransactionResponse;
+import com.trackwise.entity.Account;
 import com.trackwise.entity.Category;
 import com.trackwise.entity.Transaction;
 import com.trackwise.entity.TransactionType;
 import com.trackwise.entity.User;
 import com.trackwise.exception.ResourceNotFoundException;
+import com.trackwise.repository.AccountRepository;
 import com.trackwise.repository.CategoryRepository;
 import com.trackwise.repository.TransactionRepository;
 import com.trackwise.repository.specification.TransactionSpecification;
@@ -17,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -36,7 +37,7 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
-    private final com.trackwise.repository.AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
     public TransactionService(TransactionRepository transactionRepository,
                               CategoryRepository categoryRepository,
@@ -100,6 +101,12 @@ public class TransactionService {
         );
 
         Transaction saved = transactionRepository.save(transaction);
+
+        // Adjust and persist account current balance
+        if (account != null) {
+            applyTransactionToAccount(account, saved.getType(), saved.getAmount());
+        }
+
         return TransactionResponse.fromEntity(saved);
     }
 
@@ -114,10 +121,30 @@ public class TransactionService {
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found with ID: " + request.getCategoryId()));
         }
 
-        com.trackwise.entity.Account account = null;
+        Account account = null;
         if (request.getAccountId() != null) {
             account = accountRepository.findByIdAndUser(request.getAccountId(), user)
                     .orElseThrow(() -> new ResourceNotFoundException("Account not found with ID: " + request.getAccountId()));
+        }
+
+        // Reverse old transaction impact from old account
+        Account oldAccount = transaction.getAccount();
+        TransactionType oldType = transaction.getType();
+        BigDecimal oldAmount = transaction.getAmount();
+
+        if (oldAccount != null) {
+            reverseTransactionFromAccount(oldAccount, oldType, oldAmount);
+        }
+
+        // If new account is same as old account, reuse reference with updated balance
+        Account targetAccount = account;
+        if (oldAccount != null && targetAccount != null && oldAccount.getId().equals(targetAccount.getId())) {
+            targetAccount = oldAccount;
+        }
+
+        // Apply new transaction impact to target account
+        if (targetAccount != null) {
+            applyTransactionToAccount(targetAccount, request.getType(), request.getAmount());
         }
 
         transaction.setTitle(request.getTitle().trim());
@@ -126,19 +153,46 @@ public class TransactionService {
         transaction.setDescription(request.getDescription());
         transaction.setDate(request.getDate());
         transaction.setCategory(category);
-        transaction.setAccount(account);
+        transaction.setAccount(targetAccount);
 
         Transaction updated = transactionRepository.save(transaction);
         return TransactionResponse.fromEntity(updated);
     }
 
-
     @Transactional
-    @SuppressWarnings("null")
     public void deleteTransaction(UUID id, User user) {
         Transaction transaction = transactionRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction not found with ID: " + id));
+
+        if (transaction.getAccount() != null) {
+            reverseTransactionFromAccount(transaction.getAccount(), transaction.getType(), transaction.getAmount());
+        }
+
         transactionRepository.delete(transaction);
+    }
+
+    private void applyTransactionToAccount(Account account, TransactionType type, BigDecimal amount) {
+        if (account == null || type == null || amount == null) return;
+        BigDecimal current = account.getCurrentBalance() != null ? account.getCurrentBalance() : account.getInitialBalance();
+        if (current == null) current = BigDecimal.ZERO;
+        if (type == TransactionType.INCOME) {
+            account.setCurrentBalance(current.add(amount));
+        } else if (type == TransactionType.EXPENSE) {
+            account.setCurrentBalance(current.subtract(amount));
+        }
+        accountRepository.save(account);
+    }
+
+    private void reverseTransactionFromAccount(Account account, TransactionType type, BigDecimal amount) {
+        if (account == null || type == null || amount == null) return;
+        BigDecimal current = account.getCurrentBalance() != null ? account.getCurrentBalance() : account.getInitialBalance();
+        if (current == null) current = BigDecimal.ZERO;
+        if (type == TransactionType.INCOME) {
+            account.setCurrentBalance(current.subtract(amount));
+        } else if (type == TransactionType.EXPENSE) {
+            account.setCurrentBalance(current.add(amount));
+        }
+        accountRepository.save(account);
     }
 
     @Transactional(readOnly = true)
@@ -154,7 +208,16 @@ public class TransactionService {
         if (totalIncome == null) totalIncome = BigDecimal.ZERO;
         if (totalExpense == null) totalExpense = BigDecimal.ZERO;
 
-        BigDecimal totalBalance = totalIncome.subtract(totalExpense);
+        List<Account> activeAccounts = accountRepository.findByUserAndIsArchivedFalseOrderByCreatedAtDesc(user);
+        BigDecimal totalBalance;
+        if (!activeAccounts.isEmpty()) {
+            totalBalance = activeAccounts.stream()
+                    .map(a -> a.getCurrentBalance() != null ? a.getCurrentBalance() : a.getInitialBalance())
+                    .filter(java.util.Objects::nonNull)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        } else {
+            totalBalance = totalIncome.subtract(totalExpense);
+        }
         BigDecimal savings = totalBalance;
 
         // Top spending category (all-time)

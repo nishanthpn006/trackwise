@@ -29,13 +29,14 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 
 export interface CategoryPieChartProps {
   data: CategoryBreakdownItem[];
+  subtitle?: string;
 }
 
 /**
  * CategoryPieChart — Donut chart showing expense distribution by category.
  * Shows a legend list alongside the chart with truncation for many categories.
  */
-export const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
+export const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data, subtitle = 'Period spending breakdown' }) => {
   // Cap the legend at 6 items; group the rest as "Other"
   const chartData = useMemo(() => {
     if (data.length <= 6) return data;
@@ -54,7 +55,7 @@ export const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
       <div className="flex items-start justify-between mb-5">
         <div>
           <h2 className="text-sm font-semibold text-foreground tracking-tight">Expense by Category</h2>
-          <p className="text-[11px] text-muted-foreground mt-0.5">All-time spending breakdown</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">{subtitle}</p>
         </div>
         <div className="p-2 rounded-lg bg-rose-500/10 text-rose-500 shrink-0">
           <PieIcon className="h-4 w-4" />

@@ -6,7 +6,7 @@ import com.trackwise.entity.Role;
 import com.trackwise.entity.User;
 import com.trackwise.repository.UserRepository;
 import com.trackwise.service.AnalyticsService;
-import com.trackwise.service.TransactionService;
+import com.trackwise.service.DashboardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -18,21 +18,22 @@ import java.util.Collections;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class DashboardControllerTest {
 
-    private TransactionService transactionService;
+    private DashboardService dashboardService;
     private AnalyticsService analyticsService;
     private UserRepository userRepository;
     private DashboardController dashboardController;
 
     @BeforeEach
     void setUp() {
-        transactionService = Mockito.mock(TransactionService.class);
+        dashboardService = Mockito.mock(DashboardService.class);
         analyticsService = Mockito.mock(AnalyticsService.class);
         userRepository = Mockito.mock(UserRepository.class);
-        dashboardController = new DashboardController(transactionService, analyticsService, userRepository);
+        dashboardController = new DashboardController(dashboardService, analyticsService, userRepository);
     }
 
     @Test
@@ -49,9 +50,9 @@ class DashboardControllerTest {
                 new BigDecimal("1000.00"),
                 Collections.emptyList()
         );
-        when(transactionService.getDashboardSummary(user)).thenReturn(mockResponse);
+        when(dashboardService.getDashboardSummary(eq(user), any(), any(), any())).thenReturn(mockResponse);
 
-        ResponseEntity<ApiResponse<DashboardSummaryResponse>> response = dashboardController.getDashboardSummary(userDetails);
+        ResponseEntity<ApiResponse<DashboardSummaryResponse>> response = dashboardController.getDashboardSummary(userDetails, "THIS_MONTH", null, null);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCode().value());

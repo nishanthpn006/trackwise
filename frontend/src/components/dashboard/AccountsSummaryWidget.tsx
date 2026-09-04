@@ -62,21 +62,42 @@ export const AccountsSummaryWidget: React.FC<AccountsSummaryWidgetProps> = ({ re
   }
 
   if (accounts.length === 0) {
-    return null;
+    return (
+      <div className="bg-card border border-border/60 rounded-xl p-5 shadow-xs space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Wallet className="w-4 h-4 text-primary" />
+            <h3 className="text-sm font-semibold text-foreground">
+              Accounts & Balances
+            </h3>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          No accounts connected yet. Add your bank, cash, or card account to track real-time balances.
+        </p>
+        <Link
+          to="/accounts"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors shadow-2xs"
+        >
+          <span>Create Account</span>
+          <ArrowRight className="w-3 h-3" />
+        </Link>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-white dark:bg-[#1A2234] border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-5 shadow-xs">
+    <div className="bg-card border border-border/60 rounded-xl p-5 shadow-xs">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Wallet className="w-4 h-4 text-blue-500" />
-          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+          <Wallet className="w-4 h-4 text-primary" />
+          <h3 className="text-sm font-semibold text-foreground">
             Accounts & Balances
           </h3>
         </div>
         <Link
           to="/accounts"
-          className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+          className="text-xs font-medium text-primary hover:underline flex items-center gap-1"
         >
           View all <ArrowRight className="w-3 h-3" />
         </Link>
@@ -88,21 +109,21 @@ export const AccountsSummaryWidget: React.FC<AccountsSummaryWidgetProps> = ({ re
           return (
             <div
               key={acc.id}
-              className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-900/50 border border-slate-100 dark:border-slate-800/60"
+              className="flex items-center justify-between p-2.5 rounded-lg bg-muted/30 border border-border/40 hover:bg-muted/50 transition-colors"
             >
               <div className="flex items-center gap-2.5">
-                <div className="p-1.5 rounded-md bg-white dark:bg-[#1A2234] border border-slate-200/60 dark:border-slate-800 text-slate-600 dark:text-slate-400">
+                <div className="p-1.5 rounded-md bg-card border border-border/60 text-muted-foreground">
                   <Icon className="w-3.5 h-3.5" />
                 </div>
                 <div>
-                  <div className="text-xs font-medium text-slate-800 dark:text-slate-200">
+                  <div className="text-xs font-medium text-foreground">
                     {acc.name}
                   </div>
-                  <div className="text-[10px] text-slate-400 capitalize">{acc.type.toLowerCase()}</div>
+                  <div className="text-[10px] text-muted-foreground capitalize">{acc.type.toLowerCase()}</div>
                 </div>
               </div>
 
-              <div className="text-xs font-bold text-slate-900 dark:text-slate-100">
+              <div className="text-xs font-bold font-mono text-foreground">
                 {formatCurrency(acc.currentBalance ?? acc.initialBalance, acc.currency)}
               </div>
             </div>

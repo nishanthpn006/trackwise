@@ -29,8 +29,10 @@ public class AccountService {
         this.transactionRepository = transactionRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<AccountResponse> getAccounts(User user, boolean includeArchived) {
+        seedDefaultAccounts(user);
+
         List<Account> accounts = includeArchived
                 ? accountRepository.findByUserOrderByCreatedAtDesc(user)
                 : accountRepository.findByUserAndIsArchivedFalseOrderByCreatedAtDesc(user);
@@ -56,9 +58,10 @@ public class AccountService {
         return AccountResponse.fromEntity(account, txCount);
     }
 
+    @Transactional
     public AccountResponse createAccount(AccountRequest request, User user) {
         String name = request.getName().trim();
-        if (accountRepository.existsByNameAndUser(name, user)) {
+        if (accountRepository.existsByNameIgnoreCaseAndUser(name, user)) {
             throw new IllegalArgumentException("Account with name '" + name + "' already exists");
         }
 
@@ -78,12 +81,13 @@ public class AccountService {
         return AccountResponse.fromEntity(saved, 0L);
     }
 
+    @Transactional
     public AccountResponse updateAccount(UUID id, AccountRequest request, User user) {
         Account account = accountRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
 
         String name = request.getName().trim();
-        if (accountRepository.existsByNameAndUserAndIdNot(name, user, id)) {
+        if (accountRepository.existsByNameIgnoreCaseAndUserAndIdNot(name, user, id)) {
             throw new IllegalArgumentException("Account with name '" + name + "' already exists");
         }
 
@@ -97,13 +101,14 @@ public class AccountService {
         if (request.getIcon() != null) account.setIcon(request.getIcon());
         account.setDescription(request.getDescription());
 
+        BigDecimal computed = calculateCurrentBalance(account, user);
+        account.setCurrentBalance(computed);
         Account updated = accountRepository.save(account);
-        BigDecimal computed = calculateCurrentBalance(updated, user);
-        updated.setCurrentBalance(computed);
         long txCount = transactionRepository.countByAccount(updated);
         return AccountResponse.fromEntity(updated, txCount);
     }
 
+    @Transactional
     public AccountResponse toggleArchive(UUID id, User user) {
         Account account = accountRepository.findByIdAndUser(id, user)
                 .orElseThrow(() -> new ResourceNotFoundException("Account not found with id: " + id));
@@ -116,6 +121,7 @@ public class AccountService {
         return AccountResponse.fromEntity(saved, txCount);
     }
 
+    @Transactional
     @SuppressWarnings("null")
     public void deleteAccount(UUID id, User user) {
         Account account = accountRepository.findByIdAndUser(id, user)
@@ -123,11 +129,37 @@ public class AccountService {
 
         long txCount = transactionRepository.countByAccount(account);
         if (txCount > 0) {
-            // Safe operation: archive rather than breaking transaction records
-            account.setArchived(true);
-            accountRepository.save(account);
-        } else {
-            accountRepository.delete(account);
+            throw new IllegalArgumentException("Cannot delete account associated with " + txCount + " transactions. Reassign or delete transactions first, or archive the account.");
+        }
+        accountRepository.delete(account);
+    }
+
+    @Transactional
+    public void seedDefaultAccounts(User user) {
+        List<Account> existing = accountRepository.findByUserOrderByCreatedAtDesc(user);
+        if (existing.isEmpty()) {
+            Account cash = new Account(
+                    "Cash",
+                    com.trackwise.entity.AccountType.CASH,
+                    BigDecimal.ZERO,
+                    "INR",
+                    "#10B981",
+                    "banknote",
+                    "Physical cash on hand",
+                    user
+            );
+            Account bank = new Account(
+                    "Main Bank Account",
+                    com.trackwise.entity.AccountType.BANK,
+                    BigDecimal.ZERO,
+                    "INR",
+                    "#3B82F6",
+                    "landmark",
+                    "Primary checking / savings bank account",
+                    user
+            );
+            accountRepository.save(cash);
+            accountRepository.save(bank);
         }
     }
 

@@ -30,17 +30,20 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final CategoryService categoryService;
+    private final AccountService accountService;
 
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        AuthenticationManager authenticationManager,
                        JwtUtils jwtUtils,
-                       CategoryService categoryService) {
+                       CategoryService categoryService,
+                       AccountService accountService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.categoryService = categoryService;
+        this.accountService = accountService;
     }
 
     @Transactional
@@ -56,8 +59,9 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        // Seed sensible starter categories for the new user
+        // Seed sensible starter categories and accounts for the new user
         categoryService.seedDefaultCategories(savedUser);
+        accountService.seedDefaultAccounts(savedUser);
 
         String token = jwtUtils.generateTokenFromEmail(savedUser.getEmail());
         UserSummaryDto userSummary = UserSummaryDto.fromEntity(savedUser);

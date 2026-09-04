@@ -164,9 +164,16 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="tx-account" className="font-bold text-foreground">
-            Account
-          </label>
+          <div className="flex items-center justify-between">
+            <label htmlFor="tx-account" className="font-bold text-foreground">
+              Account
+            </label>
+            {accounts.length === 0 && (
+              <a href="/accounts" className="text-[11px] text-primary hover:underline font-semibold">
+                + Create Account
+              </a>
+            )}
+          </div>
           <select
             id="tx-account"
             disabled={isSubmitting}
@@ -174,12 +181,25 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {...register('accountId')}
           >
             <option value="">Select account (Optional)</option>
-            {accounts.map((acc) => (
-              <option key={acc.id} value={acc.id}>
-                {acc.name} ({acc.type})
-              </option>
-            ))}
+            {accounts.map((acc) => {
+              const bal = acc.currentBalance ?? acc.initialBalance ?? 0;
+              const formattedBal = new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: acc.currency || 'INR',
+                maximumFractionDigits: 0,
+              }).format(bal);
+              return (
+                <option key={acc.id} value={acc.id}>
+                  {acc.name} ({acc.type} · {formattedBal})
+                </option>
+              );
+            })}
           </select>
+          {accounts.length === 0 && (
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              No accounts created yet.
+            </p>
+          )}
         </div>
       </div>
 

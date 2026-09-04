@@ -127,7 +127,6 @@ public class CategoryService {
         }
     }
 
-    @SuppressWarnings("null")
     private void ensureDefaultCategoriesExist(User user) {
         seedDefaultCategories(user);
     }

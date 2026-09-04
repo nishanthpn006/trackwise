@@ -5,6 +5,7 @@ export type SummaryCardVariant =
   | 'balance'
   | 'income'
   | 'expense'
+  | 'cashflow'
   | 'savings'
   | 'category'
   | 'percentage'
@@ -40,6 +41,9 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
   isCurrency = false,
   isPercentage = false,
 }) => {
+  const rawNum = typeof value === 'number' ? value : typeof amount === 'number' ? amount : 0;
+  const isNegativeCashflow = variant === 'cashflow' && rawNum < 0;
+
   // Format numeric values cleanly
   const formatValue = (): string => {
     const rawVal = value !== undefined ? value : amount;
@@ -51,7 +55,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
       return `${rawVal.toFixed(1)}%`;
     }
 
-    if (isCurrency || variant === 'balance' || variant === 'income' || variant === 'expense' || variant === 'savings' || variant === 'avgSpend') {
+    if (isCurrency || variant === 'balance' || variant === 'income' || variant === 'expense' || variant === 'cashflow' || variant === 'savings' || variant === 'avgSpend') {
       return formatCurrency(rawVal);
     }
 
@@ -77,6 +81,17 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({
       iconBg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400',
       amountColor: 'text-rose-600 dark:text-rose-400',
     },
+    cashflow: isNegativeCashflow
+      ? {
+          accent: 'border-l-4 border-l-rose-500',
+          iconBg: 'bg-rose-500/10 text-rose-600 dark:text-rose-400',
+          amountColor: 'text-rose-600 dark:text-rose-400',
+        }
+      : {
+          accent: 'border-l-4 border-l-emerald-500',
+          iconBg: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400',
+          amountColor: 'text-emerald-600 dark:text-emerald-400',
+        },
     savings: {
       accent: 'border-l-4 border-l-blue-500',
       iconBg: 'bg-blue-500/10 text-blue-600 dark:text-blue-400',

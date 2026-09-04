@@ -21,7 +21,11 @@ public interface AccountRepository extends JpaRepository<Account, UUID> {
 
     boolean existsByNameAndUserAndIdNot(String name, User user, UUID id);
 
+    boolean existsByNameIgnoreCaseAndUserAndIdNot(String name, User user, UUID id);
+
     boolean existsByNameAndUser(String name, User user);
+
+    boolean existsByNameIgnoreCaseAndUser(String name, User user);
 
     List<Account> findByUserAndTypeAndIsArchivedFalse(User user, AccountType type);
 }

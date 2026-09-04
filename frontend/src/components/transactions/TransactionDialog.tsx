@@ -258,9 +258,16 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
 
           {/* Account Field */}
           <div className="space-y-1">
-            <label htmlFor="dialog-tx-account" className="block font-bold text-foreground text-xs">
-              Account <span className="text-muted-foreground font-normal">(Optional)</span>
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="dialog-tx-account" className="block font-bold text-foreground text-xs">
+                Account <span className="text-muted-foreground font-normal">(Optional)</span>
+              </label>
+              {accounts.length === 0 && (
+                <a href="/accounts" className="text-[11px] text-primary hover:underline font-semibold">
+                  + Create Account
+                </a>
+              )}
+            </div>
             <select
               id="dialog-tx-account"
               disabled={isSubmitting}
@@ -268,12 +275,25 @@ export const TransactionDialog: React.FC<TransactionDialogProps> = ({
               {...register('accountId')}
             >
               <option value="">None (Unassigned)</option>
-              {accounts.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.name} ({a.type})
-                </option>
-              ))}
+              {accounts.map((a) => {
+                const bal = a.currentBalance ?? a.initialBalance ?? 0;
+                const formattedBal = new Intl.NumberFormat('en-IN', {
+                  style: 'currency',
+                  currency: a.currency || 'INR',
+                  maximumFractionDigits: 0,
+                }).format(bal);
+                return (
+                  <option key={a.id} value={a.id}>
+                    {a.name} ({a.type} · {formattedBal})
+                  </option>
+                );
+              })}
             </select>
+            {accounts.length === 0 && (
+              <p className="text-[11px] text-muted-foreground mt-1">
+                No accounts found. Create one in Accounts to track balances accurately.
+              </p>
+            )}
           </div>
         </div>
 

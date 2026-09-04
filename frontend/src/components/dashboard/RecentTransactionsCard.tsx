@@ -74,8 +74,8 @@ export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
                   className="p-3 bg-muted/20 border border-border/40 rounded-xl flex items-center justify-between gap-3 text-xs"
                 >
                   <div className="min-w-0 space-y-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-semibold text-foreground truncate">{tx.title}</p>
+                    <p className="font-semibold text-foreground truncate">{tx.title}</p>
+                    <div className="flex flex-wrap items-center gap-1.5">
                       {tx.category && (
                         <span
                           className="inline-flex items-center px-1.5 py-0.5 rounded-md text-[9px] font-semibold border shrink-0"
@@ -88,8 +88,14 @@ export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
                           {tx.category.name}
                         </span>
                       )}
+                      {tx.account && (
+                        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md text-[9px] font-medium bg-muted/60 text-muted-foreground border border-border/40 shrink-0">
+                          <CreditCard className="h-2.5 w-2.5" />
+                          {tx.account.name}
+                        </span>
+                      )}
+                      <span className="text-[10px] text-muted-foreground">{formatDate(tx.date)}</span>
                     </div>
-                    <p className="text-[10px] text-muted-foreground">{formatDate(tx.date)}</p>
                   </div>
 
                   <div
@@ -119,6 +125,7 @@ export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
                   <th className="py-2.5 px-3 rounded-l-md">Date</th>
                   <th className="py-2.5 px-3">Title</th>
                   <th className="py-2.5 px-3">Category</th>
+                  <th className="py-2.5 px-3">Account</th>
                   <th className="py-2.5 px-3 text-right rounded-r-md">Amount</th>
                 </tr>
               </thead>
@@ -147,6 +154,16 @@ export const RecentTransactionsCard: React.FC<RecentTransactionsCardProps> = ({
                           </span>
                         ) : (
                           <span className="text-muted-foreground/70 italic text-[10px]">Uncategorized</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-3">
+                        {tx.account ? (
+                          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <CreditCard className="h-3 w-3 text-muted-foreground/70" />
+                            <span className="font-medium text-foreground">{tx.account.name}</span>
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground/50 text-[10px]">—</span>
                         )}
                       </td>
                       <td
